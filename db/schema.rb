@@ -10,7 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_19_053633) do
+ActiveRecord::Schema.define(version: 2021_08_19_081033) do
+
+  create_table "gameupdates", force: :cascade do |t|
+    t.text "text", null: false
+    t.datetime "datetime"
+  end
 
   create_table "userdata", force: :cascade do |t|
     t.string "username", limit: 50, null: false
