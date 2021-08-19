@@ -2,6 +2,7 @@
 
 <table>
   <thead>
+    <th>ID</th>
   <th>Time</th>
   <th>Update</th>
   </thead>
@@ -9,6 +10,7 @@
   <tbody>
     <% @articles.each do |article| %>
     <tr>
+      <td><%= article.id %></td>
       <td><%= article.created_at %></td>
       <td><%= article.text %></td>
     </tr>
