@@ -1,8 +1,8 @@
 class AddGameupdates < ActiveRecord::Migration[6.1]
   def change
-    create_table :gameupdates do |t|
-      t.text :text, :null => false
-      t.datetime :datetime
+    remove_column :gameupdates, :datetime
+    add_column :gameupdates, timestamps
+
     end
   end
 end

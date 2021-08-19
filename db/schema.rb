@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_19_081033) do
+ActiveRecord::Schema.define(version: 2021_08_19_082130) do
 
   create_table "gameupdates", force: :cascade do |t|
     t.text "text", null: false
