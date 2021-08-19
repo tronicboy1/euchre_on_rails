@@ -1,0 +1,20 @@
+<h1>test submit to database gameupdate</h1>
+
+<% if @new_update.errors.any? %>
+<h2>errors display:</h2>
+  <ul>
+
+
+  <% @new_update.errors.full_messages.each do |msg| %>
+
+    <li><%= msg %></li>
+  <% end %>
+  </ul>
+<% end %>
+
+<%= form_with scope: :gameupdates, url: gameupdates_path, local: true do |f| %>
+
+<p><%= f.label :text %><br><%= f.text_area :text %></p>
+<p><%= f.submit %></p>
+
+<% end %>

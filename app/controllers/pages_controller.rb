@@ -1,7 +1,7 @@
 class PagesController < ApplicationController
 
   def index
-    @updates = Gameupdates.last(5)
+    @updates = Gameupdates.last(5).reverse!
   end
 
 end

@@ -1,0 +1,17 @@
+<h1>list all game updates here</h1>
+
+<table>
+  <thead>
+  <th>Time</th>
+  <th>Update</th>
+  </thead>
+
+  <tbody>
+    <% @articles.each do |article| %>
+    <tr>
+      <td><%= article.created_at %></td>
+      <td><%= article.text %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
