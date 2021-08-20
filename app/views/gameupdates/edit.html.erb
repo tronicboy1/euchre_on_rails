@@ -1,20 +1,3 @@
 <h1>test to edit database gameupdates</h1>
 
-<% if @result.errors.any? %>
-<h2>errors display:</h2>
-  <ul>
-
-
-  <% @result.errors.full_messages.each do |msg| %>
-
-    <li><%= msg %></li>
-  <% end %>
-  </ul>
-<% end %>
-
-<%= form_with(model: @result,local: true ) do |f| %>
-
-<p><%= f.label :text %><br><%= f.text_area :text %></p>
-<p><%= f.submit %></p>
-
-<% end %>
+<%= render 'form' %>

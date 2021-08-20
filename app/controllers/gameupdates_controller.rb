@@ -10,13 +10,13 @@ class GameupdatesController < ApplicationController
   end
 
   def new
-    @update = Gameupdates.new
+    @result = Gameupdates.new
   end
 
   def create
-    @update = Gameupdates.new(set_update_params)
+    @result = Gameupdates.new(set_update_params)
     #@update.text = params[:gameupdates][:text]
-    if @update.save
+    if @result.save
       flash[:primary] = "Update was saved"
       redirect_to '/gameupdates/'
     else
@@ -26,7 +26,7 @@ class GameupdatesController < ApplicationController
   end
 
   def edit
-    
+
   end
 
   def update
@@ -43,6 +43,7 @@ class GameupdatesController < ApplicationController
   def destroy
 
     @result.destroy
+    flash[:success] = "Successfully deleted."
     redirect_to '/gameupdates/'
   end
 
