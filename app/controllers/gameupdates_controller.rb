@@ -19,6 +19,7 @@ class GameupdatesController < ApplicationController
       flash[:primary] = "Update was saved"
       redirect_to '/gameupdates/'
     else
+      flash[:danger] = "Something went wrong!"
       render 'new'
     end
   end
@@ -28,13 +29,20 @@ class GameupdatesController < ApplicationController
   end
 
   def update
-    @new_update = Gameupdates.find(params[:id])
-    @new_update.text = params[:gameupdates][:text]
-    if @new_update.save
+    @update_edit = Gameupdates.find(params[:id])
+    @update_edit.text = params[:gameupdates][:text]
+    if @update_edit.save
       flash[:primary] = "Update was saved"
       redirect_to '/gameupdates/'
     else
-      render 'new'
+      flash[:danger] = "Something went wrong!"
+      render 'edit'
     end
+  end
+
+  def destroy
+    delete = Gameupdates.find(params[:id])
+    delete.destroy
+    redirect_to '/gameupdates/'
   end
 end

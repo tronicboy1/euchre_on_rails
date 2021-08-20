@@ -1,11 +1,21 @@
-<h1>list all game updates here</h1>
+<div class="container py-2">
+  <h1>list all game updates here</h1>
+</div>
 
-<table>
+
+<div class="container py-3">
+  <div class="px-2 py-2">
+    <a type="button" name="button" href="/gameupdates/new" class="btn btn-primary">New</a>
+  </div>
+
+<table class="table">
   <thead>
     <th>ID</th>
   <th>Time</th>
   <th>Update</th>
+  <th>Actions</th>
   </thead>
+
 
   <tbody>
     <% @articles.each do |article| %>
@@ -13,7 +23,20 @@
       <td><%= article.id %></td>
       <td><%= article.created_at %></td>
       <td><%= article.text %></td>
+      <td>
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+              Actions
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+              <li><a class="dropdown-item" href="/gameupdates/<%= article.id %>/edit">Edit</a></li>
+              <li><%= link_to 'Delete', gameupdate_path(article.id), method: :delete, class: "dropdown-item" %></li>
+            </ul>
+          </div>
+      </td>
     </tr>
     <% end %>
   </tbody>
 </table>
+
+</div>
