@@ -28,7 +28,7 @@ class GameupdatesController < ApplicationController
   end
 
   def update
-    @new_update = Gameupdates.new
+    @new_update = Gameupdates.find(params[:id])
     @new_update.text = params[:gameupdates][:text]
     if @new_update.save
       flash[:primary] = "Update was saved"
