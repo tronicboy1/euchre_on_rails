@@ -1,21 +1,22 @@
 class GameupdatesController < ApplicationController
+  before_action :set_updateid, only: [:show,:edit,:update,:destroy]
+
   def show
     #byebug
-    @result = Gameupdates.find(params[:id])
   end
 
   def index
-    @articles = Gameupdates.last(5)
+    @result = Gameupdates.last(5)
   end
 
   def new
-    @new_update = Gameupdates.new
+    @update = Gameupdates.new
   end
 
   def create
-    @new_update = Gameupdates.new
-    @new_update.text = params[:gameupdates][:text]
-    if @new_update.save
+    @update = Gameupdates.new(set_update_params)
+    #@update.text = params[:gameupdates][:text]
+    if @update.save
       flash[:primary] = "Update was saved"
       redirect_to '/gameupdates/'
     else
@@ -25,13 +26,12 @@ class GameupdatesController < ApplicationController
   end
 
   def edit
-    @update_edit = Gameupdates.find(params[:id])
+    
   end
 
   def update
-    @update_edit = Gameupdates.find(params[:id])
-    @update_edit.text = params[:gameupdates][:text]
-    if @update_edit.save
+    @result.update(set_update_params)
+    if @result.save
       flash[:primary] = "Update was saved"
       redirect_to '/gameupdates/'
     else
@@ -41,8 +41,21 @@ class GameupdatesController < ApplicationController
   end
 
   def destroy
-    delete = Gameupdates.find(params[:id])
-    delete.destroy
+
+    @result.destroy
     redirect_to '/gameupdates/'
+  end
+
+
+
+
+  #private ensures that methods are only used in this rb file
+  private
+  def set_updateid
+    @result = Gameupdates.find(params[:id])
+  end
+
+  def set_update_params
+    params.require(:gameupdates).permit(:text)
   end
 end

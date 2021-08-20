@@ -1,5 +1,5 @@
 <div class="container py-2">
-  <h1>list all game updates here</h1>
+  <h1>Game Updates CRUD</h1>
 </div>
 
 
@@ -18,19 +18,19 @@
 
 
   <tbody>
-    <% @articles.each do |article| %>
+    <% @result.each do |update| %>
     <tr>
-      <td><%= article.id %></td>
-      <td><%= article.created_at %></td>
-      <td><%= article.text %></td>
+      <td><%= update.id %></td>
+      <td><%= update.created_at %></td>
+      <td><%= update.text %></td>
       <td>
         <div class="dropdown">
           <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
               Actions
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-              <li><a class="dropdown-item" href="/gameupdates/<%= article.id %>/edit">Edit</a></li>
-              <li><%= link_to 'Delete', gameupdate_path(article.id), method: :delete, class: "dropdown-item" %></li>
+              <li><%= link_to 'Edit', edit_gameupdate_path(update.id), class: "dropdown-item" %></li>
+              <li><%= link_to 'Delete', gameupdate_path(update.id), method: :delete, class: "dropdown-item" %></li>
             </ul>
           </div>
       </td>

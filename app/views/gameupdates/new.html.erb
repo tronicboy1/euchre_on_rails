@@ -1,11 +1,11 @@
 <h1>test submit to database gameupdate</h1>
 
-<% if @new_update.errors.any? %>
+<% if @update.errors.any? %>
 <h2>errors display:</h2>
   <ul>
 
 
-  <% @new_update.errors.full_messages.each do |msg| %>
+  <% @update.errors.full_messages.each do |msg| %>
 
     <li><%= msg %></li>
   <% end %>
