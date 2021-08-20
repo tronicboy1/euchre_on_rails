@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_20_213443) do
+ActiveRecord::Schema.define(version: 2021_08_20_215841) do
 
   create_table "gameupdates", force: :cascade do |t|
     t.text "text", null: false
@@ -21,7 +21,8 @@ ActiveRecord::Schema.define(version: 2021_08_20_213443) do
 
   create_table "users", force: :cascade do |t|
     t.string "username", limit: 50, null: false
-    t.string "password_hash", limit: 200, null: false
+    t.datetime "created_at", null: false
+    t.string "password_digest"
   end
 
   add_foreign_key "gameupdates", "users"
