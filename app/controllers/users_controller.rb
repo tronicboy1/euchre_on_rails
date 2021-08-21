@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  include CurrentUser,UsersHelper
+  
   def new
     #byebug
     @user = User.new
@@ -11,17 +13,13 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
-      byebug
+      log_in(@user)
       flash[:success] = "Account successfully created. Welcome to Euchre on Rails, #{@user.username}!"
-      redirect_to root_url
+      redirect_to '/game'
     else
       params[:action] = "new"
       render 'new'
     end
   end
 
-  private
-  def user_params
-    params.require(:user).permit(:username,:password,:password_confirmation)
-  end
 end

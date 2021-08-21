@@ -17,13 +17,12 @@
   <br><%= f.password_field :password, class: "form-control", placeholder: "Password123" %>
 </div>
 
-<% if params[:action] == "new" %>
 <div class="mb-3">
   <%= f.label :password,"Confirm Password:", class: "form-label" %>
   <br>
   <%= f.password_field :password_confirmation, class: "form-control", placeholder: "Password123" %>
 </div>
-<% end %>
+
 
 
 <p><%= f.submit "Submit", class: "btn btn-secondary" %></p>
