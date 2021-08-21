@@ -1,0 +1,30 @@
+<div class="container py-3">
+<h1>Start a New Game</h1>
+</div>
+
+
+
+<div class="container py-2">
+<div class="mb-3">
+  <p>Player 1:</p>
+  <p class="list-group-item fw-light"><%= current_user.username %> </p>
+</div>
+<%= form_tag('/game',method: :post) do %>
+<div class="mb-3">
+  <label for="player2" class="form-label">Player 2:</label>
+  <%= select :player2,:id,@users,{include_blank: false}, {class: 'form-select', id: "player2"} %>
+</div>
+<div class="mb-3">
+  <label for="player3" class="form-label">Player 3:</label>
+  <%= select :player3,:id,@users,{include_blank: false}, {class: 'form-select', id: "player3"} %>
+</div>
+<div class="mb-3">
+  <label for="player4" class="form-label">Player 4:</label>
+  <%= select :player4,:id,@users,{include_blank: false}, {class: 'form-select', id: "player4"} %>
+</div>
+<div class="mb-3">
+  <%= submit_tag("Start Game", class: "btn btn-secondary") %>
+</div>
+<% end %>
+
+</div>

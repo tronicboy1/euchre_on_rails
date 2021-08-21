@@ -1,6 +1,7 @@
 class PagesController < ApplicationController
-
+  include ApplicationHelper
   def index
+    redirect_to '/game/new' if logged_in?
     @updates = Gameupdates.last(5).reverse!
   end
 
