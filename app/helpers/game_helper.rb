@@ -1,5 +1,7 @@
 module GameHelper
   include ApplicationHelper
+
+  #add all users to room object and commit to database
   def setup_room
     new_room = Room.new
     new_room.room_name = params[:room_name][:room_name]
@@ -16,5 +18,9 @@ module GameHelper
     new_room.save
   end
 
+  #get rooms user is associated with and return with room id
+  def user_room_list
+
+  end
 
 end
