@@ -13,7 +13,9 @@ class GameController < ApplicationController
   end
 
   def create
+    byebug
     setup_room()
+    byebug
   end
 
   def destroy
