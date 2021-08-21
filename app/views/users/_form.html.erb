@@ -1,0 +1,31 @@
+<% if obj.errors.any? %>
+<div class="container py-2">
+  <%= render 'shared/errors', obj: obj %>
+</div>
+<% end %>
+
+
+<%= form_with(model: obj,local: true) do |f| %>
+
+<div class="mb-3">
+  <%= f.label :username, class: "form-label" %>
+  <br><%= f.text_field :username, class: "form-control", placeholder: "username123" %>
+</div>
+
+<div class="mb-3">
+  <%= f.label :password, class: "form-label" %>
+  <br><%= f.password_field :password, class: "form-control", placeholder: "Password123" %>
+</div>
+
+<% if params[:action] == "new" %>
+<div class="mb-3">
+  <%= f.label "Confirm Password", class: "form-label" %>
+  <br>
+  <%= f.password_field :password_confirmation, class: "form-control", placeholder: "Password123" %>
+</div>
+<% end %>
+
+
+<p><%= f.submit class: "btn btn-secondary" %></p>
+
+<% end %>

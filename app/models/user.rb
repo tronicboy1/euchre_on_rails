@@ -1,5 +1,7 @@
 # class Userdata < ActiveRecord::Base
-class Users < ApplicationRecord
+class User < ApplicationRecord
+  self.table_name = 'user'
+  before_save { self.username = username.downcase}
   #self.table_name = "userdata"
   validates :username, presence: true, uniqueness: true
   #validates :password_hash, presence: true
