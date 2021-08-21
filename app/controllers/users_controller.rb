@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  include CurrentUser,UsersHelper
-  
+  include ApplicationHelper,UsersHelper
+
   def new
     #byebug
     @user = User.new

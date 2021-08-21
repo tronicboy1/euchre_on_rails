@@ -1,5 +1,6 @@
 class SessionsController < ApplicationController
-  include CurrentUser
+  #include CurrentUser
+  include ApplicationHelper
 
   def new
   end
