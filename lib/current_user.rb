@@ -2,6 +2,7 @@ module CurrentUser
   def log_in(user)
     session[:user_id] = user.id
     session[:username] = user.username
+    session[:authenticated] = true
   end
 
   def current_user
