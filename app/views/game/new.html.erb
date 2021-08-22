@@ -9,7 +9,7 @@
 <div class="mb-3">
 <%= form_tag('/game',method: :post) do %>
   <label for="room_name" class="form-label">Room Name:</label>
-  <%= text_field :room_name, :room_name, class: "form-control" %>
+  <%= text_field :room_name, :room_name, class: "form-control", value: Time.now.strftime('%Y-%m-%d %H:%M:%S') %>
 </div>
 
 <div class="mb-3">
