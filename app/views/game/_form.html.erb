@@ -1,39 +1,38 @@
+<% if obj.errors.any? %>
 <div class="container py-2">
-<form class="" action="<%= url_for game_path %>" method="post">
-  <fieldset>
-    <div class="mb-3">
-      <p>Player 1:</p>
-       <p class="list-group-item fw-light"><%= current_user.username %> </p>
-    </div>
-    <div class="mb-3">
-      <label for="player2" class="form-label">Player 2:</label>
-      <select id="player2" class="form-select">
-        <option value="computer">Computer</option>
-        <% @users.each do |user| %>
-        <option value="<%= user.id %>"><%= user.username%></option>
-        <% end %>
-      </select>
-    </div>
-    <div class="mb-3">
-      <label for="disabledSelect" class="form-label">Player 3:</label>
-      <select id="disabledSelect" class="form-select">
-        <option value="computer">Computer</option>
-        <% @users.each do |user| %>
-        <option value="<%= user.id %>"><%= user.username%></option>
-        <% end %>
-      </select>
-    </div>
-    <div class="mb-3">
-      <label for="disabledSelect" class="form-label">Player 4:</label>
-      <select id="disabledSelect" class="form-select">
-        <option value="computer">Computer</option>
-        <% @users.each do |user| %>
-        <option value="<%= user.id %>"><%= user.username%></option>
-        <% end %>
-      </select>
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </fieldset>
-</form>
+  <%= render 'shared/errors', obj: obj %>
+</div>
+<% end %>
 
-@users.collect{|user| [user.username,user.id]}
+
+<%= form_for obj, url: rooms_path, html: {method: :post} do |f| %>
+
+<div class="mb-3">
+  <%= f.label :room_name, "Room Name:", class: "form-label" %>
+  <br><%= f.text_field :room_name, class: "form-control", placeholder: "username123" %>
+</div>
+
+<p>Player 1:</p>
+<p class="list-group-item fw-light"><%= current_user.username %> </p>
+</div>
+
+<div class="mb-3">
+<label for="player2" class="form-label">Player 2:</label>
+<%= f.select :player2,:id,@users,{include_blank: false}, {class: 'form-select', id: "player2"} %>
+</div>
+
+<div class="mb-3">
+  <label for="player3" class="form-label">Player 3:</label>
+  <%= f.select :player3,:id,@users,{include_blank: false}, {class: 'form-select', id: "player3"} %>
+</div>
+
+<div class="mb-3">
+  <label for="player4" class="form-label">Player 4:</label>
+  <%= f.select :player4,:id,@users,{include_blank: false}, {class: 'form-select', id: "player4"} %>
+</div>
+
+<div class="mb-3">
+<p><%= f.submit "Submit", class: "btn btn-secondary" %></p>
+</div>
+
+<% end %>

@@ -12,21 +12,22 @@
   <%= text_field :room_name, :room_name, class: "form-control" %>
 </div>
 
-  <p>Player 1:</p>
-  <p class="list-group-item fw-light"><%= current_user.username %> </p>
+<div class="mb-3">
+  <label for="player1" class="form-label">Player 1:</label>
+  <%= select :player1_id,:id,[[current_user.username,current_user.id]],{include_blank: false}, {class: 'form-select', id: "player1", disabled: true } %>
 </div>
 
 <div class="mb-3">
   <label for="player2" class="form-label">Player 2:</label>
-  <%= select :player2,:id,@users,{include_blank: false}, {class: 'form-select', id: "player2"} %>
+  <%= select :player2_id,:id,@users,{include_blank: false}, {class: 'form-select', id: "player2"} %>
 </div>
 <div class="mb-3">
   <label for="player3" class="form-label">Player 3:</label>
-  <%= select :player3,:id,@users,{include_blank: false}, {class: 'form-select', id: "player3"} %>
+  <%= select :player3_id,:id,@users,{include_blank: false}, {class: 'form-select', id: "player3"} %>
 </div>
 <div class="mb-3">
   <label for="player4" class="form-label">Player 4:</label>
-  <%= select :player4,:id,@users,{include_blank: false}, {class: 'form-select', id: "player4"} %>
+  <%= select :player4_id,:id,@users,{include_blank: false}, {class: 'form-select', id: "player4"} %>
 </div>
 <div class="mb-3">
   <%= submit_tag("Start Game", class: "btn btn-secondary") %>

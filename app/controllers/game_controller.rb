@@ -7,15 +7,21 @@ class GameController < ApplicationController
   #accept user input for new room
   #invite players and decide how many CPU players
   def new
-    @users = User.all
-    @users = @users.collect{|user| [user.username,user.id]}
-    @users.unshift(["Computer","computer"])
+    add_player_list
+    @room = Room.new
   end
 
   def create
-    byebug
-    setup_room()
-    byebug
+    #byebug
+    if setup_room()
+      flash[:success] = "Room created successfully!"
+      redirect_to '/game'
+    else
+      flash[:danger] = "Something went wrong! Try a different Room Name."
+      redirect_to '/game/new'
+    end
+
+    #byebug
   end
 
   def destroy

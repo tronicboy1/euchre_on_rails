@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_21_094614) do
+ActiveRecord::Schema.define(version: 2021_08_22_005247) do
 
   create_table "gameupdates", force: :cascade do |t|
     t.text "text", null: false
@@ -35,6 +35,8 @@ ActiveRecord::Schema.define(version: 2021_08_21_094614) do
     t.string "username", limit: 50, null: false
     t.datetime "created_at", null: false
     t.string "password_digest"
+    t.integer "room_id"
+    t.index ["room_id"], name: "index_user_on_room_id"
   end
 
   add_foreign_key "gameupdates", "user"

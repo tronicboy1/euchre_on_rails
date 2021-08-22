@@ -10,5 +10,6 @@ class User < ApplicationRecord
 
   has_many :gameupdates
   belongs_to :room, optional: true
+
   has_secure_password
 end
