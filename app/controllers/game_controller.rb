@@ -1,6 +1,8 @@
 class GameController < ApplicationController
   include ApplicationHelper,GameHelper
+  
   def show
+    #redirect if not logged in
     if !logged_in?
       flash[:warning] = "You must login to access this page."
       redirect_to '/login'
@@ -20,11 +22,9 @@ class GameController < ApplicationController
     else
       add_player_list
     end
-    #@room = Room.new
   end
 
   def create
-    #byebug
     if setup_room()
       new_update("#{current_user.username} created a new room!")
       flash[:success] = "Room created successfully!"
@@ -34,14 +34,11 @@ class GameController < ApplicationController
       redirect_to '/game/new'
     end
 
-    #byebug
   end
 
   def destroy
     destroy_room
     redirect_to '/game'
-
-
   end
 
 end
