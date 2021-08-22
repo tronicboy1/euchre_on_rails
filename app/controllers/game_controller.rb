@@ -17,7 +17,7 @@ class GameController < ApplicationController
       flash[:success] = "Room created successfully!"
       redirect_to '/game'
     else
-      flash[:danger] = "Something went wrong! Try a different Room Name."
+      flash[:danger] = "Something went wrong! Try a different Room Name, or check for duplicate users."
       redirect_to '/game/new'
     end
 

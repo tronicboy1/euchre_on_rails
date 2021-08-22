@@ -4,27 +4,39 @@ module GameHelper
   def add_roomid_to_player(id,room_id)
     user = User.find(id)
     user.room_id = room_id
-    user.save
+    #password validation will prevent from saving so must disable
+    user.save(validate: false)
 
   end
   #add all users to room object and commit to database
   def setup_room
+    player1_id = current_user.id
+    player2_id = params[:player2_id][:id]
+    player3_id = params[:player3_id][:id]
+    player4_id = params[:player4_id][:id]
     new_room = Room.new
     new_room.room_name = params[:room_name][:room_name]
-    new_room.player1_id = current_user.id
+    new_room.player1_id = player1_id
     #only add human players to playerid array to avoid error
-    playerid_arr = [current_user.id]
-    if params[:player2_id][:id] != "computer"
-      new_room.player2_id = params[:player2_id][:id]
-      playerid_arr.push(params[:player2_id][:id])
+    playerid_arr = [player1_id]
+    if player2_id != "computer"
+      new_room.player2_id = player2_id
+      playerid_arr.push(player2_id)
     end
-    if params[:player3_id][:id] != "computer"
-      new_room.player3_id = params[:player3_id][:id]
-      playerid_arr.push(params[:player3_id][:id])
+
+    #check for redundancies
+    if player3_id == player2_id
+      return false
+    elsif player3_id != "computer"
+      new_room.player3_id = player3_id
+      playerid_arr.push(player3_id)
     end
-    if params[:player4_id][:id] != "computer"
-      new_room.player4_id = params[:player4_id][:id]
-      playerid_arr.push(params[:player4_id][:id])
+
+    if [player2_id,player3_id].include?(player4_id)
+      return false
+    elsif params[:player4_id][:id] != "computer"
+      new_room.player4_id = player4_id
+      playerid_arr.push(player4_id)
     end
     if new_room.save
       new_room_id = Room.find_by(room_name: params[:room_name][:room_name]).id
