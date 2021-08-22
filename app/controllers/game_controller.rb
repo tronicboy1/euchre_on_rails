@@ -1,6 +1,6 @@
 class GameController < ApplicationController
   include ApplicationHelper,GameHelper
-  
+
   def show
     #redirect if not logged in
     if !logged_in?
@@ -9,6 +9,7 @@ class GameController < ApplicationController
     elsif current_user.room_id.nil?
       redirect_to '/game/new'
     else
+      params[:room_id] = current_user.room_id
       @room ||= Room.find(current_user.room_id)
     end
   end
