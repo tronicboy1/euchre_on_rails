@@ -11,9 +11,6 @@
 
     <% if logged_in? %>
     <li class="nav-item">
-      <a class="nav-link fs-5" href="/game/">Game</a>
-    </li>
-    <li class="nav-item">
       <%= link_to 'Logout', logout_path, method: :delete, class: "nav-link fs-5" %>
     </li>
     <% else %>

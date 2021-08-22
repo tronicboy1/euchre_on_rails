@@ -2,7 +2,7 @@ class GameController < ApplicationController
   include ApplicationHelper,GameHelper
   def show
     if current_user.room_id.nil?
-      @room = nil
+      redirect_to '/game/new'
     else
       @room ||= Room.find(current_user.room_id)
     end
@@ -18,6 +18,7 @@ class GameController < ApplicationController
   def create
     #byebug
     if setup_room()
+      new_update("#{current_user.username} created a new room!")
       flash[:success] = "Room created successfully!"
       redirect_to '/game'
     else
@@ -29,16 +30,7 @@ class GameController < ApplicationController
   end
 
   def destroy
-    room = Room.find(current_user.room_id)
-    associated_users = [room.player1_id,room.player2_id,room.player3_id,room.player4_id]
-    associated_users.each do |id|
-      if id != 0
-        user = User.find(id)
-        user.room_id = nil
-        user.save(validate: false)
-      end
-    end
-    room.destroy
+    destroy_room
     redirect_to '/game'
 
 

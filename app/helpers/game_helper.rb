@@ -53,10 +53,8 @@ module GameHelper
       end
       return true
     else
-      byebug
       return false
     end
-
   end
 
   #get rooms user is associated with and return with room id
@@ -67,7 +65,8 @@ module GameHelper
   #create list with computer and all users in list so player can create room accessable to friends
   def add_player_list
     @users = User.all
-    @users = @users.collect{|user| [user.username,user.id]}
+    #do not collect users currently in a room
+    @users = @users.collect{|user| [user.username,user.id] if user.room_id.nil?}
     #remove user from list to avoid bugs
     @users.delete([current_user.username,current_user.id])
     @users.unshift(["Computer","computer"])

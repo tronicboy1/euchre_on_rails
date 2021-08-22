@@ -18,6 +18,9 @@ class SessionsController < ApplicationController
   end
 
   def destroy
+    if !current_user.room_id.nil?
+      destroy_room
+    end
     session.clear
     flash[:success] = "Logged out. Come back soon!"
     redirect_to root_path
