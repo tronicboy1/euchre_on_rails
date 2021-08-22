@@ -1,7 +1,10 @@
 class GameController < ApplicationController
   include ApplicationHelper,GameHelper
   def show
-    if current_user.room_id.nil?
+    if !logged_in?
+      flash[:warning] = "You must login to access this page."
+      redirect_to '/login'
+    elsif current_user.room_id.nil?
       redirect_to '/game/new'
     else
       @room ||= Room.find(current_user.room_id)
@@ -11,7 +14,12 @@ class GameController < ApplicationController
   #accept user input for new room
   #invite players and decide how many CPU players
   def new
-    add_player_list
+    if !logged_in?
+      flash[:warning] = "You must login to access this page."
+      redirect_to '/login'
+    else
+      add_player_list
+    end
     #@room = Room.new
   end
 

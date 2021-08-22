@@ -1,4 +1,5 @@
 module ApplicationHelper
+
   def new_update(text)
     update = Gameupdates.new(text: text)
     update.save
