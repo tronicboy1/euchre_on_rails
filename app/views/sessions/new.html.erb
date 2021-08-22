@@ -15,8 +15,10 @@
     <%= f.label :password, "Password:", class: "form-label" %>
     <br><%= f.password_field :password, class: "form-control", placeholder: "Password123" %>
   </div>
+  <div class="d-grid">
+    <%= f.submit "Login", class: "btn btn-secondary btn-lg" %>
+  </div>
 
-  <p><%= f.submit "Login", class: "btn btn-secondary" %></p>
 
   <% end %>
 
