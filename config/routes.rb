@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   get 'game', to: 'game#show'
   get 'game/new', to: 'game#new'
   post 'game', to: 'game#create'
-  delete 'game', to: 'game#destroy'
+  delete 'game/leave', to: 'game#destroy'
   resources :gameupdates
   resources :users, only: [:new,:create,:index]
   get 'login', to: 'sessions#new'

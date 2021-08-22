@@ -19,22 +19,28 @@ module GameHelper
     new_room.player1_id = player1_id
     #only add human players to playerid array to avoid error
     playerid_arr = [player1_id]
-    if player2_id != "computer"
+    if player2_id == "computer"
+      new_room.player2_id = 0
+    else
       new_room.player2_id = player2_id
       playerid_arr.push(player2_id)
     end
 
     #check for redundancies
-    if player3_id == player2_id
+    if player3_id == player2_id && player3_id != "computer"
       return false
-    elsif player3_id != "computer"
+    elsif player3_id == "computer"
+      new_room.player3_id = 0
+    else
       new_room.player3_id = player3_id
       playerid_arr.push(player3_id)
     end
 
-    if [player2_id,player3_id].include?(player4_id)
+    if [player2_id,player3_id].include?(player4_id) && player4_id != "computer"
       return false
-    elsif params[:player4_id][:id] != "computer"
+    elsif player4_id = "computer"
+      new_room.player4_id = 0
+    else
       new_room.player4_id = player4_id
       playerid_arr.push(player4_id)
     end
@@ -47,6 +53,7 @@ module GameHelper
       end
       return true
     else
+      byebug
       return false
     end
 

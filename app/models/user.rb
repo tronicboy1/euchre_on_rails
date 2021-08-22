@@ -9,7 +9,6 @@ class User < ApplicationRecord
   validates_confirmation_of :password
 
   has_many :gameupdates
-  belongs_to :room, optional: true
 
   has_secure_password
 end

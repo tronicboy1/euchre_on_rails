@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_22_005247) do
+ActiveRecord::Schema.define(version: 2021_08_22_070155) do
 
   create_table "gameupdates", force: :cascade do |t|
     t.text "text", null: false
@@ -20,15 +20,13 @@ ActiveRecord::Schema.define(version: 2021_08_22_005247) do
   end
 
   create_table "room", force: :cascade do |t|
-    t.text "room_name", null: false
+    t.string "room_name"
     t.integer "player1_id"
     t.integer "player2_id"
     t.integer "player3_id"
     t.integer "player4_id"
-    t.index ["player1_id"], name: "index_room_on_player1_id"
-    t.index ["player2_id"], name: "index_room_on_player2_id"
-    t.index ["player3_id"], name: "index_room_on_player3_id"
-    t.index ["player4_id"], name: "index_room_on_player4_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "user", force: :cascade do |t|
@@ -40,8 +38,4 @@ ActiveRecord::Schema.define(version: 2021_08_22_005247) do
   end
 
   add_foreign_key "gameupdates", "user"
-  add_foreign_key "room", "user", column: "player1_id"
-  add_foreign_key "room", "user", column: "player2_id"
-  add_foreign_key "room", "user", column: "player3_id"
-  add_foreign_key "room", "user", column: "player4_id"
 end

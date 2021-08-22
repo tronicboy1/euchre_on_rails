@@ -1,0 +1,15 @@
+
+
+<div class="container py-3">
+  <h1>Room Name: <%= @room.room_name %> </h1>
+</div>
+
+<div class="container pb-3">
+
+</div>
+
+<div class="container pb-3">
+  <%= form_with url: '/game/leave', method: :delete do |f| %>
+    <%= f.submit "Leave Room", class: "btn btn-secondary" %>
+  <% end %>
+</div>
