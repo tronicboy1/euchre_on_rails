@@ -9,8 +9,7 @@ class GameController < ApplicationController
     elsif current_user.room_id.nil?
       redirect_to '/game/new'
     else
-      params[:room_id] = current_user.room_id
-      @room ||= Room.find(current_user.room_id)
+      @room ||= Room.find(refresh_userinfo_from_db.room_id)
     end
   end
 
@@ -20,6 +19,8 @@ class GameController < ApplicationController
     if !logged_in?
       flash[:warning] = "You must login to access this page."
       redirect_to '/login'
+    elsif !refresh_userinfo_from_db.room_id.nil?
+      redirect_to '/game'
     else
       add_player_list
     end

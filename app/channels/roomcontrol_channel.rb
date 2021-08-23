@@ -4,12 +4,14 @@ class RoomcontrolChannel < ApplicationCable::Channel
   end
 
   def receive(data)
-    puts "received data from user"
-    ActionCable.server.broadcast("chat_#{params[:room_id]}","data transmitted from server")
+    puts "received data from user #{data}"
+    ActionCable.server.broadcast("chat_#{params[:room_id]}","\ndata transmitted from server\n")
   end
 
   def unsubscribed
     # Any cleanup needed when channel is unsubscribed
+    puts "user left room"
+    ActionCable.server.broadcast("chat_#{params[:room_id]}","player left room, room has been destroyed")
   end
 
   def speak

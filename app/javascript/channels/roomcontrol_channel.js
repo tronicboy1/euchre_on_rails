@@ -32,7 +32,11 @@ document.addEventListener('turbolinks:load', () => {
     });
 
     $('#submitchat').on('click', function() {
-      $('#chatbox').append("submit button clicked" + "\n")
-      roomChannel.send({ message: "test message" })
+
+      roomChannel.send({ message: "test message" });
+    });
+
+    $('#leave-room').on('click', function() {
+      roomChannel.unsubscribe();
     });
 })
