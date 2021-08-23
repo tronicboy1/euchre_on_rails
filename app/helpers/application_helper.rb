@@ -14,6 +14,10 @@ module ApplicationHelper
     return @current_user ||= User.find_by(id: session[:user_id])
   end
 
+  def refresh_userinfo_from_db
+    return @current_user = User.find_by(id: session[:user_id])
+  end
+
   def logged_in?
     current_user
     return !@current_user.nil?

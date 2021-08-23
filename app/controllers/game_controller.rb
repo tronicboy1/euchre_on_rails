@@ -1,6 +1,6 @@
 class GameController < ApplicationController
   include ApplicationHelper,GameHelper
-  
+
   def show
     #redirect if not logged in
     if !logged_in?
@@ -9,7 +9,7 @@ class GameController < ApplicationController
     elsif current_user.room_id.nil?
       redirect_to '/game/new'
     else
-      @room ||= Room.find(current_user.room_id)
+      @room ||= Room.find(refresh_userinfo_from_db.room_id)
     end
   end
 
@@ -19,6 +19,8 @@ class GameController < ApplicationController
     if !logged_in?
       flash[:warning] = "You must login to access this page."
       redirect_to '/login'
+    elsif !refresh_userinfo_from_db.room_id.nil?
+      redirect_to '/game'
     else
       add_player_list
     end
@@ -37,7 +39,9 @@ class GameController < ApplicationController
   end
 
   def destroy
-    destroy_room
+    if !current_user.room_id.nil?
+      destroy_room
+    end
     redirect_to '/game'
   end
 
