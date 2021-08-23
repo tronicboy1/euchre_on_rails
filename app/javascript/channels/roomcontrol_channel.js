@@ -16,6 +16,7 @@ document.addEventListener('turbolinks:load', () => {
       connected() {
         let userid = "#" + $("#user-id").data('user-id') + "-status";
         $(userid).append("Online");
+        $(userid).attr('class', 'text-success')
         console.log('connected');
       },
 
@@ -28,6 +29,10 @@ document.addEventListener('turbolinks:load', () => {
         $('#chatbox').append(data.message);
         $(data.online).empty();
         $(data.online).append("Online");
+        $(data.online).attr('class', 'text-success');
+        $(data.disconnected).empty();
+        $(data.disconnected).append("Disconnected");
+        $(data.disconnected).attr('class', 'text-danger');
       }
 
     });

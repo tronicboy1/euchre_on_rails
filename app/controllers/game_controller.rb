@@ -39,7 +39,9 @@ class GameController < ApplicationController
   end
 
   def destroy
-    destroy_room
+    if !current_user.room_id.nil?
+      destroy_room
+    end
     redirect_to '/game'
   end
 

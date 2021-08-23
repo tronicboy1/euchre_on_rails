@@ -21,22 +21,22 @@
   <tbody>
     <tr>
       <th scope="row">Status:</th>
-      <td class="text-success font-weight-bold" id="<%= @room.player1_id %>-status"></td>
+      <td class="" id="<%= @room.player1_id %>-status"></td>
 
       <% if @room.player2_id != 0 %>
-      <td class="text-success font-weight-bold" id="<%= @room.player2_id %>-status"></td>
+      <td class="" id="<%= @room.player2_id %>-status"></td>
       <% else %>
       <td id="0-status">Computer</td>
       <% end %>
 
       <% if @room.player3_id != 0 %>
-      <td class="text-success font-weight-bold" id="<%= @room.player3_id %>-status"></td>
+      <td class="" id="<%= @room.player3_id %>-status"></td>
       <% else %>
       <td id="0-status">Computer</td>
       <% end %>
 
       <% if @room.player4_id != 0 %>
-      <td class="text-success font-weight-bold" id="<%= @room.player4_id %>-status"></td>
+      <td class="" id="<%= @room.player4_id %>-status"></td>
       <% else %>
       <td id="0-status">Computer</td>
       <% end %>
