@@ -28,6 +28,8 @@ class RoomcontrolChannel < ApplicationCable::Channel
 
     if dic["command"] == "start-game"
       puts "received command #{dic["command"]}"
+      f = File.open("./app/assets/images/pe.jpg","rb")
+      ActionCable.server.broadcast("chat_#{params[:room_id]}",{ "img" => f.read() })
     end
 
 
