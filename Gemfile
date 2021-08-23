@@ -60,4 +60,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 #install rmagick for image manipulation with cards
 gem 'carrierwave'
-gem 'rmagick'
+#gem 'rmagick'
+
+#install jquery for use with websockets
+gem 'jquery'
