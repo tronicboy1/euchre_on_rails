@@ -62,6 +62,6 @@ document.addEventListener('turbolinks:load', () => {
     });
 
     $('#start-game').on('click', function() {
-      roomChannel.send({ type: "gamecontrol", action: "start-game" });
+      roomChannel.send({ type: "gamecontrol", command: "test" });
     });
 })

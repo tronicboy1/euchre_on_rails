@@ -5,13 +5,13 @@ class RoomcontrolChannel < ApplicationCable::Channel
   end
 
   def receive(data)
+    dic = data.to_h
     #check if received data is a chat message or game gamecontrol
-    ActionCable.server.broadcast("chat_#{params[:room_id]}", data)
-    # if data[:type] == "chat"
-    #   ActionCable.server.broadcast("chat_#{params[:room_id]}", data)
-    # elsif data[:type] == "gamecontrol"
-    #   puts data[:action]
-    # end
+    if dic["type"] == "chat"
+      ActionCable.server.broadcast("chat_#{params[:room_id]}", data)
+    elsif dic["type"] == "gamecontrol"
+      gamecontrol_shori(dic)
+    end
   end
 
   def unsubscribed
@@ -21,5 +21,10 @@ class RoomcontrolChannel < ApplicationCable::Channel
 
   def speak
 
+  end
+
+  private
+  def gamecontrol_shori(dic)
+    puts "received command #{dic["command"]}"
   end
 end
