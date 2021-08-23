@@ -46,15 +46,23 @@
 </div>
 
 <div class="container pb-3">
-  <textarea id="chatbox" name="chatbox" rows="8"></textarea>
-
-  <textarea id="chatinput" name="chatinput" rows="2"></textarea>
-
-  <button id="submitchat" type="button" name="button">Send message</button>
+  <div class="pb-2">
+    <textarea class="form-control" id="chatbox" name="chatbox" rows="6"></textarea>
+  </div>
+  <div class="pb-2">
+    <textarea class="form-control" id="chatinput" name="chatinput" rows="1"></textarea>
+  </div>
+  <div class="pb-5">
+    <button class="btn btn-secondary" id="submitchat" type="button" name="button">Send message</button>
+  </div>
 </div>
 
 <div class="container pb-3">
+
   <%= form_with url: '/game/leave', method: :delete do |f| %>
+    <div class="text-right">
     <%= f.submit "Leave Room", class: "btn btn-secondary", id:"leave-room" %>
+    </div>
   <% end %>
+
 </div>

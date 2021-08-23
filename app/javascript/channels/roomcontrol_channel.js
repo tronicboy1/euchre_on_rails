@@ -26,7 +26,8 @@ document.addEventListener('turbolinks:load', () => {
 
       received(data) {
         // Called when there's incoming data on the websocket for this channel
-        $('#chatbox').append(data.message);
+        $('#chatbox').val($('#chatbox').val() + data.message + '\n');
+        $('#chatbox').scrollTop($('#chatbox')[0].scrollHeight);
         $(data.online).empty();
         $(data.online).append("Online");
         $(data.online).attr('class', 'text-success');
@@ -39,7 +40,21 @@ document.addEventListener('turbolinks:load', () => {
 
     $('#submitchat').on('click', function() {
       let userid = "#" + $("#user-id").data('user-id') + "-status";
-      roomChannel.send({ message: "test message\n", online: userid });
+      let text = $('#chatinput').val();
+      let username = $("#username").data('username');
+      roomChannel.send({ message: username + " : " + text, online: userid });
+      $('#chatinput').val('');
+    });
+
+    $('#chatinput').keypress(function(e) {
+      var code = e.keyCode || e.which;
+      if (code == 13) {
+        let text = $('#chatinput').val();
+        let userid = "#" + $("#user-id").data('user-id') + "-status";
+        let username = $("#username").data('username');
+        $('#chatinput').val('');
+        roomChannel.send({ message: username + " : " + text, online: userid });
+        }
     });
 
     $('#leave-room').on('click', function() {
