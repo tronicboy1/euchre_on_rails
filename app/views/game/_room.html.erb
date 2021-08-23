@@ -1,9 +1,48 @@
 <!-- use this to pass in room id variable to javascript -->
 <div id='room-id' data-room-id="<%= @room.id %>"></div>
 <div id='username' data-username="<%= current_user.username %>"></div>
+<div id='user-id' data-user-id="<%= current_user.id %>"></div>
 
 <div class="container py-3">
   <h1>Room Name: <%= @room.room_name %> </h1>
+</div>
+
+<div class="container pb-3">
+  <table class="table">
+  <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col">Player 1</th>
+      <th scope="col">Player 2</th>
+      <th scope="col">Player 3</th>
+      <th scope="col">Player 4</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">Status:</th>
+      <td class="text-success font-weight-bold" id="<%= @room.player1_id %>-status"></td>
+
+      <% if @room.player2_id != 0 %>
+      <td class="text-success font-weight-bold" id="<%= @room.player2_id %>-status"></td>
+      <% else %>
+      <td id="0-status">Computer</td>
+      <% end %>
+
+      <% if @room.player3_id != 0 %>
+      <td class="text-success font-weight-bold" id="<%= @room.player3_id %>-status"></td>
+      <% else %>
+      <td id="0-status">Computer</td>
+      <% end %>
+
+      <% if @room.player4_id != 0 %>
+      <td class="text-success font-weight-bold" id="<%= @room.player4_id %>-status"></td>
+      <% else %>
+      <td id="0-status">Computer</td>
+      <% end %>
+    </tr>
+  </tbody>
+</table>
 </div>
 
 <div class="container pb-3">

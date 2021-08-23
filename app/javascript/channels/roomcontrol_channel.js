@@ -12,12 +12,11 @@ document.addEventListener('turbolinks:load', () => {
         return
     }
 
-    const roomChannel = consumer.subscriptions.create({ channel: "RoomcontrolChannel", room_id: $("#room-id").data('room-id') }, {
+    const roomChannel = consumer.subscriptions.create({ channel: "RoomcontrolChannel", room_id: $("#room-id").data('room-id'), username: $("#username").data('username'), user_id: $("#user-id").data('user-id') }, {
       connected() {
-        // Called when the subscription is ready for use on the server
-        $('#chatbox').append("connected \n")
-        $('#chatbox').append($("#username").data('username'))
-        console.log('connected')
+        let userid = "#" + $("#user-id").data('user-id') + "-status";
+        $(userid).append("Online");
+        console.log('connected');
       },
 
       disconnected() {
@@ -26,14 +25,16 @@ document.addEventListener('turbolinks:load', () => {
 
       received(data) {
         // Called when there's incoming data on the websocket for this channel
-        $('#chatbox').append(data)
+        $('#chatbox').append(data.message);
+        $(data.online).empty();
+        $(data.online).append("Online");
       }
 
     });
 
     $('#submitchat').on('click', function() {
-
-      roomChannel.send({ message: "test message" });
+      let userid = "#" + $("#user-id").data('user-id') + "-status";
+      roomChannel.send({ message: "test message\n", online: userid });
     });
 
     $('#leave-room').on('click', function() {
