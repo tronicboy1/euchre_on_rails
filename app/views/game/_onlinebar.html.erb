@@ -1,0 +1,37 @@
+<div class="container pb-3">
+  <table class="table">
+  <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col">Player 1</th>
+      <th scope="col">Player 2</th>
+      <th scope="col">Player 3</th>
+      <th scope="col">Player 4</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">Status:</th>
+      <td class="" id="<%= @room.player1_id %>-status"></td>
+
+      <% if @room.player2_id != 0 %>
+      <td class="" id="<%= @room.player2_id %>-status"></td>
+      <% else %>
+      <td id="0-status">CPU</td>
+      <% end %>
+
+      <% if @room.player3_id != 0 %>
+      <td class="" id="<%= @room.player3_id %>-status"></td>
+      <% else %>
+      <td id="0-status">CPU</td>
+      <% end %>
+
+      <% if @room.player4_id != 0 %>
+      <td class="" id="<%= @room.player4_id %>-status"></td>
+      <% else %>
+      <td id="0-status">CPU</td>
+      <% end %>
+    </tr>
+  </tbody>
+</table>
+</div>

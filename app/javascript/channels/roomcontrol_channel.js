@@ -32,7 +32,7 @@ document.addEventListener('turbolinks:load', () => {
         $(data.online).append("Online");
         $(data.online).attr('class', 'text-success');
         $(data.disconnected).empty();
-        $(data.disconnected).append("Disconnected");
+        $(data.disconnected).append("Offline");
         $(data.disconnected).attr('class', 'text-danger');
       }
 
@@ -42,7 +42,7 @@ document.addEventListener('turbolinks:load', () => {
       let userid = "#" + $("#user-id").data('user-id') + "-status";
       let text = $('#chatinput').val();
       let username = $("#username").data('username');
-      roomChannel.send({ message: username + " : " + text, online: userid });
+      roomChannel.send({ type: "chat", message: username + " : " + text, online: userid });
       $('#chatinput').val('');
     });
 
@@ -53,11 +53,15 @@ document.addEventListener('turbolinks:load', () => {
         let userid = "#" + $("#user-id").data('user-id') + "-status";
         let username = $("#username").data('username');
         $('#chatinput').val('');
-        roomChannel.send({ message: username + " : " + text, online: userid });
+        roomChannel.send({ type: "chat", message: username + " : " + text, online: userid });
         }
     });
 
     $('#leave-room').on('click', function() {
       roomChannel.unsubscribe();
+    });
+
+    $('#start-game').on('click', function() {
+      roomChannel.send({ type: "gamecontrol", action: "start-game" });
     });
 })
