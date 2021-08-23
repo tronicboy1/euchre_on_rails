@@ -10,10 +10,14 @@
 
 <%= render 'onlinebar' %>
 
-
+<% if @room.player1_id == current_user.id %>
 <div class="container mb-3">
   <button id="start-game" class="btn btn-primary" type="button" name="button">Start Game</button>
 </div>
+
+<%= render 'player1' %>
+
+<% end %>
 
 
 <%= render 'chatbox' %>
