@@ -1,11 +1,15 @@
 <div class="container pb-3">
-  <div class="pb-2">
-    <textarea class="form-control" id="chatbox" name="chatbox" rows="6"></textarea>
+  <div class="d-grid">
+    <button id="toggle-chat" class="btn btn-secondary btn-sm" type="button" name="button">Toggle Chat</button>
   </div>
-  <div class="pb-2">
-    <textarea class="form-control" id="chatinput" name="chatinput" rows="1"></textarea>
+
+  <div id="chat-group" class="">
+  <div class="input-group pb-2">
+    <textarea readonly class="form-control" id="chatbox" name="chatbox" rows="6"></textarea>
   </div>
-  <div class="d-grid pb-5">
-    <button class="btn btn-secondary" id="submitchat" type="button" name="button">Send message</button>
+  <div class="input-group pb-5">
+    <input class="form-control" id="chatinput" name="chatinput" placeholder="Input chat message here"></input>
+    <button class="btn btn-secondary" id="submitchat" type="button" name="button">Send</button>
   </div>
+</div>
 </div>

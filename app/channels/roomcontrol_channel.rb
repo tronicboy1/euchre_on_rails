@@ -25,6 +25,11 @@ class RoomcontrolChannel < ApplicationCable::Channel
 
   private
   def gamecontrol_shori(dic)
-    puts "received command #{dic["command"]}"
+
+    if dic["command"] == "start-game"
+      puts "received command #{dic["command"]}"
+    end
+
+
   end
 end

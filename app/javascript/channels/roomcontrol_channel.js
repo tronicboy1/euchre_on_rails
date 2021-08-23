@@ -6,7 +6,6 @@ document.addEventListener('turbolinks:load', () => {
 
     // js.erb 内で使用できるように変数を定義しておく
     window.messageContainer = document.getElementById('chatbox')
-
     // 以下のプログラムが他のページで動作しないようにしておく
     if (messageContainer === null) {
         return
@@ -62,6 +61,10 @@ document.addEventListener('turbolinks:load', () => {
     });
 
     $('#start-game').on('click', function() {
-      roomChannel.send({ type: "gamecontrol", command: "test" });
+      roomChannel.send({ type: "gamecontrol", command: "start-game" });
+    });
+
+    $('#toggle-chat').on('click', function() {
+      $('#chat-group').toggle();
     });
 })
