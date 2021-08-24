@@ -29,11 +29,14 @@ class RoomcontrolChannel < ApplicationCable::Channel
   def gamecontrol_shori(dic)
 
     if dic["command"] == "start-game"
-      puts "received command #{dic["command"]}"
 
-      img = File.open("./app/assets/images/pe.jpg")
-      b64_img = Base64.encode64(img.read)
-      ActionCable.server.broadcast("chat_#{params[:room_id]}",{ "img" => b64_img })
+      card_a = Dir.glob("./app/assets/images/cards/*")
+      card_a.each do |path|
+        img = File.open(path)
+        b64_img = Base64.encode64(img.read)
+        ActionCable.server.broadcast("chat_#{params[:room_id]}",{ "img" => b64_img })
+        sleep 1
+      end
     end
 
 
