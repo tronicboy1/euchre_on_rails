@@ -14,6 +14,7 @@ document.addEventListener('turbolinks:load', () => {
     const roomChannel = consumer.subscriptions.create({ channel: "RoomcontrolChannel", room_id: $("#room-id").data('room-id'), username: $("#username").data('username'), user_id: $("#user-id").data('user-id') }, {
       connected() {
         let userid = "#" + $("#user-id").data('user-id') + "-status";
+        $(userid).empty();
         $(userid).append("Online");
         $(userid).attr('class', 'text-success')
         console.log('connected');
@@ -25,14 +26,31 @@ document.addEventListener('turbolinks:load', () => {
 
       received(data) {
         // Called when there's incoming data on the websocket for this channel
-        $('#chatbox').val($('#chatbox').val() + data.message + '\n');
-        $('#chatbox').scrollTop($('#chatbox')[0].scrollHeight);
-        $(data.online).empty();
-        $(data.online).append("Online");
-        $(data.online).attr('class', 'text-success');
-        $(data.disconnected).empty();
-        $(data.disconnected).append("Offline");
-        $(data.disconnected).attr('class', 'text-danger');
+
+        if (typeof data.img !== 'undefined') {
+          console.log("img received")
+          // var base64Str = data.img;
+          // var image_id = document.getElementById('p1-guiimg');
+          // image_id.src = "data:image/jpeg;base64" + base64Str
+
+	        var img_element = document.getElementById("p1-guiimg");
+	        var img_base64_content = data.img;
+	        img_element.src = "data:image/jpeg;base64," + img_base64_content;
+
+        } else if (typeof data.message !== 'undefined') {
+          console.log("message received")
+          $('#chatbox').val($('#chatbox').val() + data.message + '\n');
+          $('#chatbox').scrollTop($('#chatbox')[0].scrollHeight);
+          if (typeof data.online !== 'undefined') {
+            $(data.online).empty();
+            $(data.online).append("Online");
+            $(data.online).attr('class', 'text-success');
+          } else if (typeof data.disconnected !== 'undefined') {
+            $(data.disconnected).empty("Offline");
+            $(data.disconnected).append("Offline");
+            $(data.disconnected).attr('class', 'text-danger');
+          }
+        }
       }
 
     });
@@ -67,6 +85,7 @@ document.addEventListener('turbolinks:load', () => {
     $('#toggle-chat').on('click', function() {
       $('#chat-group').toggle();
     });
+
 
     // socket.on('p2-mochihai', function(data) {
     //     var arrayBufferView = new Uint8Array( data.img );
