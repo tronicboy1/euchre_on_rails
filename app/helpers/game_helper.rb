@@ -35,10 +35,9 @@ module GameHelper
       new_room.player3_id = player3_id
       playerid_arr.push(player3_id)
     end
-
     if [player2_id,player3_id].include?(player4_id) && player4_id != "computer"
       return false
-    elsif player4_id = "computer"
+    elsif player4_id == "computer"
       new_room.player4_id = 0
     else
       new_room.player4_id = player4_id
@@ -69,6 +68,8 @@ module GameHelper
     @users = @users.collect{|user| [user.username,user.id] if user.room_id.nil?}
     #remove user from list to avoid bugs
     @users.delete([current_user.username,current_user.id])
+    #remove blank arrays from list
+    @users.delete_if{|x| x.nil?}
     @users.unshift(["Computer","computer"])
   end
 
