@@ -1,3 +1,5 @@
+require 'base64'
+
 class RoomcontrolChannel < ApplicationCable::Channel
   def subscribed
     stream_from "chat_#{params[:room_id]}"
@@ -28,6 +30,10 @@ class RoomcontrolChannel < ApplicationCable::Channel
 
     if dic["command"] == "start-game"
       puts "received command #{dic["command"]}"
+
+      img = File.open("./app/assets/images/pe.jpg")
+      b64_img = Base64.encode64(img.read)
+      ActionCable.server.broadcast("chat_#{params[:room_id]}",{ "img" => b64_img })
     end
 
 
