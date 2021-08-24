@@ -29,10 +29,6 @@ document.addEventListener('turbolinks:load', () => {
 
         if (typeof data.img !== 'undefined') {
           console.log("img received")
-          // var base64Str = data.img;
-          // var image_id = document.getElementById('p1-guiimg');
-          // image_id.src = "data:image/jpeg;base64" + base64Str
-
 	        var img_element = document.getElementById("p1-guiimg");
 	        var img_base64_content = data.img;
 	        img_element.src = "data:image/jpeg;base64," + img_base64_content;
@@ -85,15 +81,4 @@ document.addEventListener('turbolinks:load', () => {
     $('#toggle-chat').on('click', function() {
       $('#chat-group').toggle();
     });
-
-
-    // socket.on('p2-mochihai', function(data) {
-    //     var arrayBufferView = new Uint8Array( data.img );
-    //     var blob = new Blob( [ arrayBufferView ], { type: "image/jpeg" } );
-    //     var urlCreator = window.URL || window.webkitURL;
-    //     var imageUrl = urlCreator.createObjectURL( blob );
-    //     var image_id = document.getElementById('p2-mochihai');
-    //     image_id.src = imageUrl;
-    //     $('#p2-mochihai-container').show();
-    //     console.log('mochihai image received')
 })
