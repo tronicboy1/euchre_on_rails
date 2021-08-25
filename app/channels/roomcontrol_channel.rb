@@ -31,8 +31,9 @@ class RoomcontrolChannel < ApplicationCable::Channel
   def gamecontrol_shori(dic)
 
     if dic["command"] == "start-game"
+      game = Game.new(params[:room_id])
+      game.start_game
       byebug
-      player1 = Player.new(Room.find(params[:room_id]).player1_id)
       # deck = Euchre::Deck.new
       # deck.shuffle
       # deck.cards.each do |card|

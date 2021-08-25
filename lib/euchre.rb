@@ -66,6 +66,7 @@ module Euchre
   #round will hold data for each round such as next player and when round is finished
   #also will hold functions to update round information based on player input
   class Round
+    attr_accessor :current_player, :turn
 
     def initialize(player1,player2,player3,player4,turn)
       @player1 = player1
@@ -119,7 +120,7 @@ module Euchre
 
   #keep information on proceedings of all rounds and score
   class Game
-    attr_accessor :player1, :player2, :player3, :player4
+    attr_accessor :player1, :player2, :player3, :player4, :round
 
     def initialize(room_id)
       room = Room.find(room_id)
