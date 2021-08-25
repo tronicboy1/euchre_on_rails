@@ -6,7 +6,7 @@ module Euchre
     def initialize(suit,value)
       @suit = suit
       @value = value
-      path = "./app/assets/images/cards/#{suit},#{value}.png"
+      path = "./app/assets/images/cards/cards_sm/#{suit},#{value}.png"
       img = File.open(path,"rb")
       @b64_img = Base64.strict_encode64(img.read)
     end

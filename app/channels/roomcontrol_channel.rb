@@ -34,7 +34,7 @@ class RoomcontrolChannel < ApplicationCable::Channel
       deck = Euchre::Deck.new
       deck.cards.each do |card|
         ActionCable.server.broadcast("chat_#{params[:room_id]}",{ "img" => card.b64_img })
-        sleep 1
+        sleep 2
       end
     end
 
