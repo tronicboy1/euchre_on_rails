@@ -68,7 +68,8 @@ module Euchre
   class Round
     attr_accessor :current_player, :turn
 
-    def initialize(player1,player2,player3,player4,turn)
+    def initialize(player1,player2,player3,player4,turn,channel)
+      @channel = channel
       @player1 = player1
       @player2 = player2
       @player3 = player3
@@ -79,7 +80,7 @@ module Euchre
       @dealer = @player_list[@turn]
       next_player
       deal_cards
-
+      send_all_cards
 
     end
 
@@ -116,6 +117,16 @@ module Euchre
       end
     end
 
+    def send_all_cards
+      #player 1 cards
+      @player1.hand.each_with_index do |card, i|
+        ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "element" => "p1-card#{i}" })
+      end
+      #player2~4 cards require check to see if CPU or not
+
+      #ActionCable.server.broadcast("chat_#{params[:room_id]}",{ "img" => card.b64_img })
+    end
+
   end
 
   #keep information on proceedings of all rounds and score
@@ -123,6 +134,7 @@ module Euchre
     attr_accessor :player1, :player2, :player3, :player4, :round
 
     def initialize(room_id)
+      @channel = "chat_#{room_id}"
       room = Room.find(room_id)
       user = User.find(room.player1_id)
       @player1 = Player.new(user.id,user.username)
@@ -149,7 +161,7 @@ module Euchre
     end
 
     def start_game
-      @round = Round.new(@player1,@player2,@player3,@player4,0)
+      @round = Round.new(@player1,@player2,@player3,@player4,0,@channel)
     end
   end
 
