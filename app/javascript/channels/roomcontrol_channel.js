@@ -52,6 +52,8 @@ document.addEventListener('turbolinks:load', () => {
             $(data.disconnected).empty("Offline");
             $(data.disconnected).append("Offline");
             $(data.disconnected).attr('class', 'text-danger');
+          } else if (typeof data.hide !== 'undefined') {
+            $(data.hide).hide()
           }
         }
       }

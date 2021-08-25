@@ -122,8 +122,15 @@ module Euchre
       @player1.hand.each_with_index do |card, i|
         ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "element" => "p1-card#{i}", "show" => "#hand" })
       end
-      
+
       #player2~4 cards require check to see if CPU or not
+      [@player2,@player3,@player4].zip([2,3,4]).each do |player,n|
+        if player != 0
+          player.hand.each_with_index do |card, i|
+            ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "element" => "p#{n}-card#{i}", "show" => "#hand" })
+          end
+        end
+      end
 
       #ActionCable.server.broadcast("chat_#{params[:room_id]}",{ "img" => card.b64_img })
     end
