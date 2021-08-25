@@ -14,6 +14,7 @@ document.addEventListener('turbolinks:load', () => {
     //hide hand until cards are dealt
     $('#hand').hide();
     $('#turnup').hide();
+    $('#pickup-yesno').hide();
     $('#trump-selection').hide();
 
 
@@ -61,6 +62,8 @@ document.addEventListener('turbolinks:load', () => {
         if (typeof data.gameupdate !== 'undefined') {
           $(data.element).empty()
           $(data.element).append(data.gameupdate)
+          $(data.hide).hide()
+          $(data.show).show()
         } else if (typeof data.hide !== 'undefined') {
           $(data.hide).hide()
           $(data.show).show()
@@ -104,5 +107,14 @@ document.addEventListener('turbolinks:load', () => {
     });
     $('#start-game').on('click', function() {
       $('#start-game').hide();
+    });
+
+    $('#p1-pickup-yes').on('click', function() {
+      let userid = $("#user-id").data('user-id');
+      roomChannel.send({ type: "gamecontrol", command: true, id: userid });
+    });
+    $('#p1-pickup-no').on('click', function() {
+      let userid = $("#user-id").data('user-id');
+      roomChannel.send({ type: "gamecontrol", command: false, id: userid });
     });
 })

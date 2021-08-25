@@ -130,7 +130,7 @@ module Euchre
 
         else
           @status = "pickup_or_pass"
-          ActionCable.server.broadcast(@channel,{ "element" => "#game-telop", "gameupdate" => "Player #{@turn + 1}, Pass or Pickup?" })
+          ActionCable.server.broadcast(@channel,{ "element" => "#game-telop", "gameupdate" => "Player #{@turn + 1}, Pass or Pickup?","show" => "#pickup-yesno" })
 
         end
       elsif @pass_count == 4
@@ -226,10 +226,21 @@ module Euchre
     def start_game
       @round = Round.new(@player1,@player2,@player3,@player4,0,@channel,@status)
     end
+
+    def game_control(user_input)
+      if user_input["id"] == @round.current_player.id
+
+      else
+        puts "wrong player"
+      end
+    end
+
   end
 
-  def game_control(user_input)
 
-  end
+
+
+
+
 
 end
