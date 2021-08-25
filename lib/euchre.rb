@@ -66,7 +66,7 @@ module Euchre
   #round will hold data for each round such as next player and when round is finished
   #also will hold functions to update round information based on player input
   class Round
-    attr_accessor :current_player, :turn
+    attr_accessor :current_player, :turn, :trump, :turnup
 
     def initialize(player1,player2,player3,player4,turn,channel)
       @channel = channel
@@ -78,6 +78,8 @@ module Euchre
       @turn = turn
       @deck = Deck.new
       @dealer = @player_list[@turn]
+      #broadcast dealer to players
+      ActionCable.server.broadcast(@channel,{ "element" => "#dealer", "dealer" => "Dealer: Player #{@turn + 1}" })
       next_player
       deal_cards
       send_all_cards
@@ -105,6 +107,30 @@ module Euchre
           end
         end
       end
+
+      #set turnup card and send to players
+      @turnup = @deck.deal_card
+      ActionCable.server.broadcast(@channel,{ "img" => @turnup.b64_img, "element" => "turnup-card", "show" => "#turnup" })
+    end
+
+
+    def pickup_or_pass
+
+    end
+
+
+
+
+    def turn
+      if @current_player.id != 0
+
+      else
+
+      end
+    end
+
+    def cycle_to_human
+
     end
 
     def next_player
@@ -131,8 +157,6 @@ module Euchre
           end
         end
       end
-
-      #ActionCable.server.broadcast("chat_#{params[:room_id]}",{ "img" => card.b64_img })
     end
 
   end

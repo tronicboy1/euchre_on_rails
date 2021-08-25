@@ -12,7 +12,9 @@ document.addEventListener('turbolinks:load', () => {
     }
 
     //hide hand until cards are dealt
-    $('#hand').hide()
+    $('#hand').hide();
+    $('#turnup').hide();
+
 
     const roomChannel = consumer.subscriptions.create({ channel: "RoomcontrolChannel", room_id: $("#room-id").data('room-id'), username: $("#username").data('username'), user_id: $("#user-id").data('user-id') }, {
       connected() {
@@ -55,6 +57,11 @@ document.addEventListener('turbolinks:load', () => {
           } else if (typeof data.hide !== 'undefined') {
             $(data.hide).hide()
           }
+        }
+
+        if (typeof data.dealer !== 'undefined') {
+          $(data.element).empty()
+          $(data.element).append(data.dealer)
         }
       }
 
