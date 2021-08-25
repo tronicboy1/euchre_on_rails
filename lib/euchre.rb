@@ -111,6 +111,7 @@ module Euchre
       end
 
       send_all_cards
+      sleep(1)
 
       #set turnup card and send to players
       @turnup = @deck.deal_card
@@ -132,6 +133,7 @@ module Euchre
           end
 
         else
+          @pass_count += 1
           @status = "pickup_or_pass"
           ActionCable.server.broadcast(@channel,{ "element" => "#game-telop", "gameupdate" => "Player #{@turn + 1}, Pass or Pickup?","show" => "#pickup-yesno" })
 
@@ -159,12 +161,14 @@ module Euchre
 
     def cycle_to_human
       while @current_player.id == 0
-        if @current_player.id != 0
-          break
-        end
         if @status == "pickup_or_pass"
           pickup_or_pass
         end
+      end
+      #pass on to next player action
+      if @status == "pickup_or_pass"
+        pickup_or_pass
+
       end
     end
 
