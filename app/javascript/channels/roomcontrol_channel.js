@@ -14,7 +14,7 @@ document.addEventListener('turbolinks:load', () => {
     //hide hand until cards are dealt
     $('#hand').hide();
     $('#turnup').hide();
-    $('#trump-selection')
+    $('#trump-selection').hide();
 
 
     const roomChannel = consumer.subscriptions.create({ channel: "RoomcontrolChannel", room_id: $("#room-id").data('room-id'), username: $("#username").data('username'), user_id: $("#user-id").data('user-id') }, {
