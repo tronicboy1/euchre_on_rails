@@ -32,7 +32,6 @@ class RoomcontrolChannel < ApplicationCable::Channel
 
     if dic["command"] == "start-game"
       deck = Euchre::Deck.new
-      byebug
       deck.cards.each do |card|
         ActionCable.server.broadcast("chat_#{params[:room_id]}",{ "img" => card.b64_img })
         sleep 1

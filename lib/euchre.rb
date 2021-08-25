@@ -7,8 +7,8 @@ module Euchre
       @suit = suit
       @value = value
       path = "./app/assets/images/cards/#{suit},#{value}.png"
-      img = File.open(path)
-      @b64_img = Base64.encode64(img.read)
+      img = File.open(path,"rb")
+      @b64_img = Base64.strict_encode64(img.read)
     end
 
     def inspect
@@ -19,6 +19,7 @@ module Euchre
 
   #generate euchre deck here with shuffle function
   class Deck
+    attr_accessor :cards
 
     def initialize
       @cards = []
@@ -31,7 +32,6 @@ module Euchre
           @cards.push(card)
         end
       end
-
     end
 
     def shuffle
