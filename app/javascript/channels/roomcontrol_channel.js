@@ -1,15 +1,18 @@
 import consumer from "./consumer"
 
 
-// turbolinks の読み込みが終わった後にidを取得しないと，エラーが出ます。
+
 document.addEventListener('turbolinks:load', () => {
 
-    // js.erb 内で使用できるように変数を定義しておく
+
     window.messageContainer = document.getElementById('chatbox')
-    // 以下のプログラムが他のページで動作しないようにしておく
+
     if (messageContainer === null) {
         return
     }
+
+    //hide hand until cards are dealt
+    $('#hand').hide()
 
     const roomChannel = consumer.subscriptions.create({ channel: "RoomcontrolChannel", room_id: $("#room-id").data('room-id'), username: $("#username").data('username'), user_id: $("#user-id").data('user-id') }, {
       connected() {
@@ -32,6 +35,10 @@ document.addEventListener('turbolinks:load', () => {
 	        var img_element = document.getElementById(data.element);
 	        var img_base64_content = data.img;
 	        img_element.src = "data:image/png;base64," + img_base64_content;
+          if (typeof data.show !== 'undefined') {
+            console.log(data)
+            $(data.show).show()
+          }
 
         } else if (typeof data.message !== 'undefined') {
           console.log("message received")

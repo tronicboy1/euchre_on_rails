@@ -120,8 +120,9 @@ module Euchre
     def send_all_cards
       #player 1 cards
       @player1.hand.each_with_index do |card, i|
-        ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "element" => "p1-card#{i}" })
+        ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "element" => "p1-card#{i}", "show" => "#hand" })
       end
+      
       #player2~4 cards require check to see if CPU or not
 
       #ActionCable.server.broadcast("chat_#{params[:room_id]}",{ "img" => card.b64_img })
