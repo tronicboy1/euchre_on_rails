@@ -79,7 +79,7 @@ module Euchre
       @deck = Deck.new
       @dealer = @player_list[@turn]
       #broadcast dealer to players
-      ActionCable.server.broadcast(@channel,{ "element" => "#dealer", "dealer" => "Dealer: Player #{@turn + 1}" })
+      ActionCable.server.broadcast(@channel,{ "element" => "#p#{@turn + 1}-dealer", "gameupdate" => "●" })
       next_player
       deal_cards
       send_all_cards
@@ -163,9 +163,10 @@ module Euchre
 
   #keep information on proceedings of all rounds and score
   class Game
-    attr_accessor :player1, :player2, :player3, :player4, :round
+    attr_accessor :player1, :player2, :player3, :player4, :round, :status
 
     def initialize(room_id)
+      @status = "start"
       @channel = "chat_#{room_id}"
       room = Room.find(room_id)
       user = User.find(room.player1_id)
@@ -195,6 +196,10 @@ module Euchre
     def start_game
       @round = Round.new(@player1,@player2,@player3,@player4,0,@channel)
     end
+  end
+
+  def game_control(user_input)
+
   end
 
 end

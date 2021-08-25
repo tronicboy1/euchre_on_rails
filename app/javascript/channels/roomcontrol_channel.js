@@ -59,9 +59,9 @@ document.addEventListener('turbolinks:load', () => {
           }
         }
 
-        if (typeof data.dealer !== 'undefined') {
+        if (typeof data.gameupdate !== 'undefined') {
           $(data.element).empty()
-          $(data.element).append(data.dealer)
+          $(data.element).append(data.gameupdate)
         }
       }
 
@@ -96,5 +96,11 @@ document.addEventListener('turbolinks:load', () => {
 
     $('#toggle-chat').on('click', function() {
       $('#chat-group').toggle();
+    });
+    $('#toggle-onlinebar').on('click', function() {
+      $('#onlinebar').toggle();
+    });
+    $('#start-game').on('click', function() {
+      $('#start-game').hide();
     });
 })
