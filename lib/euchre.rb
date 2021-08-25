@@ -48,7 +48,7 @@ module Euchre
 
   #player object will hold player cards and player score
   class Player
-    attr_accessor :hand, :username
+    attr_accessor :hand, :username, :id
 
     def initialize(id,username)
       @hand = []
@@ -68,7 +68,8 @@ module Euchre
   class Round
     attr_accessor :current_player, :turn, :trump, :turnup
 
-    def initialize(player1,player2,player3,player4,turn,channel)
+    def initialize(player1,player2,player3,player4,turn,channel,status)
+      @status = status
       @channel = channel
       @player1 = player1
       @player2 = player2
@@ -78,6 +79,7 @@ module Euchre
       @turn = turn
       @deck = Deck.new
       @dealer = @player_list[@turn]
+      @trump = nil
       #broadcast dealer to players
       ActionCable.server.broadcast(@channel,{ "element" => "#p#{@turn + 1}-dealer", "gameupdate" => "●" })
       next_player
@@ -111,10 +113,33 @@ module Euchre
       #set turnup card and send to players
       @turnup = @deck.deal_card
       ActionCable.server.broadcast(@channel,{ "img" => @turnup.b64_img, "element" => "turnup-card", "show" => "#turnup" })
+      #declare a counter to keep track of how many times players have passed
+      @pass_count = 0
+      pickup_or_pass
     end
 
 
     def pickup_or_pass
+      if @pass_count < 4
+        if @current_player.id == 0
+          @pass_count += 1
+          next_player
+          if @status == "start"
+            cycle_to_human
+          end
+
+        else
+          @status = "pickup_or_pass"
+          ActionCable.server.broadcast(@channel,{ "element" => "#game-telop", "gameupdate" => "Player #{@turn + 1}, Pass or Pickup?" })
+
+        end
+      elsif @pass_count == 4
+        #hide turnup card and show buttons for picking trump
+        ActionCable.server.broadcast(@channel,{ "hide" => "#turnup", "show" => "#trump-selection" })
+
+
+      end
+
 
     end
 
@@ -130,6 +155,11 @@ module Euchre
     end
 
     def cycle_to_human
+      while @current_player.id == 0
+        if @status == "pickup_or_pass"
+          pickup_or_pass
+        end
+      end
 
     end
 
@@ -194,7 +224,7 @@ module Euchre
     end
 
     def start_game
-      @round = Round.new(@player1,@player2,@player3,@player4,0,@channel)
+      @round = Round.new(@player1,@player2,@player3,@player4,0,@channel,@status)
     end
   end
 
