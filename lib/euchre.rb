@@ -12,6 +12,7 @@ module Euchre
     end
 
     def inspect
+      suit_str = {0 => "Spades", 1 => "Clubs", 2 => "Diamonds", 3 => "Hearts"}[suit]
       "(#{value},#{suit})"
     end
 
@@ -32,6 +33,7 @@ module Euchre
           @cards.push(card)
         end
       end
+      @cards.shuffle!
     end
 
     def shuffle
@@ -55,8 +57,8 @@ module Euchre
 
     end
 
-    def add_card(card)
-      @hand.push(card)
+    def add_cards(cards)
+      @hand.concat(cards)
     end
 
   end
@@ -65,15 +67,16 @@ module Euchre
   #also will hold functions to update round information based on player input
   class Round
 
-    def initialize(params = {})
-      @player1 = params.fetch(:player1)
-      @player2 = params.fetch(:player2)
-      @player3 = params.fetch(:player3)
-      @player4 = params.fetch(:player4)
+    def initialize(player1,player2,player3,player4,turn)
+      @player1 = player1
+      @player2 = player2
+      @player3 = player3
+      @player4 = player4
       @player_list = [@player1,@player2,@player3,@player4]
-      @turn = params.fetch(:turn, 0)
+      @turn = turn
       @deck = Deck.new
       @dealer = @player_list[@turn]
+      next_player
       deal_cards
 
 
@@ -81,10 +84,23 @@ module Euchre
 
     #function to deal hands to players
     def deal_cards
-      while @player1.hand.length != 5 do
-        @player_list.each do |player|
-          card = @deck.deal_card
-          player.add_card(card)
+      i = 0
+      while @player4.hand.length != 5 do
+        i += 1
+        if i.odd?
+          [2,3,2,3].each do |n|
+            cards = []
+            n.times {cards.push(@deck.deal_card)}
+            @current_player.add_cards(cards)
+            next_player
+          end
+        else
+          [3,2,3,2].each do |n|
+            cards = []
+            n.times {cards.push(@deck.deal_card)}
+            @current_player.add_cards(cards)
+            next_player
+          end
         end
       end
     end
@@ -103,6 +119,7 @@ module Euchre
 
   #keep information on proceedings of all rounds and score
   class Game
+    attr_accessor :player1, :player2, :player3, :player4
 
     def initialize(room_id)
       room = Room.find(room_id)
@@ -128,12 +145,10 @@ module Euchre
         user = User.find(room.player4_id)
         @player4 = Player.new(user.id,user.username)
       end
-
-
     end
 
     def start_game
-
+      @round = Round.new(@player1,@player2,@player3,@player4,0)
     end
   end
 
