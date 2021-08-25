@@ -84,7 +84,7 @@ module Euchre
       ActionCable.server.broadcast(@channel,{ "element" => "#p#{@turn + 1}-dealer", "gameupdate" => "●" })
       next_player
       deal_cards
-      send_all_cards
+
 
     end
 
@@ -110,6 +110,8 @@ module Euchre
         end
       end
 
+      send_all_cards
+
       #set turnup card and send to players
       @turnup = @deck.deal_card
       ActionCable.server.broadcast(@channel,{ "img" => @turnup.b64_img, "element" => "turnup-card", "show" => "#turnup" })
@@ -125,6 +127,7 @@ module Euchre
           @pass_count += 1
           next_player
           if @status == "start"
+            @status = "pickup_or_pass"
             cycle_to_human
           end
 
@@ -156,11 +159,13 @@ module Euchre
 
     def cycle_to_human
       while @current_player.id == 0
+        if @current_player.id != 0
+          break
+        end
         if @status == "pickup_or_pass"
           pickup_or_pass
         end
       end
-
     end
 
     def next_player
@@ -181,7 +186,7 @@ module Euchre
 
       #player2~4 cards require check to see if CPU or not
       [@player2,@player3,@player4].zip([2,3,4]).each do |player,n|
-        if player != 0
+        if player.id != 0
           player.hand.each_with_index do |card, i|
             ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "element" => "p#{n}-card#{i}", "show" => "#hand" })
           end
@@ -231,7 +236,7 @@ module Euchre
       if user_input["id"] == @round.current_player.id
 
       else
-        puts "wrong player"
+        puts "wrong player #{user_input}"
       end
     end
 

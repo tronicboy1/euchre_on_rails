@@ -109,12 +109,28 @@ document.addEventListener('turbolinks:load', () => {
       $('#start-game').hide();
     });
 
-    $('#p1-pickup-yes').on('click', function() {
+    $('#pickup-yes').on('click', function() {
       let userid = $("#user-id").data('user-id');
       roomChannel.send({ type: "gamecontrol", command: true, id: userid });
     });
-    $('#p1-pickup-no').on('click', function() {
+    $('#pickup-no').on('click', function() {
       let userid = $("#user-id").data('user-id');
       roomChannel.send({ type: "gamecontrol", command: false, id: userid });
+    });
+    $('#trump-selection0').on('click', function() {
+      let userid = $("#user-id").data('user-id');
+      roomChannel.send({ type: "gamecontrol", command: 0, id: userid });
+    });
+    $('#trump-selection1').on('click', function() {
+      let userid = $("#user-id").data('user-id');
+      roomChannel.send({ type: "gamecontrol", command: 1, id: userid });
+    });
+    $('#trump-selection2').on('click', function() {
+      let userid = $("#user-id").data('user-id');
+      roomChannel.send({ type: "gamecontrol", command: 2, id: userid });
+    });
+    $('#trump-selection3').on('click', function() {
+      let userid = $("#user-id").data('user-id');
+      roomChannel.send({ type: "gamecontrol", command: 3, id: userid });
     });
 })
