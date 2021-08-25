@@ -1,6 +1,8 @@
 require 'base64'
 
 class RoomcontrolChannel < ApplicationCable::Channel
+  include Euchre
+
   def subscribed
     stream_from "chat_#{params[:room_id]}"
     ActionCable.server.broadcast("chat_#{params[:room_id]}",{"message" => "\n#{params[:username]} entered room!", "online" => "##{params[:user_id]}-status"})
@@ -29,14 +31,14 @@ class RoomcontrolChannel < ApplicationCable::Channel
   def gamecontrol_shori(dic)
 
     if dic["command"] == "start-game"
-
-      card_a = Dir.glob("./app/assets/images/cards/*")
-      card_a.each do |path|
-        img = File.open(path)
-        b64_img = Base64.encode64(img.read)
-        ActionCable.server.broadcast("chat_#{params[:room_id]}",{ "img" => b64_img })
-        sleep 1
-      end
+      game = Game.new(params[:room_id])
+      game.start_game
+      # deck = Euchre::Deck.new
+      # deck.shuffle
+      # deck.cards.each do |card|
+      #   ActionCable.server.broadcast("chat_#{params[:room_id]}",{ "img" => card.b64_img })
+      #   sleep 2
+      # end
     end
 
 

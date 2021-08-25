@@ -29,9 +29,9 @@ document.addEventListener('turbolinks:load', () => {
 
         if (typeof data.img !== 'undefined') {
           console.log("img received")
-	        var img_element = document.getElementById("p1-guiimg");
+	        var img_element = document.getElementById(data.element);
 	        var img_base64_content = data.img;
-	        img_element.src = "data:image/jpeg;base64," + img_base64_content;
+	        img_element.src = "data:image/png;base64," + img_base64_content;
 
         } else if (typeof data.message !== 'undefined') {
           console.log("message received")
