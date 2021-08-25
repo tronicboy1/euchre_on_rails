@@ -48,7 +48,7 @@ module Euchre
 
   #player object will hold player cards and player score
   class Player
-    attr_accessor :hand, :username
+    attr_accessor :hand, :username, :id
 
     def initialize(id,username)
       @hand = []
@@ -66,9 +66,10 @@ module Euchre
   #round will hold data for each round such as next player and when round is finished
   #also will hold functions to update round information based on player input
   class Round
-    attr_accessor :current_player, :turn
+    attr_accessor :current_player, :turn, :trump, :turnup
 
-    def initialize(player1,player2,player3,player4,turn,channel)
+    def initialize(player1,player2,player3,player4,turn,channel,status)
+      @status = status
       @channel = channel
       @player1 = player1
       @player2 = player2
@@ -78,9 +79,12 @@ module Euchre
       @turn = turn
       @deck = Deck.new
       @dealer = @player_list[@turn]
+      @trump = nil
+      #broadcast dealer to players
+      ActionCable.server.broadcast(@channel,{ "element" => "#p#{@turn + 1}-dealer", "gameupdate" => "●" })
       next_player
       deal_cards
-      send_all_cards
+
 
     end
 
@@ -105,6 +109,67 @@ module Euchre
           end
         end
       end
+
+      send_all_cards
+      sleep(1)
+
+      #set turnup card and send to players
+      @turnup = @deck.deal_card
+      ActionCable.server.broadcast(@channel,{ "img" => @turnup.b64_img, "element" => "turnup-card", "show" => "#turnup" })
+      #declare a counter to keep track of how many times players have passed
+      @pass_count = 0
+      pickup_or_pass
+    end
+
+
+    def pickup_or_pass
+      if @pass_count < 4
+        if @current_player.id == 0
+          @pass_count += 1
+          next_player
+          if @status == "start"
+            @status = "pickup_or_pass"
+            cycle_to_human
+          end
+
+        else
+          @pass_count += 1
+          @status = "pickup_or_pass"
+          ActionCable.server.broadcast(@channel,{ "element" => "#game-telop", "gameupdate" => "Player #{@turn + 1}, Pass or Pickup?","show" => "#pickup-yesno" })
+
+        end
+      elsif @pass_count == 4
+        #hide turnup card and show buttons for picking trump
+        ActionCable.server.broadcast(@channel,{ "hide" => "#turnup", "show" => "#trump-selection" })
+
+
+      end
+
+
+    end
+
+
+
+
+    def turn
+      if @current_player.id != 0
+
+      else
+
+      end
+    end
+
+    def cycle_to_human
+      while @current_player.id == 0
+        if @status == "pickup_or_pass"
+          pickup_or_pass
+        end
+      end
+      #pass on to next player action
+      if @status == "pickup_or_pass"
+        pickup_or_pass
+
+      end
     end
 
     def next_player
@@ -120,20 +185,27 @@ module Euchre
     def send_all_cards
       #player 1 cards
       @player1.hand.each_with_index do |card, i|
-        ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "element" => "p1-card#{i}" })
+        ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "element" => "p1-card#{i}", "show" => "#hand" })
       end
-      #player2~4 cards require check to see if CPU or not
 
-      #ActionCable.server.broadcast("chat_#{params[:room_id]}",{ "img" => card.b64_img })
+      #player2~4 cards require check to see if CPU or not
+      [@player2,@player3,@player4].zip([2,3,4]).each do |player,n|
+        if player.id != 0
+          player.hand.each_with_index do |card, i|
+            ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "element" => "p#{n}-card#{i}", "show" => "#hand" })
+          end
+        end
+      end
     end
 
   end
 
   #keep information on proceedings of all rounds and score
   class Game
-    attr_accessor :player1, :player2, :player3, :player4, :round
+    attr_accessor :player1, :player2, :player3, :player4, :round, :status
 
     def initialize(room_id)
+      @status = "start"
       @channel = "chat_#{room_id}"
       room = Room.find(room_id)
       user = User.find(room.player1_id)
@@ -161,8 +233,23 @@ module Euchre
     end
 
     def start_game
-      @round = Round.new(@player1,@player2,@player3,@player4,0,@channel)
+      @round = Round.new(@player1,@player2,@player3,@player4,0,@channel,@status)
     end
+
+    def game_control(user_input)
+      if user_input["id"] == @round.current_player.id
+
+      else
+        puts "wrong player #{user_input}"
+      end
+    end
+
   end
+
+
+
+
+
+
 
 end

@@ -1,15 +1,22 @@
 import consumer from "./consumer"
 
 
-// turbolinks の読み込みが終わった後にidを取得しないと，エラーが出ます。
+
 document.addEventListener('turbolinks:load', () => {
 
-    // js.erb 内で使用できるように変数を定義しておく
+
     window.messageContainer = document.getElementById('chatbox')
-    // 以下のプログラムが他のページで動作しないようにしておく
+
     if (messageContainer === null) {
         return
     }
+
+    //hide hand until cards are dealt
+    $('#hand').hide();
+    $('#turnup').hide();
+    $('#pickup-yesno').hide();
+    $('#trump-selection').hide();
+
 
     const roomChannel = consumer.subscriptions.create({ channel: "RoomcontrolChannel", room_id: $("#room-id").data('room-id'), username: $("#username").data('username'), user_id: $("#user-id").data('user-id') }, {
       connected() {
@@ -32,6 +39,10 @@ document.addEventListener('turbolinks:load', () => {
 	        var img_element = document.getElementById(data.element);
 	        var img_base64_content = data.img;
 	        img_element.src = "data:image/png;base64," + img_base64_content;
+          if (typeof data.show !== 'undefined') {
+            console.log(data)
+            $(data.show).show()
+          }
 
         } else if (typeof data.message !== 'undefined') {
           console.log("message received")
@@ -46,6 +57,16 @@ document.addEventListener('turbolinks:load', () => {
             $(data.disconnected).append("Offline");
             $(data.disconnected).attr('class', 'text-danger');
           }
+        }
+
+        if (typeof data.gameupdate !== 'undefined') {
+          $(data.element).empty()
+          $(data.element).append(data.gameupdate)
+          $(data.hide).hide()
+          $(data.show).show()
+        } else if (typeof data.hide !== 'undefined') {
+          $(data.hide).hide()
+          $(data.show).show()
         }
       }
 
@@ -80,5 +101,36 @@ document.addEventListener('turbolinks:load', () => {
 
     $('#toggle-chat').on('click', function() {
       $('#chat-group').toggle();
+    });
+    $('#toggle-onlinebar').on('click', function() {
+      $('#onlinebar').toggle();
+    });
+    $('#start-game').on('click', function() {
+      $('#start-game').hide();
+    });
+
+    $('#pickup-yes').on('click', function() {
+      let userid = $("#user-id").data('user-id');
+      roomChannel.send({ type: "gamecontrol", command: true, id: userid });
+    });
+    $('#pickup-no').on('click', function() {
+      let userid = $("#user-id").data('user-id');
+      roomChannel.send({ type: "gamecontrol", command: false, id: userid });
+    });
+    $('#trump-selection0').on('click', function() {
+      let userid = $("#user-id").data('user-id');
+      roomChannel.send({ type: "gamecontrol", command: 0, id: userid });
+    });
+    $('#trump-selection1').on('click', function() {
+      let userid = $("#user-id").data('user-id');
+      roomChannel.send({ type: "gamecontrol", command: 1, id: userid });
+    });
+    $('#trump-selection2').on('click', function() {
+      let userid = $("#user-id").data('user-id');
+      roomChannel.send({ type: "gamecontrol", command: 2, id: userid });
+    });
+    $('#trump-selection3').on('click', function() {
+      let userid = $("#user-id").data('user-id');
+      roomChannel.send({ type: "gamecontrol", command: 3, id: userid });
     });
 })

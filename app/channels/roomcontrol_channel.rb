@@ -31,14 +31,10 @@ class RoomcontrolChannel < ApplicationCable::Channel
   def gamecontrol_shori(dic)
 
     if dic["command"] == "start-game"
-      game = Game.new(params[:room_id])
-      game.start_game
-      # deck = Euchre::Deck.new
-      # deck.shuffle
-      # deck.cards.each do |card|
-      #   ActionCable.server.broadcast("chat_#{params[:room_id]}",{ "img" => card.b64_img })
-      #   sleep 2
-      # end
+      @game = Game.new(params[:room_id])
+      @game.start_game
+    else
+      @game.game_control(dic)
     end
 
 
