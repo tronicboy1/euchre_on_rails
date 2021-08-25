@@ -35,16 +35,28 @@ module Euchre
     end
 
     def shuffle
+      @cards.shuffle!
+    end
 
+    def deal_card
+      return @cards.pop
     end
 
   end
 
   #player object will hold player cards and player score
   class Player
+    attr_accessor :hand, :username
 
-    def initialize
+    def initialize(id,username)
+      @hand = []
+      @username = username
+      @id = id
 
+    end
+
+    def add_card(card)
+      @hand.push(card)
     end
 
   end
@@ -53,8 +65,38 @@ module Euchre
   #also will hold functions to update round information based on player input
   class Round
 
-    def initialize
+    def initialize(params = {})
+      @player1 = params.fetch(:player1)
+      @player2 = params.fetch(:player2)
+      @player3 = params.fetch(:player3)
+      @player4 = params.fetch(:player4)
+      @player_list = [@player1,@player2,@player3,@player4]
+      @turn = params.fetch(:turn, 0)
+      @deck = Deck.new
+      @dealer = @player_list[@turn]
+      deal_cards
 
+
+    end
+
+    #function to deal hands to players
+    def deal_cards
+      while @player1.hand.length != 5 do
+        @player_list.each do |player|
+          card = @deck.deal_card
+          player.add_card(card)
+        end
+      end
+    end
+
+    def next_player
+      if @turn == 3
+        @turn = 0
+        @current_player = @player_list[@turn]
+      else
+        @turn += 1
+        @current_player = @player_list[@turn]
+      end
     end
 
   end
@@ -62,10 +104,37 @@ module Euchre
   #keep information on proceedings of all rounds and score
   class Game
 
-    def initialize
+    def initialize(room_id)
+      room = Room.find(room_id)
+      user = User.find(room.player1_id)
+      @player1 = Player.new(user.id,user.username)
+      if room.player2_id == 0
+        @player2 = Player.new(0,"Computer 1")
+      else
+        user = User.find(room.player2_id)
+        @player2 = Player.new(user.id,user.username)
+      end
+
+      if room.player3_id == 0
+        @player3 = Player.new(0,"Computer 2")
+      else
+        user = User.find(room.player3_id)
+        @player3 = Player.new(user.id,user.username)
+      end
+
+      if room.player4_id == 0
+        @player4 = Player.new(0,"Computer 3")
+      else
+        user = User.find(room.player4_id)
+        @player4 = Player.new(user.id,user.username)
+      end
+
 
     end
 
+    def start_game
+
+    end
   end
 
 end
