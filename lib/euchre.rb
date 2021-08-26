@@ -158,17 +158,17 @@ module Euchre
 
     def pickup_or_pass
       if @pass_count < 4
+        @pass_count += 1
         #action for computer
         #computer will pass for the time being
         if @current_player.id == 0
-          @pass_count += 1
           next_player()
           if @status == "start"
             @status = "pickup_or_pass"
-            cycle_to_human()
+            #cycle_to_human()
           end
+          pickup_or_pass()
         else
-          @pass_count += 1
           @status = "pickup_or_pass"
           ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
             "gameupdate" => "Player #{@turn + 1}, Pass or Pickup?",
@@ -196,7 +196,7 @@ module Euchre
         ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
           "gameupdate" => "Player #{@turn + 1}, choose card to throw away", })
       else
-        next_player
+        next_player()
         if @pass_count == 4
           @status = "call_trump"
           ActionCable.server.broadcast(@channel,{ "hide" => "#pickup-yesno" })
@@ -204,7 +204,7 @@ module Euchre
         else
           pickup_or_pass()
         end
-        cycle_to_human()
+        #cycle_to_human()
       end
     end
 
@@ -219,7 +219,7 @@ module Euchre
       setup_turn()
       next_player()
       turn()
-      cycle_to_human()
+      #cycle_to_human()
     end
 
     def call_trump
@@ -234,7 +234,8 @@ module Euchre
         #computer will pass for the time being
         if @current_player.id == 0
           @pass_count += 1
-          next_player
+          next_player()
+          call_trump()
         else
           @pass_count += 1
           ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
@@ -252,7 +253,7 @@ module Euchre
       if input["command"] == false
         next_player()
         call_trump()
-        cycle_to_human()
+        #cycle_to_human()
       else
         ActionCable.server.broadcast(@channel,{ "hide" => "#pickup-yesno" })
         set_trump(input)
@@ -260,7 +261,7 @@ module Euchre
         setup_turn()
         next_player()
         turn()
-        cycle_to_human()
+        #cycle_to_human()
       end
     end
 
@@ -334,6 +335,7 @@ module Euchre
         "gameupdate" => "Player #{@turn + 1} played the #{card.to_s}" })
 
       next_player()
+      turn()
     end
 
     def trick_check
@@ -397,7 +399,7 @@ module Euchre
         @current_player = winner
         @first_card_suit = nil
         @turn = @player_list.find_index(winner)
-
+        turn()
 
 
 
