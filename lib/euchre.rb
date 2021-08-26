@@ -334,7 +334,6 @@ module Euchre
       @cards_played.push([card,current_player])
       ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
         "gameupdate" => "Player #{@turn + 1} played the #{card.to_s}" })
-
       next_player()
       turn()
     end
@@ -446,17 +445,19 @@ module Euchre
 
       def best_card
         if !@current_player.trump_cards.empty?
-          best = @current_player.trump_cards.delete_at(0)
+          best = @current_player.trump_cards[0]
           card = @current_player.hand.delete(best)
           return card
         else
-          best = @current_player.non_trump_cards.delete_at(0)
+          best = @current_player.non_trump_cards[0]
           card = @current_player.hand.delete(best)
           return card
         end
       end
 
       def generate_best_card_lists
+        @current_player.trump_cards = []
+        @current_player.non_trump_cards = []
         value_list = [8,9,10,11,12,0]
         @current_player.hand.each do |card|
           if @trump_list.include?(card.id)
