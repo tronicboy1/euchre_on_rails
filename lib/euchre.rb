@@ -1,7 +1,7 @@
 module Euchre
   #individual cards with img data
   class Card
-    attr_accessor :suit, :value, :b64_img, :id, :trump_cards, :non_trump_cards
+    attr_accessor :suit, :value, :b64_img, :id
 
     def initialize(suit,value)
       @suit = suit
@@ -10,15 +10,16 @@ module Euchre
       path = "./app/assets/images/cards/cards_sm/#{suit},#{value}.png"
       img = File.open(path,"rb")
       @b64_img = Base64.strict_encode64(img.read)
-
-      #for computer ai
-      @trump_cards = []
-      @non_trump_cards = []
     end
 
     def inspect
-      suit_str = {0 => "Spades", 1 => "Clubs", 2 => "Diamonds", 3 => "Hearts"}[suit]
       "(#{suit},#{value})"
+    end
+
+    def to_s
+        suit_str = {0 => "Spades", 1 => "Clubs", 2 => "Diamonds", 3 => "Hearts"}
+        value_str = {0 => "Ace", 8 => "Nine", 9 => "Ten", 10 => "Jack", 11 => "Queen", 12 => "King"}
+        return "#{value_str[@value]} of #{suit_str[@suit]}"
     end
 
   end
@@ -64,7 +65,7 @@ module Euchre
 
   #player object will hold player cards and player score
   class Player
-    attr_accessor :hand, :username, :id, :player_no, :card_played, :tricks
+    attr_accessor :hand, :username, :id, :player_no, :card_played, :tricks, :trump_cards, :non_trump_cards
 
     def initialize(id,username,player_no)
       @hand = []
@@ -73,6 +74,10 @@ module Euchre
       @player_no = player_no
       @card_played = nil
       @tricks = 0
+
+      #for computer ai
+      @trump_cards = []
+      @non_trump_cards = []
 
     end
 
@@ -157,10 +162,10 @@ module Euchre
         #computer will pass for the time being
         if @current_player.id == 0
           @pass_count += 1
-          next_player
+          next_player()
           if @status == "start"
             @status = "pickup_or_pass"
-            cycle_to_human
+            cycle_to_human()
           end
         else
           @pass_count += 1
@@ -172,7 +177,7 @@ module Euchre
       else
         @status = "call_trump"
 
-        call_trump
+        call_trump()
       end
     end
 
@@ -270,12 +275,23 @@ module Euchre
       if @count <= 4
         if @current_player.id != 0
           ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
-            "gameupdate" => "Player #{@turn + 1}, call trump or pass?",
-            "show" => "#trump-selection" })
+            "gameupdate" => "Player #{@turn + 1}, choose a card to play." })
         else
           card = computer_card_ai()
+          #save first card played to check that other players follow suit
+          if @count == 1
+            @first_card_played = card
+          end
+          #add card played to players attribute
+          @current_player.card_played = card
+          ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
+            "gameupdate" => "Player #{@turn + 1} played the #{card.to_s}" })
+          sleep(0.1)
           byebug
+          next_player()
+
         end
+
       else
 
       end
@@ -287,34 +303,73 @@ module Euchre
     end
 
     def computer_card_ai
-      #compare with trump_list and add cards if trump only first time
-      if @current_player.non_trump_cards.empty?
+      def choose_card
+        #play best card if first card
+        if @first_card_played.nil?
+          return best_card()
+
+        #use best trump if in hand
+        elsif @first_card_played.suit == @trump and !@current_player.trump_cards.empty?
+          return best_card()
+        #check if can follow suit
+        else
+          if can_follow_suit()
+            @current_player.hand.each do |card|
+              if card.suit == @first_card_played.suit
+                @current_player.hand.delete(card)
+                #re run card list gen
+                generate_best_card_lists()
+                return card
+              end
+            end
+          else
+            return best_card()
+          end
+        end
+      end
+
+      def best_card
+        if !@current_player.trump_cards.empty?
+          best = @current_player.trump_cards.delete_at(0)
+          card = @current_player.hand.delete(best)
+          return card
+        else
+          best = @current_player.non_trump_cards.delete_at(0)
+          card = @current_player.hand.delete(best)
+          return card
+        end
+      end
+
+      def generate_best_card_lists
         value_list = [8,9,10,11,12,0]
         @current_player.hand.each do |card|
           if @trump_list.include?(card.id)
-            trump_cards.push(card)
+            @current_player.trump_cards.push(card)
           else
             value_list.each do |val|
-              if card.value == val and !non_trump_cards.include?(card)
-                non_trump_cards.push(card)
+              if card.value == val and !@current_player.non_trump_cards.include?(card)
+                @current_player.non_trump_cards.push(card)
               end
             end
           end
         end
-        if !@current_player.trump_cards.empty?
-          card = @current_player.hand.delete(@current_player.trump_cards[0])
-          return card
-        else
-          card = @current_player.hand.delete(@current_player.non_trump_cards[0])
-        end
-      else
-        if !@current_player.trump_cards.empty?
-          card = @current_player.hand.delete(@current_player.trump_cards[0])
-          return card
-        else
-          card = @current_player.hand.delete(@current_player.non_trump_cards[0])
+      end
+      #compare with trump_list and add cards if trump only first time
+      if @current_player.non_trump_cards.empty?
+        generate_best_card_lists()
+      end
+
+      return choose_card()
+    end
+
+    #check if player can follow suit or not
+    def can_follow_suit
+      @current_player.hand.each do |card|
+        if card.suit == @first_card_played.suit
+          return true
         end
       end
+      return false
     end
 
     def cycle_to_human
