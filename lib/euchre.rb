@@ -300,8 +300,7 @@ module Euchre
       puts "count: #{@count}"
       if !@first_card_suit.nil?
         if can_follow_suit()
-          puts "can follow suit"
-          if @current_player.hand[input["command"]].suit == @first_card_suit
+          if can_follow_suit_card(@current_player.hand[input["command"]])
             puts "first card suit okay"
             after_check(input)
           else
@@ -392,7 +391,7 @@ module Euchre
       #check how many rounds have been played
       @round_count += 1
       #continue if not 5
-      if @round_count <= 5
+      if @round_count < 5
         @count = 0
         @status = "turn"
         @cards_played = []
@@ -401,11 +400,15 @@ module Euchre
         @turn = winner.player_no - 1
         turn()
       else
-        puts "end round"
+        round_end()
       end
     end
 
 
+    def round_end
+      byebug
+
+    end
 
 
 
@@ -488,6 +491,31 @@ module Euchre
           elsif @trump == 3 && card.suit == 2
             return false
           end
+        end
+      end
+      return false
+    end
+
+    def can_follow_suit_card(card)
+      #if not a jack and of same suit okay
+      if card.suit == @first_card_suit
+        if card.value != 10
+          return true
+        elsif card.suit != @trump
+          return true
+        end
+
+      elsif @trump == @first_card_suit && card.value == 10
+        if card.suit == @first_card_suit
+          return true
+        elsif @trump == 0 && card.suit == 1
+          return true
+        elsif @trump == 1 && card.suit == 0
+          return true
+        elsif @trump == 2 && card.suit == 3
+          return true
+        elsif @trump == 3 && card.suit == 2
+          return true
         end
       end
       return false
