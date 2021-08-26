@@ -1,7 +1,7 @@
 module Euchre
   #individual cards with img data
   class Card
-    attr_accessor :suit, :value, :b64_img, :id
+    attr_accessor :suit, :value, :b64_img, :id, :trump_cards, :non_trump_cards
 
     def initialize(suit,value)
       @suit = suit
@@ -10,11 +10,15 @@ module Euchre
       path = "./app/assets/images/cards/cards_sm/#{suit},#{value}.png"
       img = File.open(path,"rb")
       @b64_img = Base64.strict_encode64(img.read)
+
+      #for computer ai
+      @trump_cards = []
+      @non_trump_cards = []
     end
 
     def inspect
       suit_str = {0 => "Spades", 1 => "Clubs", 2 => "Diamonds", 3 => "Hearts"}[suit]
-      "(#{value},#{suit})"
+      "(#{suit},#{value})"
     end
 
   end
@@ -60,13 +64,15 @@ module Euchre
 
   #player object will hold player cards and player score
   class Player
-    attr_accessor :hand, :username, :id, :player_no
+    attr_accessor :hand, :username, :id, :player_no, :card_played, :tricks
 
     def initialize(id,username,player_no)
       @hand = []
       @username = username
       @id = id
       @player_no = player_no
+      @card_played = nil
+      @tricks = 0
 
     end
 
@@ -100,6 +106,8 @@ module Euchre
       @deck = Deck.new
       @dealer = @player_list[@turn]
       @trump = nil
+      #record the player who ordered trump for keeping score
+      @orderer_player_no = nil
       #broadcast dealer to players
       ActionCable.server.broadcast(@channel,{ "element" => "#p#{@turn + 1}-dealer", "gameupdate" => "●" })
       next_player
@@ -201,7 +209,9 @@ module Euchre
       sleep(0.1)
       ActionCable.server.broadcast(@channel,{ "hide" => "#p#{current_player.player_no}-pickupcard" })
       sleep(0.1)
+      @count = 0
       @status = "turn"
+      @ordered_player_no = @current_player.player_no
       next_player()
       turn()
       cycle_to_human()
@@ -229,7 +239,7 @@ module Euchre
       else
         #change dealer and start new round if no players call trump
         @status = "new_round"
-        
+
       end
     end
 
@@ -241,6 +251,8 @@ module Euchre
       else
         set_trump(input)
         order_symbol_set()
+        @ordered_player_no = @current_player.player_no
+        @count = 0
         @status = "turn"
         next_player()
         turn()
@@ -253,11 +265,55 @@ module Euchre
 
 
     def turn
-      byebug
-      if @current_player.id != 0
-
+      #count will stop when all players give one card
+      @count += 1
+      if @count <= 4
+        if @current_player.id != 0
+          ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
+            "gameupdate" => "Player #{@turn + 1}, call trump or pass?",
+            "show" => "#trump-selection" })
+        else
+          card = computer_card_ai()
+          byebug
+        end
       else
 
+      end
+
+    end
+
+    def turn_input(input)
+
+    end
+
+    def computer_card_ai
+      #compare with trump_list and add cards if trump only first time
+      if @current_player.non_trump_cards.empty?
+        value_list = [8,9,10,11,12,0]
+        @current_player.hand.each do |card|
+          if @trump_list.include?(card.id)
+            trump_cards.push(card)
+          else
+            value_list.each do |val|
+              if card.value == val and !non_trump_cards.include?(card)
+                non_trump_cards.push(card)
+              end
+            end
+          end
+        end
+        if !@current_player.trump_cards.empty?
+          card = @current_player.hand.delete(@current_player.trump_cards[0])
+          return card
+        else
+          card = @current_player.hand.delete(@current_player.non_trump_cards[0])
+        end
+      else
+        if !@current_player.trump_cards.empty?
+          card = @current_player.hand.delete(@current_player.trump_cards[0])
+          return card
+        else
+          card = @current_player.hand.delete(@current_player.non_trump_cards[0])
+        end
       end
     end
 
