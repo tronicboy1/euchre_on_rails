@@ -235,17 +235,16 @@ module Euchre
 
     def call_trump_input(input)
       if input["command"] == false
-        next_player
-        call_trump
-        cycle_to_human
+        next_player()
+        call_trump()
+        cycle_to_human()
       else
         set_trump(input)
-        ActionCable.server.broadcast(@channel,{ "hide" => "#p#{current_player.player_no}-pickupcard" })
-        sleep(0.1)
+        order_symbol_set()
         @status = "turn"
-        next_player
-        turn
-        cycle_to_human
+        next_player()
+        turn()
+        cycle_to_human()
       end
     end
 
@@ -296,7 +295,7 @@ module Euchre
         @trump = @turnup.suit
       else
         #set to user trump call here
-        @trump = nil
+        @trump = input["command"]
       end
       trump_list_gen
     end
