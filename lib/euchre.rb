@@ -229,7 +229,7 @@ module Euchre
       else
         #change dealer and start new round if no players call trump
         @status = "new_round"
-        byebug
+        
       end
     end
 
