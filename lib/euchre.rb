@@ -284,7 +284,6 @@ module Euchre
             "gameupdate" => "Player #{@turn + 1}, choose a card to play." })
         else
           card = computer_card_ai()
-          #save first card played to check that other players follow suit
           turn_shared_code(card)
         end
       else
@@ -301,7 +300,7 @@ module Euchre
         ActionCable.server.broadcast(@channel,{ "hide" => "#p#{current_player.player_no}-card#{input["command"]}" })
 
         turn_shared_code(card)
-        cycle_to_human()
+        #cycle_to_human()
       end
       #check if user is playing correct card if they can follow suit
       puts "count: #{@count}"
@@ -322,7 +321,9 @@ module Euchre
     end
 
     def turn_shared_code(card)
+      #save first card played to check that other players follow suit
       if @count == 1
+        #use is trump function to avoiding problems with jacks
         if is_trump(card)
           @first_card_suit = @trump
         else
@@ -337,6 +338,12 @@ module Euchre
       next_player()
       turn()
     end
+
+
+
+
+
+
 
     def trick_check
       hantei_suit = @cards_played[0][0].suit
@@ -394,16 +401,24 @@ module Euchre
       #continue if not 5
       if @round_count <= 5
         @count = 0
-        @status = "after_check"
+        @status = "turn"
         @cards_played = []
         @current_player = winner
         @first_card_suit = nil
-        @turn = @player_list.find_index(winner)
+        @turn = winner.player_no - 1
         turn()
       else
         puts "end round"
       end
     end
+
+
+
+
+
+
+
+
 
     def computer_card_ai
       def choose_card
