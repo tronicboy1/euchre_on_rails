@@ -214,6 +214,7 @@ module Euchre
       sleep(0.1)
       ActionCable.server.broadcast(@channel,{ "hide" => "#p#{current_player.player_no}-pickupcard" })
       sleep(0.1)
+      ActionCable.server.broadcast(@channel,{ "hide" => "#pickup-yesno" })
       #setup for turn start
       setup_turn()
       next_player()
@@ -253,6 +254,7 @@ module Euchre
         call_trump()
         cycle_to_human()
       else
+        ActionCable.server.broadcast(@channel,{ "hide" => "#pickup-yesno" })
         set_trump(input)
         order_symbol_set()
         setup_turn()
@@ -292,7 +294,8 @@ module Euchre
 
     def turn_input(input)
       def after_check(input)
-        card = @current_player.hand.delete_at(input["command"])
+        card = @current_player.hand[input["command"]]
+        puts "card retrieved"
         #hide card played
         ActionCable.server.broadcast(@channel,{ "hide" => "#p#{current_player.player_no}-card#{input["command"]}" })
         sleep(0.1)
@@ -300,9 +303,12 @@ module Euchre
         cycle_to_human()
       end
       #check if user is playing correct card if they can follow suit
+      puts "count: #{@count}"
       if @count != 1
         if can_follow_suit()
+          puts "can follow suit"
           if @current_player.hand[input["command"]].suit == @first_card_suit
+            puts "first card suit okay"
             after_check(input)
           else
             ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
@@ -385,6 +391,7 @@ module Euchre
       @round_count += 1
       #continue if not 5
       if @round_count <= 5
+        @count = 0
         @status = "turn"
         @cards_played = []
         @current_player = winner
@@ -615,6 +622,7 @@ module Euchre
     end
 
     def game_control(user_input)
+      puts "player input sent to game"
       if user_input["id"] == @round.current_player.id
         if @round.status == "pickup_or_pass"
           @round.pickup_or_pass_input(user_input)
@@ -623,6 +631,7 @@ module Euchre
         elsif @round.status == "call_trump"
           @round.call_trump_input(user_input)
         elsif @round.status == "turn"
+          puts "turn input received"
           @round.turn_input(user_input)
         end
 
