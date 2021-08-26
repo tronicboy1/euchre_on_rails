@@ -165,7 +165,6 @@ module Euchre
           next_player()
           if @status == "start"
             @status = "pickup_or_pass"
-            #cycle_to_human()
           end
           pickup_or_pass()
         else
@@ -204,7 +203,6 @@ module Euchre
         else
           pickup_or_pass()
         end
-        #cycle_to_human()
       end
     end
 
@@ -219,7 +217,6 @@ module Euchre
       setup_turn()
       next_player()
       turn()
-      #cycle_to_human()
     end
 
     def call_trump
@@ -253,15 +250,14 @@ module Euchre
       if input["command"] == false
         next_player()
         call_trump()
-        #cycle_to_human()
+
       else
-        ActionCable.server.broadcast(@channel,{ "hide" => "#pickup-yesno" })
+        ActionCable.server.broadcast(@channel,{ "hide" => "#trump-selection" })
         set_trump(input)
         order_symbol_set()
         setup_turn()
         next_player()
         turn()
-        #cycle_to_human()
       end
     end
 
@@ -298,9 +294,7 @@ module Euchre
         puts "card retrieved"
         #hide card played
         ActionCable.server.broadcast(@channel,{ "hide" => "#p#{current_player.player_no}-card#{input["command"]}" })
-
         turn_shared_code(card)
-        #cycle_to_human()
       end
       #check if user is playing correct card if they can follow suit
       puts "count: #{@count}"
@@ -499,38 +493,6 @@ module Euchre
       return false
     end
 
-    def cycle_to_human
-      #use this function to handle actions loop will carry out
-      def action
-        if @status == "pickup_or_pass"
-          pickup_or_pass
-        elsif @status == "call_trump"
-          call_trump
-        elsif @status == "turn"
-          turn
-        end
-      end
-      #stop if status is trick_check
-      loop do
-        break if @current_player.id != 0
-        break if @status == "after_check"
-        action()
-        puts "cycling"
-        break if @current_player.id != 0
-        break if @status == "after_check"
-      end
-      #pass on to next player action
-
-      puts "cycle finished"
-      if @status == "after_check"
-        @status = "turn"
-        turn()
-        cycle_to_human()
-      else
-        action()
-      end
-
-    end
 
     def next_player
       if @turn == 3
