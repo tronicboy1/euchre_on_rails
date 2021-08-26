@@ -304,7 +304,7 @@ module Euchre
       end
       #check if user is playing correct card if they can follow suit
       puts "count: #{@count}"
-      if @count != 1
+      if !@first_card_suit.nil?
         if can_follow_suit()
           puts "can follow suit"
           if @current_player.hand[input["command"]].suit == @first_card_suit
@@ -392,22 +392,19 @@ module Euchre
       #continue if not 5
       if @round_count <= 5
         @count = 0
-        @status = "turn"
+        @status = "after_check"
         @cards_played = []
         @current_player = winner
+        @first_card_suit = nil
         @turn = @player_list.find_index(winner)
-        #only cycle to human if the winner is not human
-        if @current_player.id != 0
-          turn()
-        else
-          turn()
-        end
+
+
 
 
       else
 
       end
-
+      puts "finished check"
     end
 
     def computer_card_ai
@@ -492,11 +489,21 @@ module Euchre
         end
       end
       #stop if status is trick_check
-      while @current_player.id == 0 and @status != "trick_check"
+      loop do
+        break if @current_player.id != 0
+        break if @status == "after_check"
         action()
+        puts "cycling"
+        break if @current_player.id != 0
+        break if @status == "after_check"
       end
       #pass on to next player action
-      if @status != "trick_check"
+
+      puts "cycle finished"
+      if @status == "after_check"
+        @status = "turn"
+        turn()
+      else
         action()
       end
 
