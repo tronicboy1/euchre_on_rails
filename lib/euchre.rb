@@ -144,12 +144,12 @@ module Euchre
       end
 
       send_all_cards
-      sleep(0.1)
+
 
       #set turnup card and send to players
       @turnup = @deck.deal_card
       ActionCable.server.broadcast(@channel,{ "img" => @turnup.b64_img, "element" => "turnup-card", "show" => "#turnup" })
-      sleep(0.1)
+
       #declare a counter to keep track of how many times players have passed
       @pass_count = 0
       pickup_or_pass
@@ -192,7 +192,7 @@ module Euchre
         @current_player.add_cards([@turnup])
         ActionCable.server.broadcast(@channel,{ "img" => @turnup.b64_img,
           "element" => "p#{@current_player.player_no}-pickupcard", "show" => "#p#{@current_player.player_no}-pickupcard", "hide" => "#turnup" })
-        sleep(0.1)
+
         ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
           "gameupdate" => "Player #{@turn + 1}, choose card to throw away", })
       else
@@ -211,9 +211,9 @@ module Euchre
     def throw_away_card(input)
       @current_player.hand.delete_at input["command"]
       resend_player_cards()
-      sleep(0.1)
+
       ActionCable.server.broadcast(@channel,{ "hide" => "#p#{current_player.player_no}-pickupcard" })
-      sleep(0.1)
+
       ActionCable.server.broadcast(@channel,{ "hide" => "#pickup-yesno" })
       #setup for turn start
       setup_turn()
@@ -298,7 +298,7 @@ module Euchre
         puts "card retrieved"
         #hide card played
         ActionCable.server.broadcast(@channel,{ "hide" => "#p#{current_player.player_no}-card#{input["command"]}" })
-        sleep(0.1)
+
         turn_shared_code(card)
         cycle_to_human()
       end
@@ -332,7 +332,7 @@ module Euchre
       @cards_played.push([card,current_player])
       ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
         "gameupdate" => "Player #{@turn + 1} played the #{card.to_s}" })
-      sleep(0.1)
+
       next_player()
     end
 
@@ -380,13 +380,13 @@ module Euchre
       #send winner to telop
       ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
         "gameupdate" => "Player #{winner.player_no} won the trick!" })
-      sleep(2)
+
       #add trick to player
       winner.tricks += 1
       #update tricks on screen
       ActionCable.server.broadcast(@channel,{ "element" => "#p#{winner.player_no}-tricks",
         "gameupdate" => winner.tricks })
-      sleep(0.1)
+
       #check how many rounds have been played
       @round_count += 1
       #continue if not 5
@@ -422,8 +422,6 @@ module Euchre
             @current_player.hand.each do |card|
               if card.suit == @first_card_suit
                 @current_player.hand.delete(card)
-                #re run card list gen
-                generate_best_card_lists()
                 return card
               end
             end
@@ -459,10 +457,9 @@ module Euchre
           end
         end
       end
-      #compare with trump_list and add cards if trump only first time
-      if @current_player.non_trump_cards.empty?
-        generate_best_card_lists()
-      end
+
+      generate_best_card_lists()
+
 
       return choose_card()
     end
@@ -503,6 +500,7 @@ module Euchre
       if @status == "after_check"
         @status = "turn"
         turn()
+        cycle_to_human()
       else
         action()
       end
@@ -550,7 +548,7 @@ module Euchre
       symbol_dic = {0=>"♠",1=>"♣",2=>"♦",3=>"♥"}
       symbol = symbol_dic[@trump]
       ActionCable.server.broadcast(@channel,{ "element" => "#p#{@current_player.player_no}-order", "gameupdate" => symbol })
-      sleep(0.1)
+
     end
 
     def trump_list_gen
