@@ -18,6 +18,9 @@ module Euchre
 
   end
 
+
+
+
   #generate euchre deck here with shuffle function
   class Deck
     attr_accessor :cards
@@ -46,14 +49,23 @@ module Euchre
 
   end
 
+
+
+
+
+
+
+
+
   #player object will hold player cards and player score
   class Player
-    attr_accessor :hand, :username, :id
+    attr_accessor :hand, :username, :id, :player_no
 
-    def initialize(id,username)
+    def initialize(id,username,player_no)
       @hand = []
       @username = username
       @id = id
+      @player_no = player_no
 
     end
 
@@ -63,10 +75,17 @@ module Euchre
 
   end
 
+
+
+
+
+
+
+
   #round will hold data for each round such as next player and when round is finished
   #also will hold functions to update round information based on player input
   class Round
-    attr_accessor :current_player, :turn, :trump, :turnup
+    attr_accessor :current_player, :turn, :trump, :turnup, :status
 
     def initialize(player1,player2,player3,player4,turn,channel,status)
       @status = status
@@ -111,11 +130,12 @@ module Euchre
       end
 
       send_all_cards
-      sleep(1)
+      sleep(0.1)
 
       #set turnup card and send to players
       @turnup = @deck.deal_card
       ActionCable.server.broadcast(@channel,{ "img" => @turnup.b64_img, "element" => "turnup-card", "show" => "#turnup" })
+      sleep(0.1)
       #declare a counter to keep track of how many times players have passed
       @pass_count = 0
       pickup_or_pass
@@ -124,6 +144,8 @@ module Euchre
 
     def pickup_or_pass
       if @pass_count < 4
+        #action for computer
+        #computer will pass for the time being
         if @current_player.id == 0
           @pass_count += 1
           next_player
@@ -131,21 +153,66 @@ module Euchre
             @status = "pickup_or_pass"
             cycle_to_human
           end
-
         else
           @pass_count += 1
           @status = "pickup_or_pass"
-          ActionCable.server.broadcast(@channel,{ "element" => "#game-telop", "gameupdate" => "Player #{@turn + 1}, Pass or Pickup?","show" => "#pickup-yesno" })
-
+          ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
+            "gameupdate" => "Player #{@turn + 1}, Pass or Pickup?",
+            "show" => "#pickup-yesno" })
         end
-      elsif @pass_count == 4
-        #hide turnup card and show buttons for picking trump
-        ActionCable.server.broadcast(@channel,{ "hide" => "#turnup", "show" => "#trump-selection" })
+      else
+        @status = "call_trump"
+        call_trump
+      end
+    end
 
+    #function to handle user input after for pass or pickup
+    def pickup_or_pass_input(input)
+      if input["command"]
+        @status = "throw_away_card"
+        #must pass in card as an array bc using concat
+        @current_player.add_cards([@turnup])
+        ActionCable.server.broadcast(@channel,{ "img" => @turnup.b64_img,
+          "element" => "p#{@current_player.player_no}-pickupcard", "show" => "#p#{@current_player.player_no}-pickupcard", "hide" => "#turnup" })
+        sleep(0.1)
+        ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
+          "gameupdate" => "Player #{@turn + 1}, choose card to throw away", })
+      else
+        next_player
+        if @pass_count == 4
+          @status = "call_trump"
+          ActionCable.server.broadcast(@channel,{ "hide" => "#pickup-yesno" })
+          call_trump
+        end
+        cycle_to_human
+      end
+    end
+
+    def throw_away_card(input)
+      byebug
+    end
+
+    def call_trump
+      #hide turnup card and show buttons for picking trump
+      ActionCable.server.broadcast(@channel,{ "hide" => "#turnup", "show" => "#trump-selection" })
+      if @pass_count < 8
+        #action for computer
+        #computer will pass for the time being
+        if @current_player.id == 0
+          @pass_count += 1
+          next_player
+          cycle_to_human
+        else
+          @pass_count += 1
+          ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
+            "gameupdate" => "Player #{@turn + 1}, call trump or pass?",
+            "show" => "#trump-selection" })
+        end
+      else
+        #change dealer and start new round if no players call trump
+        @status = "new_round"
 
       end
-
-
     end
 
 
@@ -160,16 +227,20 @@ module Euchre
     end
 
     def cycle_to_human
-      while @current_player.id == 0
+      #use this function to handle actions loop will carry out
+      def action
         if @status == "pickup_or_pass"
           pickup_or_pass
+        elsif @status == "call_trump"
+          call_trump
         end
       end
-      #pass on to next player action
-      if @status == "pickup_or_pass"
-        pickup_or_pass
 
+      while @current_player.id == 0
+        action
       end
+      #pass on to next player action
+      action
     end
 
     def next_player
@@ -183,22 +254,40 @@ module Euchre
     end
 
     def send_all_cards
-      #player 1 cards
-      @player1.hand.each_with_index do |card, i|
-        ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "element" => "p1-card#{i}", "show" => "#hand" })
-      end
-
-      #player2~4 cards require check to see if CPU or not
-      [@player2,@player3,@player4].zip([2,3,4]).each do |player,n|
+      #must check if player is cpu or not
+      @player_list.each do |player|
         if player.id != 0
           player.hand.each_with_index do |card, i|
-            ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "element" => "p#{n}-card#{i}", "show" => "#hand" })
+            ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "element" => "p#{player.player_no}-card#{i}", "show" => "#hand" })
           end
         end
       end
     end
 
+    #resends player cards after pickup and throw away
+    def resend_player_cards
+      @current_player.hand.each_with_index do |card, i|
+        ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "element" => "p#{current_player.player_no}-card#{i}", "show" => "#hand" })
+      end
+    end
+
   end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   #keep information on proceedings of all rounds and score
   class Game
@@ -209,26 +298,26 @@ module Euchre
       @channel = "chat_#{room_id}"
       room = Room.find(room_id)
       user = User.find(room.player1_id)
-      @player1 = Player.new(user.id,user.username)
+      @player1 = Player.new(user.id,user.username,1)
       if room.player2_id == 0
-        @player2 = Player.new(0,"Computer 1")
+        @player2 = Player.new(0,"Computer 1",2)
       else
         user = User.find(room.player2_id)
-        @player2 = Player.new(user.id,user.username)
+        @player2 = Player.new(user.id,user.username,2)
       end
 
       if room.player3_id == 0
-        @player3 = Player.new(0,"Computer 2")
+        @player3 = Player.new(0,"Computer 2",3)
       else
         user = User.find(room.player3_id)
-        @player3 = Player.new(user.id,user.username)
+        @player3 = Player.new(user.id,user.username,3)
       end
 
       if room.player4_id == 0
-        @player4 = Player.new(0,"Computer 3")
+        @player4 = Player.new(0,"Computer 3",4)
       else
         user = User.find(room.player4_id)
-        @player4 = Player.new(user.id,user.username)
+        @player4 = Player.new(user.id,user.username,4)
       end
     end
 
@@ -238,6 +327,11 @@ module Euchre
 
     def game_control(user_input)
       if user_input["id"] == @round.current_player.id
+        if @round.status == "pickup_or_pass"
+          @round.pickup_or_pass_input(user_input)
+        elsif @round.status == "throw_away_card"
+          @round.throw_away_card(user_input)
+        end
 
       else
         puts "wrong player #{user_input}"
