@@ -400,13 +400,9 @@ module Euchre
         @first_card_suit = nil
         @turn = @player_list.find_index(winner)
         turn()
-
-
-
       else
-
+        puts "end round"
       end
-      puts "finished check"
     end
 
     def computer_card_ai
@@ -469,8 +465,19 @@ module Euchre
     #check if player can follow suit or not
     def can_follow_suit
       @current_player.hand.each do |card|
-        if card.suit == @first_card_suit
+        #if not a jack and of same suit okay
+        if card.suit == @first_card_suit && card.value != 10
           return true
+        elsif card.suit == @first_card_suit && card.value == 10
+          if @trump == 0 && card.suit == 1
+            return false
+          elsif @trump == 1 && card.suit == 0
+            return false
+          elsif @trump == 2 && card.suit == 3
+            return false
+          elsif @trump == 3 && card.suit == 2
+            return false
+          end
         end
       end
       return false
@@ -533,13 +540,13 @@ module Euchre
       if card.suit == @trump
         return true
       elsif card.value == 10
-        if @trump == 0 and card.suit == 1
+        if @trump == 0 && card.suit == 1
           return true
-        elsif @trump == 1 and card.suit == 0
+        elsif @trump == 1 && card.suit == 0
           return true
-        elsif @trump == 2 and card.suit == 3
+        elsif @trump == 2 && card.suit == 3
           return true
-        elsif @trump == 3 and card.suit == 2
+        elsif @trump == 3 && card.suit == 2
           return true
         end
       end
