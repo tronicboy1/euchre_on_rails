@@ -396,8 +396,14 @@ module Euchre
         @cards_played = []
         @current_player = winner
         @turn = @player_list.find_index(winner)
-        turn()
-        cycle_to_human()
+        #only cycle to human if the winner is not human
+        if @current_player.id != 0
+          turn()
+        else
+          turn()
+        end
+
+
       else
 
       end
@@ -486,11 +492,14 @@ module Euchre
         end
       end
       #stop if status is trick_check
-      while @current_player.id == 0 and status != "trick_check"
+      while @current_player.id == 0 and @status != "trick_check"
         action()
       end
       #pass on to next player action
-      action()
+      if @status != "trick_check"
+        action()
+      end
+
     end
 
     def next_player
