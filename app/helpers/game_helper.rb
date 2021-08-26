@@ -56,10 +56,6 @@ module GameHelper
     end
   end
 
-  #get rooms user is associated with and return with room id
-  def user_room_list
-
-  end
 
   #create list with computer and all users in list so player can create room accessable to friends
   def add_player_list

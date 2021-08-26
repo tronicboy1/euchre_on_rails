@@ -173,7 +173,7 @@ module Euchre
       if input["command"]
         @status = "throw_away_card"
         #set trump and card values
-        set_trump
+        set_trump(input)
         #must pass in card as an array bc using concat
         @current_player.add_cards([@turnup])
         ActionCable.server.broadcast(@channel,{ "img" => @turnup.b64_img,
@@ -284,7 +284,7 @@ module Euchre
       end
     end
 
-    def set_trump
+    def set_trump(input)
       if !@turnup.nil?
         @trump = @turnup.suit
       else
