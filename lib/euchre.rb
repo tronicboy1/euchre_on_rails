@@ -112,7 +112,7 @@ module Euchre
       @dealer = @player_list[@turn]
       @trump = nil
       #record the player who ordered trump for keeping score
-      @orderer_player_no = nil
+      @orderer_player = nil
       #broadcast dealer to players
       ActionCable.server.broadcast(@channel,{ "element" => "#p#{@turn + 1}-dealer", "gameupdate" => "●" })
       next_player
@@ -265,7 +265,7 @@ module Euchre
     def setup_turn
       @count = 0
       @status = "turn"
-      @ordered_player_no = @current_player.player_no
+      @ordered_player = @current_player
       @cards_played =[]
     end
 
@@ -302,7 +302,7 @@ module Euchre
       #check if user is playing correct card if they can follow suit
       if @count != 1
         if can_follow_suit()
-          if @current_player.hand[input["command"]].suit == @first_card_played.suit
+          if @current_player.hand[input["command"]].suit == @first_card_suit
             after_check(input)
           else
             ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
@@ -316,10 +316,14 @@ module Euchre
 
     def turn_shared_code(card)
       if @count == 1
-        @first_card_played = card
+        if is_trump(card)
+          @first_card_suit = @trump
+        else
+          @first_card_suit = card.suit
+        end
       end
       #add card played to cards_played list in order played
-      @cards_played.push([card,current_player.player_no])
+      @cards_played.push([card,current_player])
       ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
         "gameupdate" => "Player #{@turn + 1} played the #{card.to_s}" })
       sleep(0.1)
@@ -327,23 +331,63 @@ module Euchre
     end
 
     def trick_check
+      hantei_suit = @cards_played[0][0].suit
+      highest = -1
+      winner = nil
+      byebug
+      if hantei_suit == @trump
+        trump_value = @trump_list.collect{|x| x[1]}
+        @cards_played.each do |card,player|
+          if card.suit == @trump
+            val = @trump_list.find_index(card.id)
+            if val > highest
+              highest = val
+              winner = player
+            end
+          end
+        end
+      else
+        value_dic = {0 => 12, 12 => 11, 11 => 10, 10 => 9, 9 => 8, 8 => 7}
+        trump_played = false
+        @cards_played.each do |card,player|
+          if card.suit == @trump and !trump_played
+            trump_played = true
+            highest = @trump_list.find_index(card.id)
+            winner = player
+          elsif trump_played
+            if card.suit == @trump
+              val = @trump_list.find_index(card.id)
+              if val > highest
+                highest = val
+                winner = player
+              end
+            end
+          elsif card.suit == hantei_suit
+            val = value_dic[card.value]
+            if val > highest
+              highest = val
+              winner = player
+            end
+          end
+        end
+      end
       byebug
     end
 
     def computer_card_ai
       def choose_card
         #play best card if first card
-        if @first_card_played.nil?
+        if @first_card_suit.nil?
           return best_card()
 
         #use best trump if in hand
-        elsif @first_card_played.suit == @trump and !@current_player.trump_cards.empty?
+        elsif @first_card_suit == @trump and !@current_player.trump_cards.empty?
           return best_card()
         #check if can follow suit
         else
           if can_follow_suit()
             @current_player.hand.each do |card|
-              if card.suit == @first_card_played.suit
+              if card.suit == @first_card_suit
                 @current_player.hand.delete(card)
                 #re run card list gen
                 generate_best_card_lists()
@@ -393,7 +437,7 @@ module Euchre
     #check if player can follow suit or not
     def can_follow_suit
       @current_player.hand.each do |card|
-        if card.suit == @first_card_played.suit
+        if card.suit == @first_card_suit
           return true
         end
       end
@@ -437,6 +481,23 @@ module Euchre
         @trump = input["command"]
       end
       trump_list_gen
+    end
+
+    def is_trump(card)
+      if card.suit == @trump
+        return true
+      elsif card.value == 10
+        if @trump == 0 and card.suit == 1
+          return true
+        elsif @trump == 1 and card.suit == 0
+          return true
+        elsif @trump == 2 and card.suit == 3
+          return true
+        elsif @trump == 3 and card.suit == 2
+          return true
+        end
+      end
+      return false
     end
 
     def order_symbol_set
