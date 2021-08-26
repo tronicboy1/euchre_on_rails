@@ -110,6 +110,7 @@ module Euchre
       @deck = Deck.new
       @dealer = @player_list[@turn]
       @trump = nil
+      @round_count = 0
       #record the player who ordered trump for keeping score
       @orderer_player = nil
       #broadcast dealer to players
@@ -333,7 +334,7 @@ module Euchre
       hantei_suit = @cards_played[0][0].suit
       highest = -1
       winner = nil
-      if hantei_suit == @trump
+      if is_trump(@cards_played[0][0])
         trump_value = @trump_list.collect{|x| x[1]}
         @cards_played.each do |card,player|
           if is_trump(card)
@@ -369,7 +370,31 @@ module Euchre
           end
         end
       end
-      byebug
+
+      #send winner to telop
+      ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
+        "gameupdate" => "Player #{winner.player_no} won the trick!" })
+      sleep(2)
+      #add trick to player
+      winner.tricks += 1
+      #update tricks on screen
+      ActionCable.server.broadcast(@channel,{ "element" => "#p#{winner.player_no}-tricks",
+        "gameupdate" => winner.tricks })
+      sleep(0.1)
+      #check how many rounds have been played
+      @round_count += 1
+      #continue if not 5
+      if @round_count <= 5
+        @status = "turn"
+        @cards_played = []
+        @current_player = winner
+        @turn = @player_list.find_index(winner)
+        turn()
+        cycle_to_human()
+      else
+
+      end
+
     end
 
     def computer_card_ai
