@@ -214,9 +214,8 @@ module Euchre
       sleep(0.1)
       ActionCable.server.broadcast(@channel,{ "hide" => "#p#{current_player.player_no}-pickupcard" })
       sleep(0.1)
-      @count = 0
-      @status = "turn"
-      @ordered_player_no = @current_player.player_no
+      #setup for turn start
+      setup_turn()
       next_player()
       turn()
       cycle_to_human()
@@ -256,15 +255,19 @@ module Euchre
       else
         set_trump(input)
         order_symbol_set()
-        @ordered_player_no = @current_player.player_no
-        @count = 0
-        @status = "turn"
+        setup_turn()
         next_player()
         turn()
         cycle_to_human()
       end
     end
 
+    def setup_turn
+      @count = 0
+      @status = "turn"
+      @ordered_player_no = @current_player.player_no
+      @cards_played =[]
+    end
 
 
 
@@ -287,19 +290,49 @@ module Euchre
           ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
             "gameupdate" => "Player #{@turn + 1} played the #{card.to_s}" })
           sleep(0.1)
-          byebug
           next_player()
-
         end
-
       else
-
+        @status = "trick_check"
+        trick_check()
       end
-
     end
 
     def turn_input(input)
+      def after_check(input)
+        card = @current_player.hand.delete_at(input["command"])
+        #hide card played
+        ActionCable.server.broadcast(@channel,{ "hide" => "#p#{current_player.player_no}-card#{input["command"]}" })
+        sleep(0.1)
+        #save first card played to check that other players follow suit
+        if @count == 1
+          @first_card_played = card
+        end
+        #add card played to players attribute
+        @current_player.card_played = card
+        ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
+          "gameupdate" => "Player #{@turn + 1} played the #{card.to_s}" })
+        sleep(0.1)
+        next_player()
+        cycle_to_human()
+      end
+      #check if user is playing correct card if they can follow suit
+      if @count != 1
+        if can_follow_suit()
+          if @current_player.hand[input["command"]].suit == @first_card_played.suit
+            after_check(input)
+          else
+            ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
+              "gameupdate" => "Player #{@turn + 1}, you can't lie to me." })
+          end
+        end
+      else
+        after_check(input)
+      end
+    end
 
+    def trick_check
+      byebug
     end
 
     def computer_card_ai
@@ -383,8 +416,8 @@ module Euchre
           turn
         end
       end
-
-      while @current_player.id == 0
+      #stop if status is trick_check
+      while @current_player.id == 0 and status != "trick_check"
         action()
       end
       #pass on to next player action
@@ -510,6 +543,8 @@ module Euchre
           @round.throw_away_card(user_input)
         elsif @round.status == "call_trump"
           @round.call_trump_input(user_input)
+        elsif @round.status == "turn"
+          @round.turn_input(user_input)
         end
 
       else
