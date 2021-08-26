@@ -13,8 +13,13 @@ module Euchre
     end
 
     def inspect
-      suit_str = {0 => "Spades", 1 => "Clubs", 2 => "Diamonds", 3 => "Hearts"}[suit]
-      "(#{value},#{suit})"
+      "(#{suit},#{value})"
+    end
+
+    def to_s
+        suit_str = {0 => "Spades", 1 => "Clubs", 2 => "Diamonds", 3 => "Hearts"}
+        value_str = {0 => "Ace", 8 => "Nine", 9 => "Ten", 10 => "Jack", 11 => "Queen", 12 => "King"}
+        return "#{value_str[@value]} of #{suit_str[@suit]}"
     end
 
   end
@@ -60,13 +65,18 @@ module Euchre
 
   #player object will hold player cards and player score
   class Player
-    attr_accessor :hand, :username, :id, :player_no
+    attr_accessor :hand, :username, :id, :player_no, :tricks, :trump_cards, :non_trump_cards
 
     def initialize(id,username,player_no)
       @hand = []
       @username = username
       @id = id
       @player_no = player_no
+      @tricks = 0
+
+      #for computer ai
+      @trump_cards = []
+      @non_trump_cards = []
 
     end
 
@@ -100,6 +110,9 @@ module Euchre
       @deck = Deck.new
       @dealer = @player_list[@turn]
       @trump = nil
+      @round_count = 0
+      #record the player who ordered trump for keeping score
+      @orderer_player = nil
       #broadcast dealer to players
       ActionCable.server.broadcast(@channel,{ "element" => "#p#{@turn + 1}-dealer", "gameupdate" => "●" })
       next_player
@@ -131,12 +144,12 @@ module Euchre
       end
 
       send_all_cards
-      sleep(0.1)
+
 
       #set turnup card and send to players
       @turnup = @deck.deal_card
       ActionCable.server.broadcast(@channel,{ "img" => @turnup.b64_img, "element" => "turnup-card", "show" => "#turnup" })
-      sleep(0.1)
+
       #declare a counter to keep track of how many times players have passed
       @pass_count = 0
       pickup_or_pass
@@ -145,17 +158,17 @@ module Euchre
 
     def pickup_or_pass
       if @pass_count < 4
+        @pass_count += 1
         #action for computer
         #computer will pass for the time being
         if @current_player.id == 0
-          @pass_count += 1
-          next_player
+          next_player()
           if @status == "start"
             @status = "pickup_or_pass"
-            cycle_to_human
+            #cycle_to_human()
           end
+          pickup_or_pass()
         else
-          @pass_count += 1
           @status = "pickup_or_pass"
           ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
             "gameupdate" => "Player #{@turn + 1}, Pass or Pickup?",
@@ -164,7 +177,7 @@ module Euchre
       else
         @status = "call_trump"
 
-        call_trump
+        call_trump()
       end
     end
 
@@ -179,11 +192,11 @@ module Euchre
         @current_player.add_cards([@turnup])
         ActionCable.server.broadcast(@channel,{ "img" => @turnup.b64_img,
           "element" => "p#{@current_player.player_no}-pickupcard", "show" => "#p#{@current_player.player_no}-pickupcard", "hide" => "#turnup" })
-        sleep(0.1)
+
         ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
           "gameupdate" => "Player #{@turn + 1}, choose card to throw away", })
       else
-        next_player
+        next_player()
         if @pass_count == 4
           @status = "call_trump"
           ActionCable.server.broadcast(@channel,{ "hide" => "#pickup-yesno" })
@@ -191,20 +204,22 @@ module Euchre
         else
           pickup_or_pass()
         end
-        cycle_to_human()
+        #cycle_to_human()
       end
     end
 
     def throw_away_card(input)
       @current_player.hand.delete_at input["command"]
       resend_player_cards()
-      sleep(0.1)
+
       ActionCable.server.broadcast(@channel,{ "hide" => "#p#{current_player.player_no}-pickupcard" })
-      sleep(0.1)
-      @status = "turn"
+
+      ActionCable.server.broadcast(@channel,{ "hide" => "#pickup-yesno" })
+      #setup for turn start
+      setup_turn()
       next_player()
       turn()
-      cycle_to_human()
+      #cycle_to_human()
     end
 
     def call_trump
@@ -219,7 +234,8 @@ module Euchre
         #computer will pass for the time being
         if @current_player.id == 0
           @pass_count += 1
-          next_player
+          next_player()
+          call_trump()
         else
           @pass_count += 1
           ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
@@ -229,7 +245,7 @@ module Euchre
       else
         #change dealer and start new round if no players call trump
         @status = "new_round"
-        
+
       end
     end
 
@@ -237,14 +253,161 @@ module Euchre
       if input["command"] == false
         next_player()
         call_trump()
-        cycle_to_human()
+        #cycle_to_human()
       else
+        ActionCable.server.broadcast(@channel,{ "hide" => "#pickup-yesno" })
         set_trump(input)
         order_symbol_set()
-        @status = "turn"
+        setup_turn()
         next_player()
         turn()
-        cycle_to_human()
+        #cycle_to_human()
+      end
+    end
+
+    def setup_turn
+      @count = 0
+      @status = "turn"
+      @ordered_player = @current_player
+      @cards_played =[]
+    end
+
+
+
+
+    def turn
+      #count will stop when all players give one card
+      @count += 1
+      if @count <= 4
+        if @current_player.id != 0
+          ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
+            "gameupdate" => "Player #{@turn + 1}, choose a card to play." })
+        else
+          card = computer_card_ai()
+          turn_shared_code(card)
+        end
+      else
+        @status = "trick_check"
+        trick_check()
+      end
+    end
+
+    def turn_input(input)
+      def after_check(input)
+        card = @current_player.hand[input["command"]]
+        puts "card retrieved"
+        #hide card played
+        ActionCable.server.broadcast(@channel,{ "hide" => "#p#{current_player.player_no}-card#{input["command"]}" })
+
+        turn_shared_code(card)
+        #cycle_to_human()
+      end
+      #check if user is playing correct card if they can follow suit
+      puts "count: #{@count}"
+      if !@first_card_suit.nil?
+        if can_follow_suit()
+          puts "can follow suit"
+          if @current_player.hand[input["command"]].suit == @first_card_suit
+            puts "first card suit okay"
+            after_check(input)
+          else
+            ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
+              "gameupdate" => "Player #{@turn + 1}, you can't lie to me." })
+          end
+        end
+      else
+        after_check(input)
+      end
+    end
+
+    def turn_shared_code(card)
+      #save first card played to check that other players follow suit
+      if @count == 1
+        #use is trump function to avoiding problems with jacks
+        if is_trump(card)
+          @first_card_suit = @trump
+        else
+          @first_card_suit = card.suit
+        end
+      end
+      #add card played to cards_played list in order played
+      @cards_played.push([card,current_player])
+      ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
+        "gameupdate" => "Player #{@turn + 1} played the #{card.to_s}" })
+      next_player()
+      turn()
+    end
+
+
+
+
+
+
+
+    def trick_check
+      hantei_suit = @cards_played[0][0].suit
+      highest = -1
+      winner = nil
+      if is_trump(@cards_played[0][0])
+        trump_value = @trump_list.collect{|x| x[1]}
+        @cards_played.each do |card,player|
+          if is_trump(card)
+            val = @trump_list.find_index(card.id)
+            if val > highest
+              highest = val
+              winner = player
+            end
+          end
+        end
+      else
+        value_dic = {0 => 12, 12 => 11, 11 => 10, 10 => 9, 9 => 8, 8 => 7}
+        trump_played = false
+        @cards_played.each do |card,player|
+          if is_trump(card) and !trump_played
+            trump_played = true
+            highest = @trump_list.find_index(card.id)
+            winner = player
+          elsif trump_played
+            if is_trump(card) == @trump
+              val = @trump_list.find_index(card.id)
+              if val > highest
+                highest = val
+                winner = player
+              end
+            end
+          elsif card.suit == hantei_suit
+            val = value_dic[card.value]
+            if val > highest
+              highest = val
+              winner = player
+            end
+          end
+        end
+      end
+
+      #send winner to telop
+      ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
+        "gameupdate" => "Player #{winner.player_no} won the trick!" })
+
+      #add trick to player
+      winner.tricks += 1
+      #update tricks on screen
+      ActionCable.server.broadcast(@channel,{ "element" => "#p#{winner.player_no}-tricks",
+        "gameupdate" => winner.tricks })
+
+      #check how many rounds have been played
+      @round_count += 1
+      #continue if not 5
+      if @round_count <= 5
+        @count = 0
+        @status = "turn"
+        @cards_played = []
+        @current_player = winner
+        @first_card_suit = nil
+        @turn = winner.player_no - 1
+        turn()
+      else
+        puts "end round"
       end
     end
 
@@ -252,13 +415,88 @@ module Euchre
 
 
 
-    def turn
-      byebug
-      if @current_player.id != 0
 
-      else
 
+
+
+    def computer_card_ai
+      def choose_card
+        #play best card if first card
+        if @first_card_suit.nil?
+          return best_card()
+
+        #use best trump if in hand
+        elsif @first_card_suit == @trump and !@current_player.trump_cards.empty?
+          return best_card()
+        #check if can follow suit
+        else
+          if can_follow_suit()
+            @current_player.hand.each do |card|
+              if card.suit == @first_card_suit
+                @current_player.hand.delete(card)
+                return card
+              end
+            end
+          else
+            return best_card()
+          end
+        end
       end
+
+      def best_card
+        if !@current_player.trump_cards.empty?
+          best = @current_player.trump_cards[0]
+          card = @current_player.hand.delete(best)
+          return card
+        else
+          best = @current_player.non_trump_cards[0]
+          card = @current_player.hand.delete(best)
+          return card
+        end
+      end
+
+      def generate_best_card_lists
+        @current_player.trump_cards = []
+        @current_player.non_trump_cards = []
+        value_list = [8,9,10,11,12,0]
+        @current_player.hand.each do |card|
+          if @trump_list.include?(card.id)
+            @current_player.trump_cards.push(card)
+          else
+            value_list.each do |val|
+              if card.value == val and !@current_player.non_trump_cards.include?(card)
+                @current_player.non_trump_cards.push(card)
+              end
+            end
+          end
+        end
+      end
+
+      generate_best_card_lists()
+
+
+      return choose_card()
+    end
+
+    #check if player can follow suit or not
+    def can_follow_suit
+      @current_player.hand.each do |card|
+        #if not a jack and of same suit okay
+        if card.suit == @first_card_suit && card.value != 10
+          return true
+        elsif card.suit == @first_card_suit && card.value == 10
+          if @trump == 0 && card.suit == 1
+            return false
+          elsif @trump == 1 && card.suit == 0
+            return false
+          elsif @trump == 2 && card.suit == 3
+            return false
+          elsif @trump == 3 && card.suit == 2
+            return false
+          end
+        end
+      end
+      return false
     end
 
     def cycle_to_human
@@ -272,12 +510,26 @@ module Euchre
           turn
         end
       end
-
-      while @current_player.id == 0
+      #stop if status is trick_check
+      loop do
+        break if @current_player.id != 0
+        break if @status == "after_check"
         action()
+        puts "cycling"
+        break if @current_player.id != 0
+        break if @status == "after_check"
       end
       #pass on to next player action
-      action()
+
+      puts "cycle finished"
+      if @status == "after_check"
+        @status = "turn"
+        turn()
+        cycle_to_human()
+      else
+        action()
+      end
+
     end
 
     def next_player
@@ -300,11 +552,28 @@ module Euchre
       trump_list_gen
     end
 
+    def is_trump(card)
+      if card.suit == @trump
+        return true
+      elsif card.value == 10
+        if @trump == 0 && card.suit == 1
+          return true
+        elsif @trump == 1 && card.suit == 0
+          return true
+        elsif @trump == 2 && card.suit == 3
+          return true
+        elsif @trump == 3 && card.suit == 2
+          return true
+        end
+      end
+      return false
+    end
+
     def order_symbol_set
       symbol_dic = {0=>"♠",1=>"♣",2=>"♦",3=>"♥"}
       symbol = symbol_dic[@trump]
       ActionCable.server.broadcast(@channel,{ "element" => "#p#{@current_player.player_no}-order", "gameupdate" => symbol })
-      sleep(0.1)
+
     end
 
     def trump_list_gen
@@ -392,6 +661,7 @@ module Euchre
     end
 
     def game_control(user_input)
+      puts "player input sent to game"
       if user_input["id"] == @round.current_player.id
         if @round.status == "pickup_or_pass"
           @round.pickup_or_pass_input(user_input)
@@ -399,6 +669,9 @@ module Euchre
           @round.throw_away_card(user_input)
         elsif @round.status == "call_trump"
           @round.call_trump_input(user_input)
+        elsif @round.status == "turn"
+          puts "turn input received"
+          @round.turn_input(user_input)
         end
 
       else
