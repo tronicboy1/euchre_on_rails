@@ -134,6 +134,10 @@ document.addEventListener('turbolinks:load', () => {
       let userid = $("#user-id").data('user-id');
       roomChannel.send({ type: "gamecontrol", command: 3, id: userid });
     });
+    $('#trump-selection4').on('click', function() {
+      let userid = $("#user-id").data('user-id');
+      roomChannel.send({ type: "gamecontrol", command: false, id: userid });
+    });
 
     //player1 functions
     $('#p1-card0').on('click', function() {

@@ -31,10 +31,10 @@ class RoomcontrolChannel < ApplicationCable::Channel
   def gamecontrol_shori(dic)
 
     if dic["command"] == "start-game"
-      @game = Game.new(params[:room_id])
-      @game.start_game
+      $game_dict[params[:room_id]] = Game.new(params[:room_id])
+      $game_dict[params[:room_id]].start_game
     else
-      @game.game_control(dic)
+      $game_dict[params[:room_id]].game_control(dic)
     end
 
 

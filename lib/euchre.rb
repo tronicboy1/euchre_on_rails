@@ -1,11 +1,12 @@
 module Euchre
   #individual cards with img data
   class Card
-    attr_accessor :suit, :value, :b64_img
+    attr_accessor :suit, :value, :b64_img, :id
 
     def initialize(suit,value)
       @suit = suit
       @value = value
+      @id = [suit,value]
       path = "./app/assets/images/cards/cards_sm/#{suit},#{value}.png"
       img = File.open(path,"rb")
       @b64_img = Base64.strict_encode64(img.read)
@@ -162,6 +163,7 @@ module Euchre
         end
       else
         @status = "call_trump"
+
         call_trump
       end
     end
@@ -170,6 +172,8 @@ module Euchre
     def pickup_or_pass_input(input)
       if input["command"]
         @status = "throw_away_card"
+        #set trump and card values
+        set_trump
         #must pass in card as an array bc using concat
         @current_player.add_cards([@turnup])
         ActionCable.server.broadcast(@channel,{ "img" => @turnup.b64_img,
@@ -183,25 +187,38 @@ module Euchre
           @status = "call_trump"
           ActionCable.server.broadcast(@channel,{ "hide" => "#pickup-yesno" })
           call_trump
+        else
+          pickup_or_pass
         end
         cycle_to_human
       end
     end
 
     def throw_away_card(input)
-      byebug
+      @current_player.hand.delete_at input["command"]
+      resend_player_cards
+      sleep(0.1)
+      ActionCable.server.broadcast(@channel,{ "hide" => "#p#{current_player.player_no}-pickupcard" })
+      sleep(0.1)
+      @status = "turn"
+      next_player
+      turn
+      cycle_to_human
     end
 
     def call_trump
-      #hide turnup card and show buttons for picking trump
-      ActionCable.server.broadcast(@channel,{ "hide" => "#turnup", "show" => "#trump-selection" })
-      if @pass_count < 8
+      if @pass_count == 4
+        #hide turnup card and show buttons for picking trump
+        ActionCable.server.broadcast(@channel,{ "hide" => "#turnup", "show" => "#trump-selection" })
+        @turnup = nil
+      end
+
+      if @pass_count <= 8
         #action for computer
         #computer will pass for the time being
         if @current_player.id == 0
           @pass_count += 1
           next_player
-          cycle_to_human
         else
           @pass_count += 1
           ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
@@ -211,6 +228,16 @@ module Euchre
       else
         #change dealer and start new round if no players call trump
         @status = "new_round"
+        byebug
+      end
+    end
+
+    def call_trump_input(input)
+      if input["command"] == false
+        next_player
+        call_trump
+        cycle_to_human
+      else
 
       end
     end
@@ -218,7 +245,9 @@ module Euchre
 
 
 
+
     def turn
+      byebug
       if @current_player.id != 0
 
       else
@@ -233,6 +262,8 @@ module Euchre
           pickup_or_pass
         elsif @status == "call_trump"
           call_trump
+        elsif @status == "turn"
+          turn
         end
       end
 
@@ -250,6 +281,28 @@ module Euchre
       else
         @turn += 1
         @current_player = @player_list[@turn]
+      end
+    end
+
+    def set_trump
+      if !@turnup.nil?
+        @trump = @turnup.suit
+      else
+        #set to user trump call here
+        @trump = nil
+      end
+      trump_list_gen
+    end
+
+    def trump_list_gen
+      if @trump == 0
+        @trump_list = [[0,8],[0,9],[0,11],[0,12],[0,0],[1,10],[0,10]]
+      elsif @trump == 1
+        @trump_list = [[1,8],[1,9],[1,11],[1,12],[1,0],[0,10],[1,10]]
+      elsif @trump == 2
+        @trump_list = [[2,8],[2,9],[2,11],[2,12],[2,0],[3,10],[2,10]]
+      elsif @trump == 3
+        @trump_list = [[3,8],[3,9],[3,11],[3,12],[3,0],[2,10],[3,10]]
       end
     end
 
@@ -331,6 +384,8 @@ module Euchre
           @round.pickup_or_pass_input(user_input)
         elsif @round.status == "throw_away_card"
           @round.throw_away_card(user_input)
+        elsif @round.status == "call_trump"
+          @round.call_trump_input(user_input)
         end
 
       else
@@ -339,10 +394,6 @@ module Euchre
     end
 
   end
-
-
-
-
 
 
 
