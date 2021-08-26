@@ -13,7 +13,8 @@ module EuchreOnRails
 
     config.time_zone = 'Tokyo'
 
-
+    #use game_dict to store game objects with key as room id
+    $game_dict = Hash.new(nil)
 
     # Configuration for the application, engines, and railties goes here.
     #

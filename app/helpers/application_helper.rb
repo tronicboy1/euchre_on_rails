@@ -33,6 +33,9 @@ module ApplicationHelper
         user.save(validate: false)
       end
     end
+    #remove room from global dict memory
+    room_id = room.id
+    $game_dict.delete(:room_id)
     room.destroy
   end
 end
