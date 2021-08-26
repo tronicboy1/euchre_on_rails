@@ -65,14 +65,13 @@ module Euchre
 
   #player object will hold player cards and player score
   class Player
-    attr_accessor :hand, :username, :id, :player_no, :card_played, :tricks, :trump_cards, :non_trump_cards
+    attr_accessor :hand, :username, :id, :player_no, :tricks, :trump_cards, :non_trump_cards
 
     def initialize(id,username,player_no)
       @hand = []
       @username = username
       @id = id
       @player_no = player_no
-      @card_played = nil
       @tricks = 0
 
       #for computer ai
@@ -334,11 +333,10 @@ module Euchre
       hantei_suit = @cards_played[0][0].suit
       highest = -1
       winner = nil
-      byebug
       if hantei_suit == @trump
         trump_value = @trump_list.collect{|x| x[1]}
         @cards_played.each do |card,player|
-          if card.suit == @trump
+          if is_trump(card)
             val = @trump_list.find_index(card.id)
             if val > highest
               highest = val
@@ -350,12 +348,12 @@ module Euchre
         value_dic = {0 => 12, 12 => 11, 11 => 10, 10 => 9, 9 => 8, 8 => 7}
         trump_played = false
         @cards_played.each do |card,player|
-          if card.suit == @trump and !trump_played
+          if is_trump(card) and !trump_played
             trump_played = true
             highest = @trump_list.find_index(card.id)
             winner = player
           elsif trump_played
-            if card.suit == @trump
+            if is_trump(card) == @trump
               val = @trump_list.find_index(card.id)
               if val > highest
                 highest = val
