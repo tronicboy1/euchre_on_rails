@@ -174,6 +174,7 @@ module Euchre
         @status = "throw_away_card"
         #set trump and card values
         set_trump(input)
+        order_symbol_set()
         #must pass in card as an array bc using concat
         @current_player.add_cards([@turnup])
         ActionCable.server.broadcast(@channel,{ "img" => @turnup.b64_img,
@@ -186,24 +187,24 @@ module Euchre
         if @pass_count == 4
           @status = "call_trump"
           ActionCable.server.broadcast(@channel,{ "hide" => "#pickup-yesno" })
-          call_trump
+          call_trump()
         else
-          pickup_or_pass
+          pickup_or_pass()
         end
-        cycle_to_human
+        cycle_to_human()
       end
     end
 
     def throw_away_card(input)
       @current_player.hand.delete_at input["command"]
-      resend_player_cards
+      resend_player_cards()
       sleep(0.1)
       ActionCable.server.broadcast(@channel,{ "hide" => "#p#{current_player.player_no}-pickupcard" })
       sleep(0.1)
       @status = "turn"
-      next_player
-      turn
-      cycle_to_human
+      next_player()
+      turn()
+      cycle_to_human()
     end
 
     def call_trump
@@ -238,7 +239,13 @@ module Euchre
         call_trump
         cycle_to_human
       else
-
+        set_trump(input)
+        ActionCable.server.broadcast(@channel,{ "hide" => "#p#{current_player.player_no}-pickupcard" })
+        sleep(0.1)
+        @status = "turn"
+        next_player
+        turn
+        cycle_to_human
       end
     end
 
@@ -268,10 +275,10 @@ module Euchre
       end
 
       while @current_player.id == 0
-        action
+        action()
       end
       #pass on to next player action
-      action
+      action()
     end
 
     def next_player
@@ -292,6 +299,13 @@ module Euchre
         @trump = nil
       end
       trump_list_gen
+    end
+
+    def order_symbol_set
+      symbol_dic = {0=>"♠",1=>"♣",2=>"♦",3=>"♥"}
+      symbol = symbol_dic[@trump]
+      ActionCable.server.broadcast(@channel,{ "element" => "#p#{@current_player.player_no}-order", "gameupdate" => symbol })
+      sleep(0.1)
     end
 
     def trump_list_gen
