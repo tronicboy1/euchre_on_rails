@@ -757,7 +757,6 @@ module Euchre
     end
 
     def game_control(user_input)
-      puts "player input sent to game"
       if user_input["id"] == @round.current_player.id
         if @round.status == "pickup_or_pass"
           @round.pickup_or_pass_input(user_input)
@@ -766,7 +765,6 @@ module Euchre
         elsif @round.status == "call_trump"
           @round.call_trump_input(user_input)
         elsif @round.status == "turn"
-          puts "turn input received"
           @round.turn_input(user_input)
         end
 
