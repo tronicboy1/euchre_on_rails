@@ -278,6 +278,9 @@ module Euchre
       else
         ActionCable.server.broadcast(@channel,{ "hide" => "#trump-selection" })
         sleep(0.1)
+        #set current_player and turn to dealer
+        @current_player = @dealer
+        @turn = @dealer.player_no - 1
         set_trump(input)
         order_symbol_set()
         setup_turn()
