@@ -65,7 +65,7 @@ module Euchre
 
   #player object will hold player cards and player score
   class Player
-    attr_accessor :hand, :username, :id, :player_no, :tricks, :trump_cards, :non_trump_cards
+    attr_accessor :hand, :username, :id, :player_no, :tricks, :trump_cards, :non_trump_cards, :score
 
     def initialize(id,username,player_no)
       @hand = []
@@ -73,7 +73,7 @@ module Euchre
       @id = id
       @player_no = player_no
       @tricks = 0
-
+      @score = 0
       #for computer ai
       @trump_cards = []
       @non_trump_cards = []
@@ -319,19 +319,6 @@ module Euchre
           after_check(input,card)
         end
       end
-      # if !@first_card_suit.nil?
-      #   if can_follow_suit()
-      #     if can_follow_suit_card(@current_player.hand[input["command"]])
-      #       puts "first card suit okay"
-      #       after_check(input)
-      #     else
-      #       ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
-      #         "gameupdate" => "Player #{@turn + 1}, you can't lie to me." })
-      #     end
-      #   end
-      # else
-      #   after_check(input)
-      # end
     end
 
     def turn_shared_code(card)
@@ -427,7 +414,63 @@ module Euchre
 
 
     def round_end
-      byebug
+      #add up team tricks
+      team1_tricks = @player1.tricks + @player3.tricks
+      team2_tricks = @player2.tricks + @player4.tricks
+      #compare which team has more tricks
+      if team1_tricks > team2_tricks
+        if @dealer == @player1 || @dealer == @player3
+          if team1_tricks == 5
+            @player1.score += 2
+            @player3.score += 2
+          else
+            @player1.score += 1
+            @player3.score += 1
+          end
+        else
+          if team1_tricks == 5
+            @player1.score += 4
+            @player3.score += 4
+            ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
+              "gameupdate" => "Player 2 and 4 were Euchred!" })
+          else
+            @player1.score += 2
+            @player3.score += 2
+            ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
+              "gameupdate" => "Player 2 and 4 were Euchred!" })
+          end
+        end
+      else
+        if @dealer == @player2 || @dealer == @player4
+          if team2_tricks == 5
+            @player2.score += 2
+            @player4.score += 2
+          else
+            @player2.score += 1
+            @player4.score += 1
+          end
+        else
+          if team2_tricks == 5
+            @player2.score += 4
+            @player4.score += 4
+            ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
+              "gameupdate" => "Players 1 and 3 were Euchred!" })
+          else
+            @player2.score += 2
+            @player4.score += 2
+            ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
+              "gameupdate" => "Players 1 and 3 were Euchred!" })
+          end
+        end
+      end
+
+      #add win to players and send to board
+      @player_list.each do |player|
+        ActionCable.server.broadcast(@channel,{ "element" => "#p#{player.player_no}-score", "gameupdate" => player.score })
+        sleep(0.1)
+      end
+      #deal new cards and start another round
+
 
     end
 
@@ -519,32 +562,6 @@ module Euchre
       end
       return false
     end
-
-    def can_follow_suit_card(card)
-      #if not a jack and of same suit okay
-      if card.suit == @first_card_suit
-        if card.value != 10
-          return true
-        elsif card.suit != @trump
-          return true
-        end
-
-      elsif @trump == @first_card_suit && card.value == 10
-        if card.suit == @first_card_suit
-          return true
-        elsif @trump == 0 && card.suit == 1
-          return true
-        elsif @trump == 1 && card.suit == 0
-          return true
-        elsif @trump == 2 && card.suit == 3
-          return true
-        elsif @trump == 3 && card.suit == 2
-          return true
-        end
-      end
-      return false
-    end
-
 
     def next_player
       if @turn == 3
