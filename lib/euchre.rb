@@ -320,7 +320,7 @@ module Euchre
         puts "card retrieved"
         #hide card played
         ActionCable.server.broadcast(@channel,{ "hide" => "#p#{current_player.player_no}-card#{input["command"]}" })
-        sleep(1)
+        sleep(0.1)
         #set card played to nil
         @current_player.hand[input["command"]] = nil
         turn_shared_code(card)
@@ -423,7 +423,7 @@ module Euchre
       #send winner to telop
       ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
         "gameupdate" => "Player #{winner.player_no} won the trick!" })
-      sleep(0.1)
+      sleep(2)
       #add trick to player
       winner.tricks += 1
       #update tricks on screen
