@@ -393,7 +393,7 @@ module Euchre
       #send player's card to board
       ActionCable.server.broadcast(@channel,{ "img" => card.b64_img,
         "element" => "p#{@current_player.player_no}-played-card", "show" => "#p#{@current_player.player_no}-played-card" })
-      sleep(2)
+      sleep(0.1)
       next_player()
       turn()
     end
