@@ -1,10 +1,31 @@
 <div class="container py-3">
-<h1>Start a New Game</h1>
+<h1>Welcome to Euchre on Rails</h1>
 </div>
 
+<div class="container mb-3">
+  <div class="d-grid">
+    <a href="/" class="btn btn-dark btn-lg" type="button" name="button">Check for Invites</a>
+  </div>
+</div>
 
+<div class="container mb-3">
+  <ul class="list-group list-group-numbered">
+    <% @updates.each do |update|%>
+    <li class="list-group-item d-flex justify-content-between align-items-start">
+      <div class="ms-2 me-auto">
+        <div class="fw-bold"><%= update.created_at %></div>
+        <%= update.text %>
+      </div>
+    </li>
+    <% end %>
+</ul>
+</div>
 
-<div class="container py-2">
+<div class="container mb-3">
+  <h3>Create a New Room</h3>
+</div>
+
+<div class="container mb-3">
 <div class="mb-3">
 <div class="mb-3">
 <%= form_tag('/game',method: :post) do %>
