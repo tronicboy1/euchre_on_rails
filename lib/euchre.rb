@@ -289,28 +289,49 @@ module Euchre
     end
 
     def turn_input(input)
-      def after_check(input)
-        card = @current_player.hand[input["command"]]
+      def after_check(input,card)
         puts "card retrieved"
         #hide card played
         ActionCable.server.broadcast(@channel,{ "hide" => "#p#{current_player.player_no}-card#{input["command"]}" })
+        #set card played to nil
+        @current_player.hand[input["command"]] = nil
         turn_shared_code(card)
       end
       #check if user is playing correct card if they can follow suit
       puts "count: #{@count}"
-      if !@first_card_suit.nil?
-        if can_follow_suit()
-          if can_follow_suit_card(@current_player.hand[input["command"]])
-            puts "first card suit okay"
-            after_check(input)
-          else
-            ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
-              "gameupdate" => "Player #{@turn + 1}, you can't lie to me." })
-          end
-        end
+
+      card = @current_player.hand[input["command"]]
+
+      if @count == 1
+        after_check(input,card)
       else
-        after_check(input)
+        if can_follow_suit()
+          if @first_card_suit == @trump
+            if is_trump(card)
+              after_check(input,card)
+            end
+          elsif card.suit == @first_card_suit
+            after_check(input,card)
+          else
+            ActionCable.server.broadcast(@channel,{ "element" => "#game-telop", "gameupdate" => "Player #{@turn + 1}, you can't lie to me." })
+          end
+        else
+          after_check(input,card)
+        end
       end
+      # if !@first_card_suit.nil?
+      #   if can_follow_suit()
+      #     if can_follow_suit_card(@current_player.hand[input["command"]])
+      #       puts "first card suit okay"
+      #       after_check(input)
+      #     else
+      #       ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
+      #         "gameupdate" => "Player #{@turn + 1}, you can't lie to me." })
+      #     end
+      #   end
+      # else
+      #   after_check(input)
+      # end
     end
 
     def turn_shared_code(card)
@@ -478,18 +499,21 @@ module Euchre
     #check if player can follow suit or not
     def can_follow_suit
       @current_player.hand.each do |card|
-        #if not a jack and of same suit okay
-        if card.suit == @first_card_suit && card.value != 10
-          return true
-        elsif card.suit == @first_card_suit && card.value == 10
-          if @trump == 0 && card.suit == 1
-            return false
-          elsif @trump == 1 && card.suit == 0
-            return false
-          elsif @trump == 2 && card.suit == 3
-            return false
-          elsif @trump == 3 && card.suit == 2
-            return false
+        #check if card has been replaced by nil and skip if so
+        if !card.nil?
+          #if not a jack and of same suit okay
+          if card.suit == @first_card_suit && card.value != 10
+            return true
+          elsif card.suit == @first_card_suit && card.value == 10
+            if @trump == 0 && card.suit == 1
+              return false
+            elsif @trump == 1 && card.suit == 0
+              return false
+            elsif @trump == 2 && card.suit == 3
+              return false
+            elsif @trump == 3 && card.suit == 2
+              return false
+            end
           end
         end
       end
