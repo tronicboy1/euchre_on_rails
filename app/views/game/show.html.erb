@@ -25,8 +25,15 @@
 
 <%= render 'player2' %>
 
-<% end %>
+<% elsif @room.player3_id == current_user.id %>
 
+<%= render 'player3' %>
+
+<% elsif @room.player4_id == current_user.id %>
+
+<%= render 'player4' %>
+
+<% end %>
 
 <%= render 'chatbox' %>
 

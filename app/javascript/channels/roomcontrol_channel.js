@@ -86,6 +86,12 @@ document.addEventListener('turbolinks:load', () => {
           $('#p3-tricks').empty()
           $('#p4-tricks').empty()
         }
+        if (typeof data.clearboard !== 'undefined') {
+          $('#p1-played-card').attr('src', '/assets/blank_white_card.png')
+          $('#p2-played-card').attr('src', '/assets/blank_white_card.png')
+          $('#p3-played-card').attr('src', '/assets/blank_white_card.png')
+          $('#p4-played-card').attr('src', '/assets/blank_white_card.png')
+      }
 
       }
 

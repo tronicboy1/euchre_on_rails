@@ -33,7 +33,6 @@ class RoomcontrolChannel < ApplicationCable::Channel
       $game_dict[params[:room_id]] = Game.new(params[:room_id])
       $game_dict[params[:room_id]].start_game
     else
-      puts "player input"
       $game_dict[params[:room_id]].game_control(dic)
     end
 
