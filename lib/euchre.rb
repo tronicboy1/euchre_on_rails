@@ -520,9 +520,13 @@ module Euchre
         sleep(0.1)
       end
       #deal new cards and start another round
-      if @player1.score >= 10 || @player2.score >= 10
+      if @player1.score >= 10 ||
         #end game here
-        puts "end game"
+        new_update("#{@player1.username} and #{@player3.username} won a game!")
+        ActionCable.server.broadcast(@channel,{ "element" => "#game-telop", "gameupdate" => "Player 1 and Player 3 won the game!" })
+      elsif @player2.score >= 10
+        new_update("#{@player2.username} and #{@player4.username} won a game!")
+        ActionCable.server.broadcast(@channel,{ "element" => "#game-telop", "gameupdate" => "Player 2 and Player 4 won the game!" })
       else
         #start new round here
         start_new_round()
