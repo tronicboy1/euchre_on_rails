@@ -461,9 +461,11 @@ module Euchre
           if team1_tricks == 5
             @player1.score += 2
             @player3.score += 2
+            new_update("#{@player1.username} and #{@player3.username} won a hand!")
           else
             @player1.score += 1
             @player3.score += 1
+            new_update("#{@player1.username} and #{@player3.username} won a hand!")
           end
         else
           if team1_tricks == 5
@@ -488,9 +490,11 @@ module Euchre
           if team2_tricks == 5
             @player2.score += 2
             @player4.score += 2
+            new_update("#{@player2.username} and #{@player4.username} won a hand!")
           else
             @player2.score += 1
             @player4.score += 1
+            new_update("#{@player2.username} and #{@player4.username} won a hand!")
           end
         else
           if team2_tricks == 5
