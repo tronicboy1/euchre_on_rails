@@ -408,8 +408,7 @@ module Euchre
       hantei_suit = @cards_played[0][0].suit
       highest = -1
       winner = nil
-      if is_trump(@cards_played[0][0])
-        trump_value = @trump_list.collect{|x| x[1]}
+      if @first_card_suit == @trump
         @cards_played.each do |card,player|
           if is_trump(card)
             val = @trump_list.find_index(card.id)
@@ -428,7 +427,7 @@ module Euchre
             highest = @trump_list.find_index(card.id)
             winner = player
           elsif trump_played
-            if is_trump(card) == @trump
+            if is_trump(card)
               val = @trump_list.find_index(card.id)
               if val > highest
                 highest = val
