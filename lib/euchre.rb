@@ -456,7 +456,6 @@ module Euchre
       team2_tricks = @player2.tricks + @player4.tricks
       #compare which team has more tricks
       if team1_tricks > team2_tricks
-        byebug
         if @ordered_player == @player1.player_no || @ordered_player == @player3.player_no
           if team1_tricks == 5
             @player1.score += 2

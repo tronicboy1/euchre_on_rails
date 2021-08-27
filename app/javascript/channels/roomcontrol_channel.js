@@ -62,8 +62,6 @@ document.addEventListener('turbolinks:load', () => {
         if (typeof data.gameupdate !== 'undefined') {
           $(data.element).empty()
           $(data.element).append(data.gameupdate)
-          $('#chatbox').val($('#chatbox').val() + "Gameupdate: " + data.gameupdate + '\n');
-          $('#chatbox').scrollTop($('#chatbox')[0].scrollHeight);
           $(data.hide).hide()
           $(data.show).show()
         }
