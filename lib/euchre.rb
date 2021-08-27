@@ -113,6 +113,7 @@ module Euchre
       @round_count = 0
       #record the player who ordered trump for keeping score
       @ordered_player = nil
+      @loner = nil
       #broadcast dealer to players
       ActionCable.server.broadcast(@channel,{ "element" => "#p#{@turn + 1}-dealer", "gameupdate" => "●" })
       sleep(0.1)
@@ -172,7 +173,7 @@ module Euchre
           @status = "pickup_or_pass"
           ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
             "gameupdate" => "Player #{@turn + 1}, Pass or Pickup?",
-            "show" => "#pickup-yesno" })
+            "show" => "#pickup-yesno", "hide" => "#loner-selection" })
           sleep(0.1)
         end
       else
@@ -234,10 +235,10 @@ module Euchre
       sleep(0.1)
       ActionCable.server.broadcast(@channel,{ "hide" => "#turnup" })
       sleep(0.1)
-      #setup for turn start
-      setup_turn()
-      next_player()
-      turn()
+      #check for loner
+      ActionCable.server.broadcast(@channel,{ "hide" => "#trump-selection", "show" => "#loner-selection", "element" => "#game-telop",
+        "gameupdate" => "Player #{@turn + 1}, go alone?" })
+      @status = "loner_check"
     end
 
     def call_trump
@@ -273,15 +274,24 @@ module Euchre
         call_trump()
 
       else
-        ActionCable.server.broadcast(@channel,{ "hide" => "#trump-selection" })
-        sleep(0.1)
-
+        ActionCable.server.broadcast(@channel,{ "hide" => "#trump-selection", "show" => "#loner-selection", "element" => "#game-telop",
+          "gameupdate" => "Player #{@turn + 1}, go alone?" })
+        @status = "loner_check"
         set_trump(input)
         order_symbol_set()
-        setup_turn()
-        next_player()
-        turn()
       end
+    end
+
+    def loner_check_input(input)
+      if input["command"]
+        @loner = {1 => 3, 2 => 4, 3 => 1, 4 => 2}[@current_player.player_no]
+        ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
+          "gameupdate" => "Player #{@turn + 1} is going alone!" })
+        sleep(1.5)
+      end
+      setup_turn()
+      next_player()
+      turn()
     end
 
     def setup_turn
@@ -302,12 +312,24 @@ module Euchre
       @count += 1
       if @count <= 4
         if @current_player.id != 0
-          ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
-            "gameupdate" => "Player #{@turn + 1}, choose a card to play." })
-          sleep(0.1)
+          #check if player should be skipped for loner
+          if @current_player.player_no == @loner
+            next_player()
+            turn()
+          else
+            ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
+              "gameupdate" => "Player #{@turn + 1}, choose a card to play." })
+            sleep(0.1)
+          end
         else
-          card = computer_card_ai()
-          turn_shared_code(card)
+          #check if player should be skipped for loner
+          if @current_player.player_no == @loner
+            next_player()
+            turn()
+          else
+            card = computer_card_ai()
+            turn_shared_code(card)
+          end
         end
       else
         @status = "trick_check"
@@ -466,23 +488,24 @@ module Euchre
             @player3.score += 1
             new_update("#{@player1.username} and #{@player3.username} won a hand!")
           end
-        else
+        elsif @loner == 1 || @loner == 3
+          ind = {1 => 3, 2 => 4, 3 => 1, 4 => 2}[@loner] - 1
+          player = @player_list[ind]
           if team1_tricks == 5
             @player1.score += 4
             @player3.score += 4
-            ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
-              "gameupdate" => "Player 2 and 4 were Euchred!" })
-            sleep(0.1)
-            new_update("#{@player2.username} and #{@player4.username} were Euchred!")
+            new_update("#{player.username} won a loner!")
           else
-            @player1.score += 2
-            @player3.score += 2
-            ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
-              "gameupdate" => "Player 2 and 4 were Euchred!" })
-            sleep(0.1)
-            new_update("#{@player2.username} and #{@player4.username} were Euchred!")
+            @player1.score += 1
+            @player3.score += 1
           end
-
+        else
+          @player1.score += 2
+          @player3.score += 2
+          ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
+            "gameupdate" => "Player 2 and 4 were Euchred!" })
+          sleep(0.1)
+          new_update("#{@player2.username} and #{@player4.username} were Euchred!")
         end
       else
         if @ordered_player == @player2.player_no || @ordered_player == @player4.player_no
@@ -490,27 +513,29 @@ module Euchre
             @player2.score += 2
             @player4.score += 2
             new_update("#{@player2.username} and #{@player4.username} won a hand!")
+          elsif @loner == 2 || @loner == 4
+            ind = {1 => 3, 2 => 4, 3 => 1, 4 => 2}[@loner] - 1
+            player = @player_list[ind]
+            if team2_tricks == 5
+              @player2.score += 4
+              @player4.score += 4
+              new_update("#{player.username} won a loner!")
+            else
+              @player2.score += 1
+              @player4.score += 1
+            end
           else
             @player2.score += 1
             @player4.score += 1
             new_update("#{@player2.username} and #{@player4.username} won a hand!")
           end
         else
-          if team2_tricks == 5
-            @player2.score += 4
-            @player4.score += 4
-            ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
-              "gameupdate" => "Players 1 and 3 were Euchred!" })
-            sleep(0.1)
-            new_update("#{@player1.username} and #{@player3.username} were Euchred!")
-          else
-            @player2.score += 2
-            @player4.score += 2
-            ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
-              "gameupdate" => "Players 1 and 3 were Euchred!" })
-            sleep(0.1)
-            new_update("#{@player1.username} and #{@player3.username} were Euchred!")
-          end
+          @player2.score += 2
+          @player4.score += 2
+          ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
+            "gameupdate" => "Players 1 and 3 were Euchred!" })
+          sleep(0.1)
+          new_update("#{@player1.username} and #{@player3.username} were Euchred!")
         end
       end
 
@@ -544,6 +569,7 @@ module Euchre
       @turn = @dealer.player_no - 1
       @round_count = 0
       @orderer_player = nil
+      @loner = nil
       #send clear status bar command
       ActionCable.server.broadcast(@channel,{ "clearbar" => true })
       sleep(0.1)
@@ -710,7 +736,7 @@ module Euchre
     #resends player cards after pickup and throw away
     def resend_player_cards
       @current_player.hand.each_with_index do |card, i|
-        ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "element" => "p#{current_player.player_no}-card#{i}", "show" => "#hand" })
+        ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "element" => "p#{@current_player.player_no}-card#{i}", "show" => "#hand", "hide" => "p#{@current_player.player_no}-pickupcard" })
         sleep(0.1)
       end
     end
@@ -772,6 +798,8 @@ module Euchre
           @round.throw_away_card(user_input)
         elsif @round.status == "call_trump"
           @round.call_trump_input(user_input)
+        elsif @round.status == "loner_check"
+          @round.loner_check_input(user_input)
         elsif @round.status == "turn"
           @round.turn_input(user_input)
         end
