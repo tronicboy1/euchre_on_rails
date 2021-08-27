@@ -423,6 +423,7 @@ module Euchre
       ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
         "gameupdate" => "Player #{winner.player_no} won the trick!" })
       sleep(0.1)
+      new_update("#{winner.username} won a trick!")
 
       #add trick to player
       winner.tricks += 1
@@ -471,13 +472,16 @@ module Euchre
             ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
               "gameupdate" => "Player 2 and 4 were Euchred!" })
             sleep(0.1)
+            new_update("#{@player2.username} and #{@player4.username} were Euchred!")
           else
             @player1.score += 2
             @player3.score += 2
             ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
               "gameupdate" => "Player 2 and 4 were Euchred!" })
             sleep(0.1)
+            new_update("#{@player2.username} and #{@player4.username} were Euchred!")
           end
+
         end
       else
         if @dealer == @player2 || @dealer == @player4
@@ -495,12 +499,14 @@ module Euchre
             ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
               "gameupdate" => "Players 1 and 3 were Euchred!" })
             sleep(0.1)
+            new_update("#{@player1.username} and #{@player3.username} were Euchred!")
           else
             @player2.score += 2
             @player4.score += 2
             ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
               "gameupdate" => "Players 1 and 3 were Euchred!" })
             sleep(0.1)
+            new_update("#{@player1.username} and #{@player3.username} were Euchred!")
           end
         end
       end
@@ -775,6 +781,9 @@ module Euchre
 
   end
 
-
+  def new_update(text)
+    update = Gameupdates.new(text: text)
+    update.save
+  end
 
 end
