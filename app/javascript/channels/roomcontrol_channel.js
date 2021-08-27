@@ -39,8 +39,9 @@ document.addEventListener('turbolinks:load', () => {
 	        var img_element = document.getElementById(data.element);
 	        var img_base64_content = data.img;
 	        img_element.src = "data:image/png;base64," + img_base64_content;
-          $(data.show).show()
-          $(data.hide).hide()
+          $('#' + data.element).show();
+          $(data.show).show();
+          $(data.hide).hide();
 
 
         } else if (typeof data.message !== 'undefined') {
@@ -65,10 +66,27 @@ document.addEventListener('turbolinks:load', () => {
           $('#chatbox').scrollTop($('#chatbox')[0].scrollHeight);
           $(data.hide).hide()
           $(data.show).show()
-        } else if (typeof data.hide !== 'undefined') {
+        }
+        if (typeof data.hide !== 'undefined') {
           $(data.hide).hide()
           $(data.show).show()
         }
+        if (typeof data.clearbar !== 'undefined') {
+          $('#trump-selection').hide()
+          $('#p1-dealer').empty()
+          $('#p2-dealer').empty()
+          $('#p3-dealer').empty()
+          $('#p4-dealer').empty()
+          $('#p1-order').empty()
+          $('#p2-order').empty()
+          $('#p3-order').empty()
+          $('#p4-order').empty()
+          $('#p1-tricks').empty()
+          $('#p2-tricks').empty()
+          $('#p3-tricks').empty()
+          $('#p4-tricks').empty()
+        }
+
       }
 
     });
