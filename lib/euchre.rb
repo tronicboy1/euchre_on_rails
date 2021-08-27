@@ -286,8 +286,11 @@ module Euchre
       if input["command"]
         @loner = {1 => 3, 2 => 4, 3 => 1, 4 => 2}[@current_player.player_no]
         ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
-          "gameupdate" => "Player #{@turn + 1} is going alone!" })
+          "gameupdate" => "Player #{@turn + 1} is going alone!", "hide" => "#loner-selection" })
         sleep(1.5)
+      else
+        ActionCable.server.broadcast(@channel,{ "hide" => "#loner-selection" })
+        sleep(0.1)
       end
       setup_turn()
       next_player()
