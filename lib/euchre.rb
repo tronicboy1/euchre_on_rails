@@ -112,7 +112,7 @@ module Euchre
       @trump = nil
       @round_count = 0
       #record the player who ordered trump for keeping score
-      @orderer_player = nil
+      @ordered_player = nil
       #broadcast dealer to players
       ActionCable.server.broadcast(@channel,{ "element" => "#p#{@turn + 1}-dealer", "gameupdate" => "●" })
       sleep(0.1)
@@ -460,7 +460,7 @@ module Euchre
       team2_tricks = @player2.tricks + @player4.tricks
       #compare which team has more tricks
       if team1_tricks > team2_tricks
-        if @dealer == @player1 || @dealer == @player3
+        if @ordered_player == @player1 || @ordered_player == @player3
           if team1_tricks == 5
             @player1.score += 2
             @player3.score += 2
@@ -489,7 +489,7 @@ module Euchre
 
         end
       else
-        if @dealer == @player2 || @dealer == @player4
+        if @ordered_player == @player2 || @ordered_player == @player4
           if team2_tricks == 5
             @player2.score += 2
             @player4.score += 2
@@ -715,16 +715,11 @@ module Euchre
       end
     end
 
+    def new_update(text)
+      update = Gameupdates.new(text: text)
+      update.save
+    end
   end
-
-
-
-
-
-
-
-
-
 
 
 
@@ -785,12 +780,5 @@ module Euchre
         puts "wrong player #{user_input}"
       end
     end
-
   end
-
-  def new_update(text)
-    update = Gameupdates.new(text: text)
-    update.save
-  end
-
 end
