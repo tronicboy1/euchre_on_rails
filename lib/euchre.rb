@@ -368,7 +368,7 @@ module Euchre
       #send player's card to board
       ActionCable.server.broadcast(@channel,{ "img" => card.b64_img,
         "element" => "p#{@current_player.player_no}-played-card", "show" => "#p#{@current_player.player_no}-played-card" })
-      sleep(0.1)
+      sleep(2)
       next_player()
       turn()
     end
@@ -429,7 +429,7 @@ module Euchre
       #update tricks on screen
       ActionCable.server.broadcast(@channel,{ "element" => "#p#{winner.player_no}-tricks",
         "gameupdate" => winner.tricks })
-      sleep(1)
+      sleep(2)
       #clear table
       ActionCable.server.broadcast(@channel,{ "clearboard" => true })
       sleep(0.1)
