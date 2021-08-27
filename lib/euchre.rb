@@ -192,9 +192,6 @@ module Euchre
         order_symbol_set()
         #must pass in card as an array bc using concat
         @dealer.add_cards([@turnup])
-        #set current_player and turn to dealer
-        @current_player = @dealer
-        @turn = @dealer.player_no - 1
         ActionCable.server.broadcast(@channel,{ "img" => @turnup.b64_img,
           "element" => "p#{@dealer.player_no}-pickupcard", "show" => "#p#{@dealer.player_no}-pickupcard", "hide" => "#turnup" })
         sleep(0.1)
@@ -278,9 +275,7 @@ module Euchre
       else
         ActionCable.server.broadcast(@channel,{ "hide" => "#trump-selection" })
         sleep(0.1)
-        #set current_player and turn to dealer
-        @current_player = @dealer
-        @turn = @dealer.player_no - 1
+
         set_trump(input)
         order_symbol_set()
         setup_turn()
@@ -293,6 +288,9 @@ module Euchre
       @count = 0
       @status = "turn"
       @ordered_player = @current_player
+      #set current_player and turn to dealer
+      @current_player = @dealer
+      @turn = @dealer.player_no - 1
       @cards_played =[]
     end
 
@@ -444,6 +442,7 @@ module Euchre
         @cards_played = []
         @current_player = winner
         @first_card_suit = nil
+        @ordered_player = nil
         @turn = winner.player_no - 1
         turn()
       else
