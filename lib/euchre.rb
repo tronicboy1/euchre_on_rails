@@ -320,7 +320,7 @@ module Euchre
         puts "card retrieved"
         #hide card played
         ActionCable.server.broadcast(@channel,{ "hide" => "#p#{current_player.player_no}-card#{input["command"]}" })
-        sleep(0.1)
+        sleep(1)
         #set card played to nil
         @current_player.hand[input["command"]] = nil
         turn_shared_code(card)
