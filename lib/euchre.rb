@@ -429,7 +429,7 @@ module Euchre
       #update tricks on screen
       ActionCable.server.broadcast(@channel,{ "element" => "#p#{winner.player_no}-tricks",
         "gameupdate" => winner.tricks })
-      sleep(0.1)
+      sleep(1)
       #clear table
       ActionCable.server.broadcast(@channel,{ "clearboard" => true })
       sleep(0.1)
@@ -520,7 +520,7 @@ module Euchre
         sleep(0.1)
       end
       #deal new cards and start another round
-      if @player1.score >= 10 ||
+      if @player1.score >= 10
         #end game here
         new_update("#{@player1.username} and #{@player3.username} won a game!")
         ActionCable.server.broadcast(@channel,{ "element" => "#game-telop", "gameupdate" => "Player 1 and Player 3 won the game!" })
