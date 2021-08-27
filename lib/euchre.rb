@@ -481,17 +481,7 @@ module Euchre
       team2_tricks = @player2.tricks + @player4.tricks
       #compare which team has more tricks
       if team1_tricks > team2_tricks
-        if @ordered_player == @player1.player_no || @ordered_player == @player3.player_no
-          if team1_tricks == 5
-            @player1.score += 2
-            @player3.score += 2
-            new_update("#{@player1.username} and #{@player3.username} won a hand!")
-          else
-            @player1.score += 1
-            @player3.score += 1
-            new_update("#{@player1.username} and #{@player3.username} won a hand!")
-          end
-        elsif @loner == 1 || @loner == 3
+        if @loner == 1 || @loner == 3
           ind = {1 => 3, 2 => 4, 3 => 1, 4 => 2}[@loner] - 1
           player = @player_list[ind]
           if team1_tricks == 5
@@ -501,6 +491,16 @@ module Euchre
           else
             @player1.score += 1
             @player3.score += 1
+          end
+        elsif @ordered_player == @player1.player_no || @ordered_player == @player3.player_no
+          if team1_tricks == 5
+            @player1.score += 2
+            @player3.score += 2
+            new_update("#{@player1.username} and #{@player3.username} won a hand!")
+          else
+            @player1.score += 1
+            @player3.score += 1
+            new_update("#{@player1.username} and #{@player3.username} won a hand!")
           end
         else
           @player1.score += 2
@@ -512,11 +512,7 @@ module Euchre
         end
       else
         if @ordered_player == @player2.player_no || @ordered_player == @player4.player_no
-          if team2_tricks == 5
-            @player2.score += 2
-            @player4.score += 2
-            new_update("#{@player2.username} and #{@player4.username} won a hand!")
-          elsif @loner == 2 || @loner == 4
+          if @loner == 2 || @loner == 4
             ind = {1 => 3, 2 => 4, 3 => 1, 4 => 2}[@loner] - 1
             player = @player_list[ind]
             if team2_tricks == 5
@@ -527,6 +523,11 @@ module Euchre
               @player2.score += 1
               @player4.score += 1
             end
+          elsif team2_tricks == 5
+            @player2.score += 2
+            @player4.score += 2
+            new_update("#{@player2.username} and #{@player4.username} won a hand!")
+
           else
             @player2.score += 1
             @player4.score += 1
