@@ -364,6 +364,10 @@ module Euchre
       ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
         "gameupdate" => "Player #{@turn + 1} played the #{card.to_s}" })
       sleep(0.1)
+      #send player's card to board
+      ActionCable.server.broadcast(@channel,{ "img" => card.b64_img,
+        "element" => "p#{@current_player.player_no}-played-card", "show" => "#p#{@current_player.player_no}-played-card" })
+      sleep(0.1)
       next_player()
       turn()
     end
@@ -426,7 +430,9 @@ module Euchre
       ActionCable.server.broadcast(@channel,{ "element" => "#p#{winner.player_no}-tricks",
         "gameupdate" => winner.tricks })
       sleep(0.1)
-
+      #clear table
+      ActionCable.server.broadcast(@channel,{ "clearboard" => true })
+      sleep(0.1)
       #check how many rounds have been played
       @round_count += 1
       #continue if not 5
