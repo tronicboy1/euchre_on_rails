@@ -65,7 +65,7 @@ module Euchre
 
   #player object will hold player cards and player score
   class Player
-    attr_accessor :hand, :username, :id, :player_no, :tricks, :trump_cards, :non_trump_cards
+    attr_accessor :hand, :username, :id, :player_no, :tricks, :trump_cards, :non_trump_cards, :score
 
     def initialize(id,username,player_no)
       @hand = []
@@ -73,7 +73,7 @@ module Euchre
       @id = id
       @player_no = player_no
       @tricks = 0
-
+      @score = 0
       #for computer ai
       @trump_cards = []
       @non_trump_cards = []
@@ -115,6 +115,7 @@ module Euchre
       @orderer_player = nil
       #broadcast dealer to players
       ActionCable.server.broadcast(@channel,{ "element" => "#p#{@turn + 1}-dealer", "gameupdate" => "●" })
+      sleep(0.1)
       next_player
       deal_cards
 
@@ -149,7 +150,7 @@ module Euchre
       #set turnup card and send to players
       @turnup = @deck.deal_card
       ActionCable.server.broadcast(@channel,{ "img" => @turnup.b64_img, "element" => "turnup-card", "show" => "#turnup" })
-
+      sleep(0.1)
       #declare a counter to keep track of how many times players have passed
       @pass_count = 0
       pickup_or_pass
@@ -165,7 +166,6 @@ module Euchre
           next_player()
           if @status == "start"
             @status = "pickup_or_pass"
-            #cycle_to_human()
           end
           pickup_or_pass()
         else
@@ -173,10 +173,12 @@ module Euchre
           ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
             "gameupdate" => "Player #{@turn + 1}, Pass or Pickup?",
             "show" => "#pickup-yesno" })
+          sleep(0.1)
         end
       else
         @status = "call_trump"
-
+        ActionCable.server.broadcast(@channel,{ "hide" => "#pickup-yesno" })
+        sleep(0.1)
         call_trump()
       end
     end
@@ -189,43 +191,63 @@ module Euchre
         set_trump(input)
         order_symbol_set()
         #must pass in card as an array bc using concat
-        @current_player.add_cards([@turnup])
+        @dealer.add_cards([@turnup])
+        #set current_player and turn to dealer
+        @current_player = @dealer
+        @turn = @dealer.player_no - 1
         ActionCable.server.broadcast(@channel,{ "img" => @turnup.b64_img,
-          "element" => "p#{@current_player.player_no}-pickupcard", "show" => "#p#{@current_player.player_no}-pickupcard", "hide" => "#turnup" })
-
+          "element" => "p#{@dealer.player_no}-pickupcard", "show" => "#p#{@dealer.player_no}-pickupcard", "hide" => "#turnup" })
+        sleep(0.1)
         ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
-          "gameupdate" => "Player #{@turn + 1}, choose card to throw away", })
+          "gameupdate" => "Player #{@dealer.player_no}, choose card to throw away", })
+        sleep(0.1)
+
+        #automatically throw_away_card for computers
+        if @dealer.id == 0
+          @dealer.hand.pop
+          throw_away_shared_code()
+        end
+
+
       else
         next_player()
         if @pass_count == 4
           @status = "call_trump"
           ActionCable.server.broadcast(@channel,{ "hide" => "#pickup-yesno" })
+          sleep(0.1)
           call_trump()
         else
           pickup_or_pass()
         end
-        #cycle_to_human()
       end
     end
 
     def throw_away_card(input)
-      @current_player.hand.delete_at input["command"]
+      @dealer.hand.delete_at input["command"]
       resend_player_cards()
+      sleep(0.1)
+      ActionCable.server.broadcast(@channel,{ "hide" => "#p#{@dealer.player_no}-pickupcard" })
+      sleep(0.1)
+      #setup for turn start
+      throw_away_shared_code()
+    end
 
-      ActionCable.server.broadcast(@channel,{ "hide" => "#p#{current_player.player_no}-pickupcard" })
-
+    def throw_away_shared_code
       ActionCable.server.broadcast(@channel,{ "hide" => "#pickup-yesno" })
+      sleep(0.1)
+      ActionCable.server.broadcast(@channel,{ "hide" => "#turnup" })
+      sleep(0.1)
       #setup for turn start
       setup_turn()
       next_player()
       turn()
-      #cycle_to_human()
     end
 
     def call_trump
       if @pass_count == 4
         #hide turnup card and show buttons for picking trump
         ActionCable.server.broadcast(@channel,{ "hide" => "#turnup", "show" => "#trump-selection" })
+        sleep(0.1)
         @turnup = nil
       end
 
@@ -244,8 +266,7 @@ module Euchre
         end
       else
         #change dealer and start new round if no players call trump
-        @status = "new_round"
-
+        start_new_round()
       end
     end
 
@@ -253,15 +274,15 @@ module Euchre
       if input["command"] == false
         next_player()
         call_trump()
-        #cycle_to_human()
+
       else
-        ActionCable.server.broadcast(@channel,{ "hide" => "#pickup-yesno" })
+        ActionCable.server.broadcast(@channel,{ "hide" => "#trump-selection" })
+        sleep(0.1)
         set_trump(input)
         order_symbol_set()
         setup_turn()
         next_player()
         turn()
-        #cycle_to_human()
       end
     end
 
@@ -282,6 +303,7 @@ module Euchre
         if @current_player.id != 0
           ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
             "gameupdate" => "Player #{@turn + 1}, choose a card to play." })
+          sleep(0.1)
         else
           card = computer_card_ai()
           turn_shared_code(card)
@@ -293,30 +315,37 @@ module Euchre
     end
 
     def turn_input(input)
-      def after_check(input)
-        card = @current_player.hand[input["command"]]
+      def after_check(input,card)
         puts "card retrieved"
         #hide card played
         ActionCable.server.broadcast(@channel,{ "hide" => "#p#{current_player.player_no}-card#{input["command"]}" })
-
+        sleep(0.1)
+        #set card played to nil
+        @current_player.hand[input["command"]] = nil
         turn_shared_code(card)
-        #cycle_to_human()
       end
       #check if user is playing correct card if they can follow suit
       puts "count: #{@count}"
-      if !@first_card_suit.nil?
-        if can_follow_suit()
-          puts "can follow suit"
-          if @current_player.hand[input["command"]].suit == @first_card_suit
-            puts "first card suit okay"
-            after_check(input)
-          else
-            ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
-              "gameupdate" => "Player #{@turn + 1}, you can't lie to me." })
-          end
-        end
+
+      card = @current_player.hand[input["command"]]
+
+      if @count == 1
+        after_check(input,card)
       else
-        after_check(input)
+        if can_follow_suit()
+          if @first_card_suit == @trump
+            if is_trump(card)
+              after_check(input,card)
+            end
+          elsif card.suit == @first_card_suit
+            after_check(input,card)
+          else
+            ActionCable.server.broadcast(@channel,{ "element" => "#game-telop", "gameupdate" => "Player #{@turn + 1}, you can't lie to me." })
+            sleep(0.1)
+          end
+        else
+          after_check(input,card)
+        end
       end
     end
 
@@ -334,6 +363,7 @@ module Euchre
       @cards_played.push([card,current_player])
       ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
         "gameupdate" => "Player #{@turn + 1} played the #{card.to_s}" })
+      sleep(0.1)
       next_player()
       turn()
     end
@@ -388,17 +418,19 @@ module Euchre
       #send winner to telop
       ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
         "gameupdate" => "Player #{winner.player_no} won the trick!" })
+      sleep(0.1)
 
       #add trick to player
       winner.tricks += 1
       #update tricks on screen
       ActionCable.server.broadcast(@channel,{ "element" => "#p#{winner.player_no}-tricks",
         "gameupdate" => winner.tricks })
+      sleep(0.1)
 
       #check how many rounds have been played
       @round_count += 1
       #continue if not 5
-      if @round_count <= 5
+      if @round_count < 5
         @count = 0
         @status = "turn"
         @cards_played = []
@@ -407,15 +439,101 @@ module Euchre
         @turn = winner.player_no - 1
         turn()
       else
-        puts "end round"
+        round_end()
       end
     end
 
 
+    def round_end
+      #add up team tricks
+      team1_tricks = @player1.tricks + @player3.tricks
+      team2_tricks = @player2.tricks + @player4.tricks
+      #compare which team has more tricks
+      if team1_tricks > team2_tricks
+        if @dealer == @player1 || @dealer == @player3
+          if team1_tricks == 5
+            @player1.score += 2
+            @player3.score += 2
+          else
+            @player1.score += 1
+            @player3.score += 1
+          end
+        else
+          if team1_tricks == 5
+            @player1.score += 4
+            @player3.score += 4
+            ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
+              "gameupdate" => "Player 2 and 4 were Euchred!" })
+            sleep(0.1)
+          else
+            @player1.score += 2
+            @player3.score += 2
+            ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
+              "gameupdate" => "Player 2 and 4 were Euchred!" })
+            sleep(0.1)
+          end
+        end
+      else
+        if @dealer == @player2 || @dealer == @player4
+          if team2_tricks == 5
+            @player2.score += 2
+            @player4.score += 2
+          else
+            @player2.score += 1
+            @player4.score += 1
+          end
+        else
+          if team2_tricks == 5
+            @player2.score += 4
+            @player4.score += 4
+            ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
+              "gameupdate" => "Players 1 and 3 were Euchred!" })
+            sleep(0.1)
+          else
+            @player2.score += 2
+            @player4.score += 2
+            ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
+              "gameupdate" => "Players 1 and 3 were Euchred!" })
+            sleep(0.1)
+          end
+        end
+      end
 
+      #add win to players and send to board
+      @player_list.each do |player|
+        ActionCable.server.broadcast(@channel,{ "element" => "#p#{player.player_no}-score", "gameupdate" => player.score })
+        sleep(0.1)
+      end
+      #deal new cards and start another round
+      if @player1.score >= 10 || @player2.score >= 10
+        #end game here
+        puts "end game"
+      else
+        #start new round here
+        start_new_round()
+      end
+    end
 
-
-
+    def start_new_round
+      @deck = Deck.new
+      #reset player cards
+      (0..3).each do |i|
+        @player_list[i].hand.clear
+        @player_list[i].tricks = 0
+      end
+      @dealer = {@player1 => @player2, @player2 => @player3, @player3 => @player4, @player4 => @player1}[@dealer]
+      @turn = @dealer.player_no - 1
+      @round_count = 0
+      @orderer_player = nil
+      #send clear status bar command
+      ActionCable.server.broadcast(@channel,{ "clearbar" => true })
+      sleep(0.1)
+      #broadcast dealer to players
+      ActionCable.server.broadcast(@channel,{ "element" => "#p#{@turn + 1}-dealer", "gameupdate" => "●" })
+      sleep(0.1)
+      next_player()
+      deal_cards()
+    end
 
 
 
@@ -481,55 +599,25 @@ module Euchre
     #check if player can follow suit or not
     def can_follow_suit
       @current_player.hand.each do |card|
-        #if not a jack and of same suit okay
-        if card.suit == @first_card_suit && card.value != 10
-          return true
-        elsif card.suit == @first_card_suit && card.value == 10
-          if @trump == 0 && card.suit == 1
-            return false
-          elsif @trump == 1 && card.suit == 0
-            return false
-          elsif @trump == 2 && card.suit == 3
-            return false
-          elsif @trump == 3 && card.suit == 2
-            return false
+        #check if card has been replaced by nil and skip if so
+        if !card.nil?
+          #if not a jack and of same suit okay
+          if card.suit == @first_card_suit && card.value != 10
+            return true
+          elsif card.suit == @first_card_suit && card.value == 10
+            if @trump == 0 && card.suit == 1
+              return false
+            elsif @trump == 1 && card.suit == 0
+              return false
+            elsif @trump == 2 && card.suit == 3
+              return false
+            elsif @trump == 3 && card.suit == 2
+              return false
+            end
           end
         end
       end
       return false
-    end
-
-    def cycle_to_human
-      #use this function to handle actions loop will carry out
-      def action
-        if @status == "pickup_or_pass"
-          pickup_or_pass
-        elsif @status == "call_trump"
-          call_trump
-        elsif @status == "turn"
-          turn
-        end
-      end
-      #stop if status is trick_check
-      loop do
-        break if @current_player.id != 0
-        break if @status == "after_check"
-        action()
-        puts "cycling"
-        break if @current_player.id != 0
-        break if @status == "after_check"
-      end
-      #pass on to next player action
-
-      puts "cycle finished"
-      if @status == "after_check"
-        @status = "turn"
-        turn()
-        cycle_to_human()
-      else
-        action()
-      end
-
     end
 
     def next_player
@@ -573,7 +661,7 @@ module Euchre
       symbol_dic = {0=>"♠",1=>"♣",2=>"♦",3=>"♥"}
       symbol = symbol_dic[@trump]
       ActionCable.server.broadcast(@channel,{ "element" => "#p#{@current_player.player_no}-order", "gameupdate" => symbol })
-
+      sleep(0.1)
     end
 
     def trump_list_gen
@@ -594,6 +682,7 @@ module Euchre
         if player.id != 0
           player.hand.each_with_index do |card, i|
             ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "element" => "p#{player.player_no}-card#{i}", "show" => "#hand" })
+            sleep(0.1)
           end
         end
       end
@@ -603,6 +692,7 @@ module Euchre
     def resend_player_cards
       @current_player.hand.each_with_index do |card, i|
         ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "element" => "p#{current_player.player_no}-card#{i}", "show" => "#hand" })
+        sleep(0.1)
       end
     end
 
