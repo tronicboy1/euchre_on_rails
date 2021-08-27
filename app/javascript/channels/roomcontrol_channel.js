@@ -16,6 +16,7 @@ document.addEventListener('turbolinks:load', () => {
     $('#turnup').hide();
     $('#pickup-yesno').hide();
     $('#trump-selection').hide();
+    $('#loner-selection').hide();
 
 
     const roomChannel = consumer.subscriptions.create({ channel: "RoomcontrolChannel", room_id: $("#room-id").data('room-id'), username: $("#username").data('username'), user_id: $("#user-id").data('user-id') }, {
@@ -161,6 +162,14 @@ document.addEventListener('turbolinks:load', () => {
       roomChannel.send({ type: "gamecontrol", command: 3, id: userid });
     });
     $('#trump-selection4').on('click', function() {
+      let userid = $("#user-id").data('user-id');
+      roomChannel.send({ type: "gamecontrol", command: false, id: userid });
+    });
+    $('#loner-selection0').on('click', function() {
+      let userid = $("#user-id").data('user-id');
+      roomChannel.send({ type: "gamecontrol", command: true, id: userid });
+    });
+    $('#loner-selection1').on('click', function() {
       let userid = $("#user-id").data('user-id');
       roomChannel.send({ type: "gamecontrol", command: false, id: userid });
     });
