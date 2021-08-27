@@ -426,8 +426,6 @@ module Euchre
       ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
         "gameupdate" => "Player #{winner.player_no} won the trick!" })
       sleep(0.1)
-      new_update("#{winner.username} won a trick!")
-
       #add trick to player
       winner.tricks += 1
       #update tricks on screen
