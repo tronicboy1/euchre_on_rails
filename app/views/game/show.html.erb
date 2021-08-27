@@ -16,7 +16,7 @@
 
 <% if @room.player1_id == current_user.id %>
 <div class="container mb-3">
-  <button id="start-game" class="btn btn-primary" type="button" name="button">Start Game</button>
+  <button id="start-game" class="btn btn-dark" type="button" name="button">Start Game</button>
 </div>
 
 <%= render 'player1' %>
@@ -43,7 +43,7 @@
 
   <%= form_with url: '/game/leave', method: :delete do |f| %>
     <div class="text-right">
-    <%= f.submit "Leave Room", class: "btn btn-secondary", id:"leave-room" %>
+    <%= f.submit "Leave Room", class: "btn btn-dark", id:"leave-room" %>
     </div>
   <% end %>
 

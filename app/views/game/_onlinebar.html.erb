@@ -1,9 +1,9 @@
 <div class="container pb-3">
 <div class="d-grid">
-  <button id="toggle-onlinebar" class="btn btn-outline-secondary btn-sm" type="button" name="button">Toggle Status</button>
+  <button id="toggle-onlinebar" class="btn btn-dark btn-sm" type="button" name="button">Toggle Status</button>
 </div>
   <div id="onlinebar" class="">
-  <table class="table">
+  <table class="table table-borderless">
   <thead>
     <tr>
       <th scope="col"></th>
@@ -16,12 +16,12 @@
   <tbody>
     <tr>
       <th scope="row">Status:</th>
-      <td class="" id="<%= @room.player1_id %>-status"></td>
+      <td class="text-center" id="<%= @room.player1_id %>-status"></td>
 
       <% if @room.player2_id != 0 %>
       <td class="" id="<%= @room.player2_id %>-status"></td>
       <% else %>
-      <td id="0-status">CPU</td>
+      <td class="" id="0-status">CPU</td>
       <% end %>
 
       <% if @room.player3_id != 0 %>
