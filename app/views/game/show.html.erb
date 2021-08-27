@@ -7,9 +7,7 @@
 
 <%= render 'onlinebar' %>
 
-<div class="container mb-2">
-  <h2 id="game-telop"></h2>
-</div>
+
 
 <% if @room.player1_id == current_user.id %>
 <div class="container mb-3">
@@ -31,6 +29,10 @@
 <%= render 'player4' %>
 
 <% end %>
+
+<div class="container mb-2">
+  <h2 id="game-telop"></h2>
+</div>
 
 <%= render 'chatbox' %>
 
