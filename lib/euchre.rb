@@ -287,7 +287,7 @@ module Euchre
     def setup_turn
       @count = 0
       @status = "turn"
-      @ordered_player = @current_player
+      @ordered_player = @current_player.player_no
       #set current_player and turn to dealer
       @current_player = @dealer
       @turn = @dealer.player_no - 1
@@ -423,7 +423,7 @@ module Euchre
       #send winner to telop
       ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
         "gameupdate" => "Player #{winner.player_no} won the trick!" })
-      sleep(2)
+      sleep(1)
       #add trick to player
       winner.tricks += 1
       #update tricks on screen
@@ -442,7 +442,6 @@ module Euchre
         @cards_played = []
         @current_player = winner
         @first_card_suit = nil
-        @ordered_player = nil
         @turn = winner.player_no - 1
         turn()
       else
@@ -457,7 +456,8 @@ module Euchre
       team2_tricks = @player2.tricks + @player4.tricks
       #compare which team has more tricks
       if team1_tricks > team2_tricks
-        if @ordered_player == @player1 || @ordered_player == @player3
+        byebug
+        if @ordered_player == @player1.player_no || @ordered_player == @player3.player_no
           if team1_tricks == 5
             @player1.score += 2
             @player3.score += 2
@@ -486,7 +486,7 @@ module Euchre
 
         end
       else
-        if @ordered_player == @player2 || @ordered_player == @player4
+        if @ordered_player == @player2.player_no || @ordered_player == @player4.player_no
           if team2_tricks == 5
             @player2.score += 2
             @player4.score += 2
