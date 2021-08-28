@@ -54,12 +54,6 @@ Playing:
 3. Click start game
 
 
-Roadmap
-__________________________
-
-I still have to add option to go "loner" for more points. 
-
-
 Contributing
 __________________________
 
