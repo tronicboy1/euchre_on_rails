@@ -157,6 +157,30 @@ module Euchre
       pickup_or_pass
     end
 
+    def computer_pickup_check
+      #count how many cards computer has of turnup card suit
+      same_suit_count = 0
+      has_bower = false
+      left_bower_id = {0 => [1,10], 1 => [0,10], 2 => [3,10], 3 => [2,10]}[@turnup.suit]
+      @current_player.hand.each do |card|
+        if card.suit == @turnup.suit
+          same_suit_count += 1
+        elsif card.suit == @turnup.suit && card.value == 10
+          has_bower = true
+        elsif card.id == left_bower_id
+          has_bower = true
+        end
+      end
+      if @dealer == @current_player
+        same_suit_count += 1
+      end
+      if same_suit_count >= 3 && has_bower
+        return true
+      else
+        return false
+      end
+    end
+
 
     def pickup_or_pass
       if @pass_count < 4
@@ -164,11 +188,18 @@ module Euchre
         #action for computer
         #computer will pass for the time being
         if @current_player.id == 0
-          next_player()
           if @status == "start"
             @status = "pickup_or_pass"
           end
-          pickup_or_pass()
+          if computer_pickup_check()
+            @trump = @turnup.suit
+            trump_list_gen()
+            order_symbol_set()
+            pickup_or_pass_shared_code()
+          else
+            next_player()
+            pickup_or_pass()
+          end
         else
           @status = "pickup_or_pass"
           ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
@@ -187,26 +218,10 @@ module Euchre
     #function to handle user input after for pass or pickup
     def pickup_or_pass_input(input)
       if input["command"]
-        @status = "throw_away_card"
         #set trump and card values
         set_trump(input)
         order_symbol_set()
-        #must pass in card as an array bc using concat
-        @dealer.add_cards([@turnup])
-        ActionCable.server.broadcast(@channel,{ "img" => @turnup.b64_img,
-          "element" => "p#{@dealer.player_no}-pickupcard", "show" => "#p#{@dealer.player_no}-pickupcard", "hide" => "#turnup" })
-        sleep(0.1)
-        ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
-          "gameupdate" => "Player #{@dealer.player_no}, choose card to throw away", })
-        sleep(0.1)
-
-        #automatically throw_away_card for computers
-        if @dealer.id == 0
-          @dealer.hand.pop
-          throw_away_shared_code()
-        end
-
-
+        pickup_or_pass_shared_code()
       else
         next_player()
         if @pass_count == 4
@@ -217,6 +232,24 @@ module Euchre
         else
           pickup_or_pass()
         end
+      end
+    end
+
+    def pickup_or_pass_shared_code
+      @status = "throw_away_card"
+      #must pass in card as an array bc using concat
+      @dealer.add_cards([@turnup])
+      ActionCable.server.broadcast(@channel,{ "img" => @turnup.b64_img,
+        "element" => "p#{@dealer.player_no}-pickupcard", "show" => "#p#{@dealer.player_no}-pickupcard", "hide" => "#turnup" })
+      sleep(0.1)
+      ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
+        "gameupdate" => "Player #{@dealer.player_no}, choose card to throw away", })
+      sleep(0.1)
+
+      #automatically throw_away_card for computers
+      if @dealer.id == 0
+        @dealer.hand.pop
+        throw_away_shared_code()
       end
     end
 
@@ -236,9 +269,41 @@ module Euchre
       ActionCable.server.broadcast(@channel,{ "hide" => "#turnup" })
       sleep(0.1)
       #check for loner
-      ActionCable.server.broadcast(@channel,{ "hide" => "#trump-selection", "show" => "#loner-selection", "element" => "#game-telop",
-        "gameupdate" => "Player #{@turn + 1}, go alone?" })
-      @status = "loner_check"
+      if @current_player.id != 0
+        ActionCable.server.broadcast(@channel,{ "hide" => "#trump-selection", "show" => "#loner-selection", "element" => "#game-telop",
+          "gameupdate" => "Player #{@turn + 1}, go alone?" })
+        @status = "loner_check"
+      #if computer start round
+      else
+        setup_turn()
+        next_player()
+        turn()
+      end
+    end
+
+    def computer_call_trump
+      # count cards per suit
+      suits_count = [0,0,0,0]
+      @current_player.hand.each do |card|
+        suits_count[card.suit] += 1
+      end
+      if suits_count.max >= 3
+        call_suit = suits_count.index(suits_count.max)
+        #check if player has bower
+        has_bower = false
+        left_bower_id = {0 => [1,10], 1 => [0,10], 2 => [3,10], 3 => [2,10]}[call_suit]
+        @current_player.hand.each do |card|
+          if card.suit == call_suit && card.value == 10
+            return call_suit
+          elsif card.id == left_bower_id
+            return call_suit
+          end
+        end
+      else
+        return false
+      end
+
+
     end
 
     def call_trump
@@ -254,8 +319,20 @@ module Euchre
         #computer will pass for the time being
         if @current_player.id == 0
           @pass_count += 1
-          next_player()
-          call_trump()
+          #run computer check here to call trump if
+          possible_suit = computer_call_trump()
+          byebug
+          if possible_suit
+            @trump = possible_suit
+            trump_list_gen()
+            order_symbol_set()
+            setup_turn()
+            next_player()
+            turn()
+          else
+            next_player()
+            call_trump()
+          end
         else
           @pass_count += 1
           ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
@@ -283,6 +360,7 @@ module Euchre
     end
 
     def loner_check_input(input)
+      #for non computer players only
       if input["command"]
         @loner = {1 => 3, 2 => 4, 3 => 1, 4 => 2}[@current_player.player_no]
         ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
@@ -602,7 +680,12 @@ module Euchre
               end
             end
           else
-            return best_card()
+            worst = worst_card()
+            if worst.nil?
+              return best_card()
+            else
+              return worst
+            end
           end
         end
       end
@@ -617,6 +700,12 @@ module Euchre
           card = @current_player.hand.delete(best)
           return card
         end
+      end
+
+      def worst_card
+        worst = @current_player.non_trump_cards[-1]
+        card = @current_player.hand.delete(worst)
+        return card
       end
 
       def generate_best_card_lists
@@ -634,6 +723,8 @@ module Euchre
             end
           end
         end
+        @current_player.trump_cards.sort_by{|card| card.value}
+        @current_player.non_trump_cards.sort_by{|card| {0 => 10, 12 => 9, 11 => 8, 10 => 7, 9 => 6, 8 => 5}[card.value]}
       end
 
       generate_best_card_lists()
@@ -681,6 +772,8 @@ module Euchre
       end
       trump_list_gen
     end
+
+
 
     def is_trump(card)
       if card.suit == @trump
