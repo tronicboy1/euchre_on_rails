@@ -797,8 +797,8 @@ module Euchre
       if user_input["id"] == @round.current_player.id
         if @round.status == "pickup_or_pass"
           @round.pickup_or_pass_input(user_input)
-        elsif @round.status == "throw_away_card"
-
+        elsif @round.status == "throw_away_card" && user_input["id"] == @round.dealer.id
+          @round.throw_away_card(user_input)
         elsif @round.status == "call_trump"
           @round.call_trump_input(user_input)
         elsif @round.status == "loner_check"
@@ -808,7 +808,6 @@ module Euchre
         end
       elsif @round.status == "throw_away_card" && user_input["id"] == @round.dealer.id
         @round.throw_away_card(user_input)
-
       else
         puts "wrong player #{user_input}"
       end
