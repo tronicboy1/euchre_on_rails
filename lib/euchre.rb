@@ -106,7 +106,7 @@ module Euchre
       @player3 = player3
       @player4 = player4
       @player_list = [@player1,@player2,@player3,@player4]
-      @turn = turn
+      @turn = rand(0..3)
       @deck = Deck.new
       @dealer = @player_list[@turn]
       @trump = nil
