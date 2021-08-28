@@ -174,7 +174,7 @@ module Euchre
       if @dealer == @current_player
         same_suit_count += 1
       end
-      if same_suit_count >= 2 && has_bower
+      if same_suit_count >= 3 && has_bower
         return true
       else
         return false
@@ -221,7 +221,7 @@ module Euchre
         #set trump and card values
         set_trump(input)
         order_symbol_set()
-        throw_away_shared_code()
+        pickup_or_pass_shared_code()
       else
         next_player()
         if @pass_count == 4
@@ -279,6 +279,10 @@ module Euchre
         next_player()
         turn()
       end
+    end
+
+    def computer_call_trump
+
     end
 
     def call_trump
@@ -643,7 +647,12 @@ module Euchre
               end
             end
           else
-            return best_card()
+            worst = worst_card()
+            if worst.nil?
+              return best_card()
+            else
+              return worst
+            end
           end
         end
       end
@@ -658,6 +667,12 @@ module Euchre
           card = @current_player.hand.delete(best)
           return card
         end
+      end
+
+      def worst_card
+        worst = @current_player.non_trump_cards[-1]
+        card = @current_player.hand.delete(worst)
+        return card
       end
 
       def generate_best_card_lists
@@ -675,6 +690,8 @@ module Euchre
             end
           end
         end
+        @current_player.trump_cards.sort_by{|card| card.value}
+        @current_player.non_trump_cards.sort_by{|card| {0 => 10, 12 => 9, 11 => 8, 10 => 7, 9 => 6, 8 => 5}[card.value]}
       end
 
       generate_best_card_lists()
