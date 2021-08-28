@@ -288,22 +288,26 @@ module Euchre
         suits_count[card.suit] += 1
       end
       if suits_count.max >= 3
-        call_suit = suits_count.index(suits_count.max)
+        call_suit = suits_count.index(suits_count.max).to_i
         #check if player has bower
         has_bower = false
         left_bower_id = {0 => [1,10], 1 => [0,10], 2 => [3,10], 3 => [2,10]}[call_suit]
         @current_player.hand.each do |card|
           if card.suit == call_suit && card.value == 10
-            return call_suit
+            has_bower = true
           elsif card.id == left_bower_id
-            return call_suit
+            has_bower = true
           end
+        end
+        if has_bower
+          return call_suit
+        else
+          return false
         end
       else
         return false
       end
-
-
+      return false
     end
 
     def call_trump
@@ -325,6 +329,10 @@ module Euchre
             @trump = possible_suit
             trump_list_gen()
             order_symbol_set()
+            trump_str = {0 => "Spades", 1 => "Clubs", 2 => "Diamonds", 3 => "Hearts"}[@trump]
+            ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
+              "gameupdate" => "Player #{@current_player.player_no} called #{trump_str} trump!", "hide" => "#trump-selection" })
+            sleep(2)
             setup_turn()
             next_player()
             turn()
@@ -712,14 +720,10 @@ module Euchre
         @current_player.non_trump_cards = []
         value_list = [8,9,10,11,12,0]
         @current_player.hand.each do |card|
-          if @trump_list.include?(card.id)
+          if is_trump(card)
             @current_player.trump_cards.push(card)
           else
-            value_list.each do |val|
-              if card.value == val and !@current_player.non_trump_cards.include?(card)
-                @current_player.non_trump_cards.push(card)
-              end
-            end
+            @current_player.non_trump_cards.push(card)
           end
         end
         @current_player.trump_cards.sort_by{|card| card.value}
