@@ -127,6 +127,10 @@ document.addEventListener('turbolinks:load', () => {
 
     $('#toggle-chat').on('click', function() {
       $('#chat-group').toggle();
+      var btn = $(this);
+      btn.prop('disabled', true);
+      setTimeout(function() {
+        btn.prop('disabled', false) }, 300);
     });
     $('#toggle-onlinebar').on('click', function() {
       $('#onlinebar').toggle();
@@ -138,38 +142,74 @@ document.addEventListener('turbolinks:load', () => {
     $('#pickup-yes').on('click', function() {
       let userid = $("#user-id").data('user-id');
       roomChannel.send({ type: "gamecontrol", command: true, id: userid });
+      var btn = $(this);
+      btn.prop('disabled', true);
+      setTimeout(function() {
+        btn.prop('disabled', false) }, 1000);
     });
     $('#pickup-no').on('click', function() {
       let userid = $("#user-id").data('user-id');
       roomChannel.send({ type: "gamecontrol", command: false, id: userid });
+      var btn = $(this);
+      btn.prop('disabled', true);
+      setTimeout(function() {
+        btn.prop('disabled', false) }, 1000);
     });
     $('#trump-selection0').on('click', function() {
       let userid = $("#user-id").data('user-id');
       roomChannel.send({ type: "gamecontrol", command: 0, id: userid });
+      var btn = $(this);
+      btn.prop('disabled', true);
+      setTimeout(function() {
+        btn.prop('disabled', false) }, 1000);
     });
     $('#trump-selection1').on('click', function() {
       let userid = $("#user-id").data('user-id');
       roomChannel.send({ type: "gamecontrol", command: 1, id: userid });
+      var btn = $(this);
+      btn.prop('disabled', true);
+      setTimeout(function() {
+        btn.prop('disabled', false) }, 1000);
     });
     $('#trump-selection2').on('click', function() {
       let userid = $("#user-id").data('user-id');
       roomChannel.send({ type: "gamecontrol", command: 2, id: userid });
+      var btn = $(this);
+      btn.prop('disabled', true);
+      setTimeout(function() {
+        btn.prop('disabled', false) }, 1000);
     });
     $('#trump-selection3').on('click', function() {
       let userid = $("#user-id").data('user-id');
       roomChannel.send({ type: "gamecontrol", command: 3, id: userid });
+      var btn = $(this);
+      btn.prop('disabled', true);
+      setTimeout(function() {
+        btn.prop('disabled', false) }, 1000);
     });
     $('#trump-selection4').on('click', function() {
       let userid = $("#user-id").data('user-id');
       roomChannel.send({ type: "gamecontrol", command: false, id: userid });
+      var btn = $(this);
+      btn.prop('disabled', true);
+      setTimeout(function() {
+        btn.prop('disabled', false) }, 1000);
     });
     $('#loner-selection0').on('click', function() {
       let userid = $("#user-id").data('user-id');
       roomChannel.send({ type: "gamecontrol", command: true, id: userid });
+      var btn = $(this);
+      btn.prop('disabled', true);
+      setTimeout(function() {
+        btn.prop('disabled', false) }, 1000);
     });
     $('#loner-selection1').on('click', function() {
       let userid = $("#user-id").data('user-id');
       roomChannel.send({ type: "gamecontrol", command: false, id: userid });
+      var btn = $(this);
+      btn.prop('disabled', true);
+      setTimeout(function() {
+        btn.prop('disabled', false) }, 1000);
     });
 
     //player1 functions

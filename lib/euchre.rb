@@ -351,23 +351,19 @@ module Euchre
         turn_shared_code(card)
       end
       #check if user is playing correct card if they can follow suit
-      puts "count: #{@count}"
-
       card = @current_player.hand[input["command"]]
-
       if @count == 1
         after_check(input,card)
       else
         if can_follow_suit()
-          if @first_card_suit == @trump
-            if is_trump(card)
-              after_check(input,card)
-            end
-          elsif card.suit == @first_card_suit
+          if @first_card_suit == @trump && is_trump(card)
+            after_check(input,card)
+          elsif card.suit == @first_card_suit && !is_trump(card)
             after_check(input,card)
           else
             ActionCable.server.broadcast(@channel,{ "element" => "#game-telop", "gameupdate" => "Player #{@turn + 1}, you can't lie to me." })
             sleep(0.1)
+            @status = "turn"
           end
         else
           after_check(input,card)
@@ -394,6 +390,8 @@ module Euchre
       ActionCable.server.broadcast(@channel,{ "img" => card.b64_img,
         "element" => "p#{@current_player.player_no}-played-card", "show" => "#p#{@current_player.player_no}-played-card" })
       sleep(1.5)
+      #set status back to turn to avoid multiple input while waiting
+      @status = "turn"
       next_player()
       turn()
     end
@@ -653,14 +651,10 @@ module Euchre
           if card.suit == @first_card_suit && card.value != 10
             return true
           elsif card.suit == @first_card_suit && card.value == 10
-            if @trump == 0 && card.suit == 1
-              return false
-            elsif @trump == 1 && card.suit == 0
-              return false
-            elsif @trump == 2 && card.suit == 3
-              return false
-            elsif @trump == 3 && card.suit == 2
-              return false
+            if @first_card_suit == @trump and is_trump(card)
+              return true
+            elsif !is_trump(card) && card.suit == @first_card_suit
+              return true
             end
           end
         end
@@ -798,15 +792,20 @@ module Euchre
         if @round.status == "pickup_or_pass"
           @round.pickup_or_pass_input(user_input)
         elsif @round.status == "throw_away_card" && user_input["id"] == @round.dealer.id
+          @round.status = "executing"
           @round.throw_away_card(user_input)
         elsif @round.status == "call_trump"
           @round.call_trump_input(user_input)
         elsif @round.status == "loner_check"
           @round.loner_check_input(user_input)
         elsif @round.status == "turn"
+          @round.status = "executing"
           @round.turn_input(user_input)
+        else
+          puts "still cycling"
         end
       elsif @round.status == "throw_away_card" && user_input["id"] == @round.dealer.id
+        @round.status = "executing"
         @round.throw_away_card(user_input)
       else
         puts "wrong player #{user_input}"
