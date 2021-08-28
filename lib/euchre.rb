@@ -321,7 +321,6 @@ module Euchre
           @pass_count += 1
           #run computer check here to call trump if
           possible_suit = computer_call_trump()
-          byebug
           if possible_suit
             @trump = possible_suit
             trump_list_gen()
