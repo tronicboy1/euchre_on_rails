@@ -726,7 +726,7 @@ module Euchre
             @current_player.non_trump_cards.push(card)
           end
         end
-        @current_player.trump_cards.sort_by{|card| card.value}.reverse!
+        @current_player.trump_cards.sort_by{|card| {10 => 10, 0 => 9, 12 => 8, 11 => 7, 9 => 6, 8 => 5}[card.value]}.reverse!
         @current_player.non_trump_cards.sort_by{|card| {0 => 10, 12 => 9, 11 => 8, 10 => 7, 9 => 6, 8 => 5}[card.value]}.reverse!
       end
 
