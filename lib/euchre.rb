@@ -96,7 +96,7 @@ module Euchre
   #round will hold data for each round such as next player and when round is finished
   #also will hold functions to update round information based on player input
   class Round
-    attr_accessor :current_player, :turn, :trump, :turnup, :status
+    attr_accessor :current_player, :turn, :trump, :turnup, :status, :dealer
 
     def initialize(player1,player2,player3,player4,turn,channel,status)
       @status = status
@@ -222,7 +222,7 @@ module Euchre
 
     def throw_away_card(input)
       @dealer.hand.delete_at input["command"]
-      resend_player_cards()
+      resend_player_cards(@dealer)
       sleep(0.1)
       ActionCable.server.broadcast(@channel,{ "hide" => "#p#{@dealer.player_no}-pickupcard" })
       sleep(0.1)
@@ -393,7 +393,7 @@ module Euchre
       #send player's card to board
       ActionCable.server.broadcast(@channel,{ "img" => card.b64_img,
         "element" => "p#{@current_player.player_no}-played-card", "show" => "#p#{@current_player.player_no}-played-card" })
-      sleep(0.1)
+      sleep(1.5)
       next_player()
       turn()
     end
@@ -737,9 +737,9 @@ module Euchre
     end
 
     #resends player cards after pickup and throw away
-    def resend_player_cards
-      @current_player.hand.each_with_index do |card, i|
-        ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "element" => "p#{@current_player.player_no}-card#{i}", "show" => "#hand", "hide" => "p#{@current_player.player_no}-pickupcard" })
+    def resend_player_cards(player)
+      player.hand.each_with_index do |card, i|
+        ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "element" => "p#{player.player_no}-card#{i}", "show" => "#hand", "hide" => "p#{player.player_no}-pickupcard" })
         sleep(0.1)
       end
     end
@@ -798,7 +798,7 @@ module Euchre
         if @round.status == "pickup_or_pass"
           @round.pickup_or_pass_input(user_input)
         elsif @round.status == "throw_away_card"
-          @round.throw_away_card(user_input)
+
         elsif @round.status == "call_trump"
           @round.call_trump_input(user_input)
         elsif @round.status == "loner_check"
@@ -806,6 +806,8 @@ module Euchre
         elsif @round.status == "turn"
           @round.turn_input(user_input)
         end
+      elsif @round.status == "throw_away_card" && user_input["id"] == @round.dealer.id
+        @round.throw_away_card(user_input)
 
       else
         puts "wrong player #{user_input}"
