@@ -130,7 +130,7 @@ document.addEventListener('turbolinks:load', () => {
       var btn = $(this);
       btn.prop('disabled', true);
       setTimeout(function() {
-        btn.prop('disabled', false) }, 1000);
+        btn.prop('disabled', false) }, 300);
     });
     $('#toggle-onlinebar').on('click', function() {
       $('#onlinebar').toggle();

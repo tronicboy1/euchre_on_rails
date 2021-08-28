@@ -363,6 +363,7 @@ module Euchre
           else
             ActionCable.server.broadcast(@channel,{ "element" => "#game-telop", "gameupdate" => "Player #{@turn + 1}, you can't lie to me." })
             sleep(0.1)
+            @status = "turn"
           end
         else
           after_check(input,card)
