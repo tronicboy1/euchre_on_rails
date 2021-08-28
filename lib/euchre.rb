@@ -282,6 +282,27 @@ module Euchre
     end
 
     def computer_call_trump
+      # count cards per suit
+      suits_count = [0,0,0,0]
+      @current_player.hand.each do |card|
+        suits_count[card.suit] += 1
+      end
+      if suits_count.max >= 3
+        call_suit = suits_count.index(suits_count.max)
+        #check if player has bower
+        has_bower = false
+        left_bower_id = {0 => [1,10], 1 => [0,10], 2 => [3,10], 3 => [2,10]}[call_suit]
+        @current_player.hand.each do |card|
+          if card.suit == call_suit && card.value == 10
+            return call_suit
+          elsif card.id == left_bower_id
+            return call_suit
+          end
+        end
+      else
+        return false
+      end
+
 
     end
 
@@ -298,8 +319,20 @@ module Euchre
         #computer will pass for the time being
         if @current_player.id == 0
           @pass_count += 1
-          next_player()
-          call_trump()
+          #run computer check here to call trump if
+          possible_suit = computer_call_trump()
+          byebug
+          if possible_suit
+            @trump = possible_suit
+            trump_list_gen()
+            order_symbol_set()
+            setup_turn()
+            next_player()
+            turn()
+          else
+            next_player()
+            call_trump()
+          end
         else
           @pass_count += 1
           ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
