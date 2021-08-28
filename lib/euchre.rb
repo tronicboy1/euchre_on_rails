@@ -160,7 +160,7 @@ module Euchre
     def computer_pickup_check
       #count how many cards computer has of turnup card suit
       same_suit_count = 0
-      has_bower = false
+      has_bower = @turnup.value == 10
       left_bower_id = {0 => [1,10], 1 => [0,10], 2 => [3,10], 3 => [2,10]}[@turnup.suit]
       @current_player.hand.each do |card|
         if card.suit == @turnup.suit
@@ -248,7 +248,12 @@ module Euchre
 
       #automatically throw_away_card for computers
       if @dealer.id == 0
-        @dealer.hand.pop
+        @dealer.hand.each_with_index do |card,i|
+          if card.suit != @trump && card.value != 10
+            @dealer.hand.delete_at(i)
+            break
+          end
+        end
         throw_away_shared_code()
       end
     end
