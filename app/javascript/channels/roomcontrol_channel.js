@@ -40,9 +40,9 @@ document.addEventListener('turbolinks:load', () => {
 	        var img_element = document.getElementById(data.element);
 	        var img_base64_content = data.img;
 	        img_element.src = "data:image/png;base64," + img_base64_content;
-          $('#' + data.element).show();
-          $(data.show).show();
-          $(data.hide).hide();
+          $('#' + data.element).show('normal');
+          $(data.show).show('normal');
+          $(data.hide).hide('normal');
 
 
         } else if (typeof data.message !== 'undefined') {
@@ -63,12 +63,12 @@ document.addEventListener('turbolinks:load', () => {
         if (typeof data.gameupdate !== 'undefined') {
           $(data.element).empty()
           $(data.element).append(data.gameupdate)
-          $(data.hide).hide()
-          $(data.show).show()
+          $(data.hide).hide('normal')
+          $(data.show).show('normal')
         }
         if (typeof data.hide !== 'undefined') {
-          $(data.hide).hide()
-          $(data.show).show()
+          $(data.hide).hide('normal')
+          $(data.show).show('normal')
         }
         if (typeof data.clearbar !== 'undefined') {
           $('#trump-selection').hide()
