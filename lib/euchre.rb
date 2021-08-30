@@ -893,15 +893,16 @@ module Euchre
     def resend_gui(dic)
       player = @round.player_list[dic["player_no"]]
       @round.resend_player_cards(player)
+      sleep(0.1)
       if @round.status == "pickup_or_pass"
-        ActionCable.server.broadcast(@channel,{ "show" => "#turnup" })
+        ActionCable.server.broadcast(@channel,{ "img" => @round.turnup.b64_img, "element" => "turnup-card", "show" => "#turnup" })
         sleep(0.1)
-        ActionCable.server.broadcast(@channel,{ "show" => "#pickup-yesno" })
+        ActionCable.server.broadcast(@channel,{ "show" => "#pickup-yesno", "hide" => "null" })
         sleep(0.1)
       elsif @round.status == "throw_away_card" && user_input["id"] == @round.dealer.id
-        ActionCable.server.broadcast(@channel,{ "show" => "#turnup" })
+        ActionCable.server.broadcast(@channel,{ "show" => "#turnup", "hide" => "null" })
         sleep(0.1)
-        ActionCable.server.broadcast(@channel,{ "show" => "#pickup-yesno" })
+        ActionCable.server.broadcast(@channel,{ "show" => "#pickup-yesno", "hide" => "null" })
         sleep(0.1)
       elsif @round.status == "call_trump"
         ActionCable.server.broadcast(@channel,{ "hide" => "#pickup-yesno", "show" => "#trump-selection" })
