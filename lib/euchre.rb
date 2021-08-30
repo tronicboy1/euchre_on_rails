@@ -96,7 +96,7 @@ module Euchre
   #round will hold data for each round such as next player and when round is finished
   #also will hold functions to update round information based on player input
   class Round
-    attr_accessor :current_player, :turn, :trump, :turnup, :status, :dealer, :player_list
+    attr_accessor :current_player, :turn, :trump, :turnup, :status, :dealer, :player_list, :cards_played
 
     def initialize(player1,player2,player3,player4,turn,channel,status)
       @status = status
@@ -890,6 +890,7 @@ module Euchre
       @round = Round.new(@player1,@player2,@player3,@player4,0,@channel,@status)
     end
 
+    #this function is used to resend cards if a player refreshes the page midgame or disconnects
     def resend_gui(dic)
       player = @round.player_list[dic["player_no"]]
       @round.resend_player_cards(player)
@@ -913,6 +914,11 @@ module Euchre
         ActionCable.server.broadcast(@channel,{ "hide" => "#trump-selection", "show" => "#loner-selection" })
         sleep(0.1)
       elsif @round.status == "turn"
+        @round.cards_played.each do |card,player|
+          ActionCable.server.broadcast(@channel,{ "img" => card.b64_img,
+            "element" => "p#{player.player_no}-played-card", "show" => "#p#{player.player_no}-played-card" })
+          sleep(0.1)
+        end
         ActionCable.server.broadcast(@channel,{ "hide" => "#pickup-yesno" })
         sleep(0.1)
         ActionCable.server.broadcast(@channel,{ "hide" => "#trump-selection" })

@@ -32,6 +32,7 @@ class RoomcontrolChannel < ApplicationCable::Channel
     if dic["command"] == "start-game"
       $game_dict[params[:room_id]] = Game.new(params[:room_id])
       $game_dict[params[:room_id]].start_game
+    #reloads gui for players who left page
     elsif dic["command"] == "reload_gui"
       $game_dict[params[:room_id]].resend_gui(dic)
     else
