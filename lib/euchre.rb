@@ -96,7 +96,7 @@ module Euchre
   #round will hold data for each round such as next player and when round is finished
   #also will hold functions to update round information based on player input
   class Round
-    attr_accessor :current_player, :turn, :trump, :turnup, :status, :dealer
+    attr_accessor :current_player, :turn, :trump, :turnup, :status, :dealer, :player_list
 
     def initialize(player1,player2,player3,player4,turn,channel,status)
       @status = status
@@ -834,8 +834,10 @@ module Euchre
     #resends player cards after pickup and throw away
     def resend_player_cards(player)
       player.hand.each_with_index do |card, i|
-        ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "element" => "p#{player.player_no}-card#{i}", "show" => "#hand", "hide" => "p#{player.player_no}-pickupcard" })
-        sleep(0.1)
+        if !card.nil?
+          ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "element" => "p#{player.player_no}-card#{i}", "show" => "#hand", "hide" => "p#{player.player_no}-pickupcard" })
+          sleep(0.1)
+        end
       end
     end
 
@@ -886,6 +888,37 @@ module Euchre
 
     def start_game
       @round = Round.new(@player1,@player2,@player3,@player4,0,@channel,@status)
+    end
+
+    def resend_gui(dic)
+      player = @round.player_list[dic["player_no"]]
+      @round.resend_player_cards(player)
+      if @round.status == "pickup_or_pass"
+        ActionCable.server.broadcast(@channel,{ "show" => "#turnup" })
+        sleep(0.1)
+        ActionCable.server.broadcast(@channel,{ "show" => "#pickup-yesno" })
+        sleep(0.1)
+      elsif @round.status == "throw_away_card" && user_input["id"] == @round.dealer.id
+        ActionCable.server.broadcast(@channel,{ "show" => "#turnup" })
+        sleep(0.1)
+        ActionCable.server.broadcast(@channel,{ "show" => "#pickup-yesno" })
+        sleep(0.1)
+      elsif @round.status == "call_trump"
+        ActionCable.server.broadcast(@channel,{ "hide" => "#pickup-yesno", "show" => "#trump-selection" })
+        sleep(0.1)
+        ActionCable.server.broadcast(@channel,{ "hide" => "#turnup" })
+        sleep(0.1)
+      elsif @round.status == "loner_check"
+        ActionCable.server.broadcast(@channel,{ "hide" => "#trump-selection", "show" => "#loner-selection" })
+        sleep(0.1)
+      elsif @round.status == "turn"
+        ActionCable.server.broadcast(@channel,{ "hide" => "#pickup-yesno" })
+        sleep(0.1)
+        ActionCable.server.broadcast(@channel,{ "hide" => "#trump-selection" })
+        sleep(0.1)
+        ActionCable.server.broadcast(@channel,{ "hide" => "#loner-selection" })
+        sleep(0.1)
+      end
     end
 
     def game_control(user_input)

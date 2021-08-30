@@ -211,6 +211,15 @@ document.addEventListener('turbolinks:load', () => {
       setTimeout(function() {
         btn.prop('disabled', false) }, 1000);
     });
+    $('#reload-gui').on('click', function() {
+      let player_no = $("#player-no").data('player-no');
+      console.log(player_no);
+      roomChannel.send({ type: "gamecontrol", command: "reload_gui", player_no: player_no });
+      var btn = $(this);
+      btn.prop('disabled', true);
+      setTimeout(function() {
+        btn.prop('disabled', false) }, 3000);
+    });
 
     //player1 functions
     $('#p1-card0').on('click', function() {
