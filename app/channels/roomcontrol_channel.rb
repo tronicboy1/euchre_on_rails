@@ -1,7 +1,6 @@
 require 'base64'
 
 class RoomcontrolChannel < ApplicationCable::Channel
-  include Euchre
 
   def subscribed
     stream_from "chat_#{params[:room_id]}"
