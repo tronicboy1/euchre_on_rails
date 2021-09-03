@@ -22,4 +22,4 @@ test:
 
 production:
   encoding: utf8
-  url: postgres://tcqihalazzrqrp:134d32882d10acfddefb242fa68fcd49cc5b6d4722cbb45db4154ad0e3966124@ec2-52-45-183-77.compute-1.amazonaws.com:5432/de916jl6lr7o0l
+  url: <%= ENV["DATABASE_URL"] %>
