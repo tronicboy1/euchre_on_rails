@@ -1,4 +1,4 @@
-class GameUpdatesController < ApplicationController
+class GameupdatesController < ApplicationController
   before_action :set_updateid, only: [:show,:edit,:update,:destroy]
 
   def show
@@ -6,15 +6,15 @@ class GameUpdatesController < ApplicationController
   end
 
   def index
-    @updates = GameUpdates.last(5)
+    @updates = Gameupdates.last(5)
   end
 
   def new
-    @update = GameUpdates.new
+    @update = Gameupdates.new
   end
 
   def create
-    @update = GameUpdates.new(set_update_params)
+    @update = Gameupdates.new(set_update_params)
     #@update.text = params[:gameupdates][:text]
     if @update.save
       flash[:primary] = "Update was saved"
@@ -53,7 +53,7 @@ class GameUpdatesController < ApplicationController
   #private ensures that methods are only used in this rb file
   private
   def set_updateid
-    @update = GameUpdates.find(params[:id])
+    @update = Gameupdates.find(params[:id])
   end
 
   def set_update_params
