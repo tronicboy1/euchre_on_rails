@@ -1,7 +1,7 @@
 module ApplicationHelper
 
   def new_update(text)
-    update = Gameupdates.new(text: text)
+    update = GameUpdates.new(text: text)
     update.save
   end
 

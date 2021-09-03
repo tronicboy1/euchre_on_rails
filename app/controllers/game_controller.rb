@@ -22,7 +22,7 @@ class GameController < ApplicationController
     elsif !refresh_userinfo_from_db.room_id.nil?
       redirect_to '/game'
     else
-      @updates = Gameupdates.last(5).reverse!
+      @updates = GameUpdates.last(5).reverse!
       add_player_list
     end
   end
