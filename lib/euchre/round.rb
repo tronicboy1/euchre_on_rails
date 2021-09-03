@@ -747,7 +747,7 @@ class Round
   end
 
   def new_update(text)
-    update = GameUpdates.new(text: text)
+    update = Gameupdates.new(text: text)
     update.save
   end
 end
