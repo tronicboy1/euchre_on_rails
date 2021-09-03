@@ -24,7 +24,7 @@ module EuchreOnRails
     # config.time_zone = "Central Time (US & Canada)"
     config.autoload = :classic
     #load custom libraries from lib
-    config.autoload_paths << "#{Rails.root}/lib/euchre/"
+    config.autoload_paths << "#{Rails.root}/lib"
 
 
   end

@@ -1,5 +1,4 @@
-class GameUpdates < ApplicationRecord
-  self.table_name = 'gameupdates'
+class Gameupdates < ApplicationRecord
   validates :text, presence: true
   belongs_to :user, optional: true
 end
