@@ -537,6 +537,10 @@ class Round
 
     #add win to players and send to board
     @player_list.each do |player|
+      #set score to 10 if greater than 10
+      if player.score > 10
+        player.score = 10
+      end
       ActionCable.server.broadcast(@channel,{ "element" => "#p#{player.player_no}-score", "gameupdate" => player.score })
       sleep(0.1)
     end
