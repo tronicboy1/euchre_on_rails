@@ -212,84 +212,23 @@ document.addEventListener('turbolinks:load', () => {
         btn.prop('disabled', false) }, 3000);
     });
 
-    
-    //player1 operations
-    $('#p1-card0').on('click', function() {
+    //card operations
+    $('.card0').on('click', function() {
       sendCardClick(0);
     });
-    $('#p1-card1').on('click', function() {
+    $('.card1').on('click', function() {
       sendCardClick(1);
     });
-    $('#p1-card2').on('click', function() {
+    $('.card2').on('click', function() {
       sendCardClick(2);
     });
-    $('#p1-card3').on('click', function() {
+    $('.card3').on('click', function() {
       sendCardClick(3);
     });
-    $('#p1-card4').on('click', function() {
+    $('.card4').on('click', function() {
       sendCardClick(4);
     });
-    $('#p1-pickupcard').on('click', function() {
-      sendCardClick(5);
-    });
-
-    //player2 operations
-    $('#p2-card0').on('click', function() {
-      sendCardClick(0);
-    });
-    $('#p2-card1').on('click', function() {
-      sendCardClick(1);
-    });
-    $('#p2-card2').on('click', function() {
-      sendCardClick(2);
-    });
-    $('#p2-card3').on('click', function() {
-      sendCardClick(3);
-    });
-    $('#p2-card4').on('click', function() {
-      sendCardClick(4);
-    });
-    $('#p2-pickupcard').on('click', function() {
-      sendCardClick(5);
-    });
-
-    //player3 operations
-    $('#p3-card0').on('click', function() {
-      sendCardClick(0);
-    });
-    $('#p3-card1').on('click', function() {
-      sendCardClick(1);
-    });
-    $('#p3-card2').on('click', function() {
-      sendCardClick(2);
-    });
-    $('#p3-card3').on('click', function() {
-      sendCardClick(3);
-    });
-    $('#p3-card4').on('click', function() {
-      sendCardClick(4);
-    });
-    $('#p3-pickupcard').on('click', function() {
-      sendCardClick(5);
-    });
-
-    //player4 operations
-    $('#p4-card0').on('click', function() {
-      sendCardClick(0);
-    });
-    $('#p4-card1').on('click', function() {
-      sendCardClick(1);
-    });
-    $('#p4-card2').on('click', function() {
-      sendCardClick(2);
-    });
-    $('#p4-card3').on('click', function() {
-      sendCardClick(3);
-    });
-    $('#p4-card4').on('click', function() {
-      sendCardClick(4);
-    });
-    $('#p4-pickupcard').on('click', function() {
+    $('.pickupcard').on('click', function() {
       sendCardClick(5);
     });
 
