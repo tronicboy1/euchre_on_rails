@@ -2,6 +2,8 @@ import consumer from "./consumer"
 
 
 
+
+
 document.addEventListener('turbolinks:load', () => {
 
 
@@ -18,7 +20,72 @@ document.addEventListener('turbolinks:load', () => {
     $('#trump-selection').hide();
     $('#loner-selection').hide();
 
+    //universal functions for when data received
+    function clearBar() {
+      $('#trump-selection').hide()
+      $('#p1-dealer').empty()
+      $('#p2-dealer').empty()
+      $('#p3-dealer').empty()
+      $('#p4-dealer').empty()
+      $('#p1-order').empty()
+      $('#p2-order').empty()
+      $('#p3-order').empty()
+      $('#p4-order').empty()
+      $('#p1-tricks').empty()
+      $('#p2-tricks').empty()
+      $('#p3-tricks').empty()
+      $('#p4-tricks').empty()
+    }
+    
+    function clearBoard() {
+      $('#p1-played-card').attr('src', '/assets/blank_white_card.png')
+      $('#p2-played-card').attr('src', '/assets/blank_white_card.png')
+      $('#p3-played-card').attr('src', '/assets/blank_white_card.png')
+      $('#p4-played-card').attr('src', '/assets/blank_white_card.png')
+    }
+    
+    function showImage(data) {
+      console.log("img received")
+      var img_element = document.getElementById(data.element);
+      var img_base64_content = data.img;
+      img_element.src = "data:image/png;base64," + img_base64_content;
+      $('#' + data.element).show('normal');
+      $(data.show).show('normal');
+      $(data.hide).hide('normal');
+    }
+    
+    function chatBoxUpdate(data) {
+      console.log("message received")
+      $('#chatbox').val($('#chatbox').val() + data.message + '\n');
+      $('#chatbox').scrollTop($('#chatbox')[0].scrollHeight);
+      if (typeof data.online !== 'undefined') {
+        $(data.online).empty();
+        $(data.online).append("Online");
+        $(data.online).attr('class', 'text-success');
+      } else if (typeof data.disconnected !== 'undefined') {
+        $(data.disconnected).empty("Offline");
+        $(data.disconnected).append("Offline");
+        $(data.disconnected).attr('class', 'text-danger');
+      }
+    }
 
+    //universal functions used for sending commands
+    function sendCommand(input) {
+      let userid = $("#user-id").data('user-id');
+      roomChannel.send({ type: "gamecontrol", command: input, id: userid });
+      var btn = $(this);
+      btn.prop('disabled', true);
+      setTimeout(function() {
+        btn.prop('disabled', false) }, 1000);
+    }
+
+    function sendCardClick(card) {
+      let userid = $("#user-id").data('user-id');
+      roomChannel.send({ type: "gamecontrol", command: card, id: userid });
+    }
+
+
+    //setup activecable connection
     const roomChannel = consumer.subscriptions.create({ channel: "RoomcontrolChannel", room_id: $("#room-id").data('room-id'), username: $("#username").data('username'), user_id: $("#user-id").data('user-id') }, {
       connected() {
         let userid = "#" + $("#user-id").data('user-id') + "-status";
@@ -36,28 +103,11 @@ document.addEventListener('turbolinks:load', () => {
         // Called when there's incoming data on the websocket for this channel
 
         if (typeof data.img !== 'undefined') {
-          console.log("img received")
-	        var img_element = document.getElementById(data.element);
-	        var img_base64_content = data.img;
-	        img_element.src = "data:image/png;base64," + img_base64_content;
-          $('#' + data.element).show('normal');
-          $(data.show).show('normal');
-          $(data.hide).hide('normal');
+          showImage(data);
 
 
         } else if (typeof data.message !== 'undefined') {
-          console.log("message received")
-          $('#chatbox').val($('#chatbox').val() + data.message + '\n');
-          $('#chatbox').scrollTop($('#chatbox')[0].scrollHeight);
-          if (typeof data.online !== 'undefined') {
-            $(data.online).empty();
-            $(data.online).append("Online");
-            $(data.online).attr('class', 'text-success');
-          } else if (typeof data.disconnected !== 'undefined') {
-            $(data.disconnected).empty("Offline");
-            $(data.disconnected).append("Offline");
-            $(data.disconnected).attr('class', 'text-danger');
-          }
+          chatBoxUpdate(data);
         }
 
         if (typeof data.gameupdate !== 'undefined') {
@@ -71,25 +121,10 @@ document.addEventListener('turbolinks:load', () => {
           $(data.show).show('normal')
         }
         if (typeof data.clearbar !== 'undefined') {
-          $('#trump-selection').hide()
-          $('#p1-dealer').empty()
-          $('#p2-dealer').empty()
-          $('#p3-dealer').empty()
-          $('#p4-dealer').empty()
-          $('#p1-order').empty()
-          $('#p2-order').empty()
-          $('#p3-order').empty()
-          $('#p4-order').empty()
-          $('#p1-tricks').empty()
-          $('#p2-tricks').empty()
-          $('#p3-tricks').empty()
-          $('#p4-tricks').empty()
+          clearBar();
         }
         if (typeof data.clearboard !== 'undefined') {
-          $('#p1-played-card').attr('src', '/assets/blank_white_card.png')
-          $('#p2-played-card').attr('src', '/assets/blank_white_card.png')
-          $('#p3-played-card').attr('src', '/assets/blank_white_card.png')
-          $('#p4-played-card').attr('src', '/assets/blank_white_card.png')
+          clearBoard();
       }
 
       }
@@ -97,7 +132,7 @@ document.addEventListener('turbolinks:load', () => {
     });
 
 
-    //universal functions
+    //universal operations
     $('#submitchat').on('click', function() {
       let userid = "#" + $("#user-id").data('user-id') + "-status";
       let text = $('#chatinput').val();
@@ -139,77 +174,33 @@ document.addEventListener('turbolinks:load', () => {
       $('#start-game').hide();
     });
 
+    
     $('#pickup-yes').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: true, id: userid });
-      var btn = $(this);
-      btn.prop('disabled', true);
-      setTimeout(function() {
-        btn.prop('disabled', false) }, 1000);
+      sendCommand(true);
     });
     $('#pickup-no').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: false, id: userid });
-      var btn = $(this);
-      btn.prop('disabled', true);
-      setTimeout(function() {
-        btn.prop('disabled', false) }, 1000);
+      sendCommand(false);
     });
     $('#trump-selection0').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: 0, id: userid });
-      var btn = $(this);
-      btn.prop('disabled', true);
-      setTimeout(function() {
-        btn.prop('disabled', false) }, 1000);
+      sendCommand(0);
     });
     $('#trump-selection1').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: 1, id: userid });
-      var btn = $(this);
-      btn.prop('disabled', true);
-      setTimeout(function() {
-        btn.prop('disabled', false) }, 1000);
+      sendCommand(1);
     });
     $('#trump-selection2').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: 2, id: userid });
-      var btn = $(this);
-      btn.prop('disabled', true);
-      setTimeout(function() {
-        btn.prop('disabled', false) }, 1000);
+      sendCommand(2);
     });
     $('#trump-selection3').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: 3, id: userid });
-      var btn = $(this);
-      btn.prop('disabled', true);
-      setTimeout(function() {
-        btn.prop('disabled', false) }, 1000);
+      sendCommand(3);
     });
     $('#trump-selection4').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: false, id: userid });
-      var btn = $(this);
-      btn.prop('disabled', true);
-      setTimeout(function() {
-        btn.prop('disabled', false) }, 1000);
+      sendCommand(false);
     });
     $('#loner-selection0').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: true, id: userid });
-      var btn = $(this);
-      btn.prop('disabled', true);
-      setTimeout(function() {
-        btn.prop('disabled', false) }, 1000);
+      sendCommand(true);
     });
     $('#loner-selection1').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: false, id: userid });
-      var btn = $(this);
-      btn.prop('disabled', true);
-      setTimeout(function() {
-        btn.prop('disabled', false) }, 1000);
+      sendCommand(false);
     });
     $('#reload-gui').on('click', function() {
       let player_no = $("#player-no").data('player-no');
@@ -221,108 +212,85 @@ document.addEventListener('turbolinks:load', () => {
         btn.prop('disabled', false) }, 3000);
     });
 
-    //player1 functions
+    
+    //player1 operations
     $('#p1-card0').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: 0, id: userid });
+      sendCardClick(0);
     });
     $('#p1-card1').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: 1, id: userid });
+      sendCardClick(1);
     });
     $('#p1-card2').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: 2, id: userid });
+      sendCardClick(2);
     });
     $('#p1-card3').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: 3, id: userid });
+      sendCardClick(3);
     });
     $('#p1-card4').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: 4, id: userid });
+      sendCardClick(4);
     });
     $('#p1-pickupcard').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: 5, id: userid });
+      sendCardClick(5);
     });
 
-    //player2 functions
+    //player2 operations
     $('#p2-card0').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: 0, id: userid });
+      sendCardClick(0);
     });
     $('#p2-card1').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: 1, id: userid });
+      sendCardClick(1);
     });
     $('#p2-card2').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: 2, id: userid });
+      sendCardClick(2);
     });
     $('#p2-card3').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: 3, id: userid });
+      sendCardClick(3);
     });
     $('#p2-card4').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: 4, id: userid });
+      sendCardClick(4);
     });
     $('#p2-pickupcard').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: 5, id: userid });
+      sendCardClick(5);
     });
 
-    //player3 functions
+    //player3 operations
     $('#p3-card0').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: 0, id: userid });
+      sendCardClick(0);
     });
     $('#p3-card1').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: 1, id: userid });
+      sendCardClick(1);
     });
     $('#p3-card2').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: 2, id: userid });
+      sendCardClick(2);
     });
     $('#p3-card3').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: 3, id: userid });
+      sendCardClick(3);
     });
     $('#p3-card4').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: 4, id: userid });
+      sendCardClick(4);
     });
     $('#p3-pickupcard').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: 5, id: userid });
+      sendCardClick(5);
     });
 
-    //player4 functions
+    //player4 operations
     $('#p4-card0').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: 0, id: userid });
+      sendCardClick(0);
     });
     $('#p4-card1').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: 1, id: userid });
+      sendCardClick(1);
     });
     $('#p4-card2').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: 2, id: userid });
+      sendCardClick(2);
     });
     $('#p4-card3').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: 3, id: userid });
+      sendCardClick(3);
     });
     $('#p4-card4').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: 4, id: userid });
+      sendCardClick(4);
     });
     $('#p4-pickupcard').on('click', function() {
-      let userid = $("#user-id").data('user-id');
-      roomChannel.send({ type: "gamecontrol", command: 5, id: userid });
+      sendCardClick(5);
     });
 
 })
