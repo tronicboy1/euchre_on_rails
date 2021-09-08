@@ -635,17 +635,38 @@ class Round
       value_list = [8,9,10,11,12,0]
       @current_player.hand.each do |card|
         if is_trump(card)
-          @current_player.trump_cards.push(card)
+          if @current_player.trump_cards.empty?
+            @current_player.trump_cards.push(card)
+          else
+            trump_values = {10 => 6, 0 => 5, 12 => 4, 11 => 3, 9 => 2, 8 => 1}
+            first_card_value = @current_player.trump_cards[0].value
+            hantei = trump_values[card.value] <=> trump_values[first_card_value]
+            if hantei == -1
+              @current_player.trump_cards.push(card)
+            else
+              @current_player.trump_cards.unshift(card)
+            end
+          end
         else
-          @current_player.non_trump_cards.push(card)
+          if @current_player.non_trump_cards.empty?
+            @current_player.non_trump_cards.push(card)
+          else
+            non_trump_values = {0 => 6, 12 => 5, 11 => 4, 10 => 3, 9 => 2, 8 => 1}
+            first_card_value = @current_player.non_trump_cards[0].value
+            hantei = non_trump_values[card.value] <=> non_trump_values[first_card_value]
+            if hantei == -1
+              @current_player.non_trump_cards.push(card)
+            else
+              @current_player.non_trump_cards.unshift(card)
+            end
+          end
+          #@current_player.non_trump_cards.push(card)
         end
       end
-      @current_player.trump_cards.sort_by{|card| {10 => 10, 0 => 9, 12 => 8, 11 => 7, 9 => 6, 8 => 5}[card.value]}.reverse!
-      @current_player.non_trump_cards.sort_by{|card| {0 => 10, 12 => 9, 11 => 8, 10 => 7, 9 => 6, 8 => 5}[card.value]}.reverse!
+      
     end
-
+    
     generate_best_card_lists()
-
 
     return choose_card()
   end
