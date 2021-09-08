@@ -601,11 +601,16 @@ class Round
             end
           end
         else
-          worst = worst_card()
-          if worst.nil?
+          #play trump if not empty
+          if !@current_player.trump_cards.empty?
             return best_card()
           else
-            return worst
+            worst = worst_card()
+            if worst.nil?
+              return best_card()
+            else
+              return worst
+            end
           end
         end
       end
