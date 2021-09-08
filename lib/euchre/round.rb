@@ -148,7 +148,7 @@ class Round
       "element" => "p#{@dealer.player_no}-pickupcard", "show" => "#p#{@dealer.player_no}-pickupcard", "hide" => "#turnup" })
     sleep(0.1)
     ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
-      "gameupdate" => "Player #{@dealer.player_no}, choose card to throw away", })
+      "gameupdate" => "Player #{@dealer.player_no}, choose card to throw away", "hide" => "#pickup-yesno" })
     sleep(0.1)
 
     #automatically throw_away_card for computers
