@@ -17,11 +17,15 @@
 
 <%= render 'player1' %>
 
+<%= render 'controller', pno: "p1" %>
+
 <% elsif @room.player2_id == current_user.id %>
 
 <div id='player-no' data-player-no="1"></div>
 
 <%= render 'player2' %>
+
+<%= render 'controller', pno: "p2" %>
 
 <% elsif @room.player3_id == current_user.id %>
 
@@ -29,11 +33,15 @@
 
 <%= render 'player3' %>
 
+<%= render 'controller', pno: "p3" %>
+
 <% elsif @room.player4_id == current_user.id %>
 
 <div id='player-no' data-player-no="3"></div>
 
 <%= render 'player4' %>
+
+<%= render 'controller', pno: "p4" %>
 
 <% end %>
 

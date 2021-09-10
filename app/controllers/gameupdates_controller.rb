@@ -6,7 +6,7 @@ class GameupdatesController < ApplicationController
   end
 
   def index
-    @updates = Gameupdates.last(5)
+    @updates = Gameupdates.last(25).reverse!
   end
 
   def new
