@@ -67,6 +67,14 @@ document.addEventListener('turbolinks:load', () => {
         $(data.disconnected).append("Offline");
         $(data.disconnected).attr('class', 'text-danger');
       }
+      //change color of button for a second to show let user know new message
+      var chatToggle = $('#toggle-chat')
+      chatToggle.text("Toggle Chat (New Message!)");
+      chatToggle.attr('class', 'btn btn-success btn-sm');
+      setTimeout(function(){
+        chatToggle.text("Toggle Chat");
+        chatToggle.attr('class', 'btn btn-dark btn-sm');
+      },4000);
     }
 
     //universal functions used for sending commands
