@@ -17,7 +17,7 @@ class Card
 
     def to_s
         suit_str = {0 => "Spades", 1 => "Clubs", 2 => "Diamonds", 3 => "Hearts"}
-        value_str = {0 => "Ace", 8 => "Nine", 9 => "Ten", 10 => "Jack", 11 => "Queen", 12 => "King"}
+        value_str = {0 => "Ace", 1 => "Two", 2 => "Three", 3 => "Four", 8 => "Nine", 9 => "Ten", 10 => "Jack", 11 => "Queen", 12 => "King"}
         return "#{value_str[@value]} of #{suit_str[@suit]}"
     end
 

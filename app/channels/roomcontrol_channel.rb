@@ -14,6 +14,17 @@ class RoomcontrolChannel < ApplicationCable::Channel
       ActionCable.server.broadcast("chat_#{params[:room_id]}", data)
     elsif dic["type"] == "gamecontrol"
       gamecontrol_shori(dic)
+     #command for 2s,3s,4s spoof
+    elsif dic["type"] == "twos_threes_and_fours"
+      player_no_list = [1,2,3,4]
+      card_id = [[1,2],[1,1],[0,3],[3,2],[2,1]]
+      player_no_list.each do |player_no|
+        card_id.each_with_index do |id,index|
+          card = Card.new(id[0],id[1])
+          ActionCable.server.broadcast("chat_#{params[:room_id]}",{ "img" => card.b64_img, "element" => "p#{player_no}-card#{index}", "show" => "#hand" })
+          sleep(0.1)
+        end
+      end
     end
   end
 
@@ -37,7 +48,5 @@ class RoomcontrolChannel < ApplicationCable::Channel
     else
       $game_dict[params[:room_id]].game_control(dic)
     end
-
-
   end
 end

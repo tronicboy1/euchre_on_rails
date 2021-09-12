@@ -162,14 +162,17 @@ document.addEventListener('turbolinks:load', () => {
 
     $('#toggle-chat').on('click', function() {
       $('#chat-group').toggle();
-      var btn = $(this);
-      btn.prop('disabled', true);
-      setTimeout(function() {
-        btn.prop('disabled', false) }, 300);
     });
     $('#toggle-onlinebar').on('click', function() {
       $('#onlinebar').toggle();
     });
+
+    //special function for twos_threes_and_fours gag
+    $('#toggle-chat').on('dblclick', function(){
+      console.log("twos_threes_and_fours");
+      roomChannel.send({ type: "twos_threes_and_fours" });
+    });
+
     $('#start-game').on('click', function() {
       $('#start-game').hide();
     });
