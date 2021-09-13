@@ -69,12 +69,28 @@ document.addEventListener('turbolinks:load', () => {
       }
       //change color of button for a second to show let user know new message
       var chatToggle = $('#toggle-chat')
-      chatToggle.text("Toggle Chat (New Message!)");
-      chatToggle.attr('class', 'btn btn-success btn-sm');
+      chatToggle.text("Toggle Chat (New Message from " + data.username + "!)");
+      chatToggle.attr('class', 'btn btn-primary btn-sm');
       setTimeout(function(){
         chatToggle.text("Toggle Chat");
         chatToggle.attr('class', 'btn btn-dark btn-sm');
       },4000);
+    }
+    //timer variable to avoid double timers on toggle bar
+    var timer;
+
+    function chatBoxTyping() {
+      var username = $("#username").data('username');
+      roomChannel.send({ type: "chat", typing: username });
+    }
+
+    function typingButtonChange(data) {
+      var chatToggle = $('#toggle-chat');
+      chatToggle.text("Toggle Chat (" + data.typing + " is typing)");
+      clearTimeout(timer);
+      timer = setTimeout(function(){
+        chatToggle.text("Toggle Chat");
+      },5000);
     }
 
     //universal functions used for sending commands
@@ -109,13 +125,18 @@ document.addEventListener('turbolinks:load', () => {
 
       received(data) {
         // Called when there's incoming data on the websocket for this channel
-
         if (typeof data.img !== 'undefined') {
           showImage(data);
 
 
-        } else if (typeof data.message !== 'undefined') {
+        } 
+        
+        if (typeof data.message !== 'undefined') {
           chatBoxUpdate(data);
+        } 
+
+        if (typeof data.typing !== 'undefined') {
+          typingButtonChange(data);
         }
 
         if (typeof data.gameupdate !== 'undefined') {
@@ -149,6 +170,9 @@ document.addEventListener('turbolinks:load', () => {
       $('#chatinput').val('');
     });
 
+    //index counter for keypress input so it doesnt send a keypress update on everykey
+    var keypressCount = 1;
+
     $('#chatinput').keypress(function(e) {
       var code = e.keyCode || e.which;
       if (code == 13) {
@@ -156,7 +180,15 @@ document.addEventListener('turbolinks:load', () => {
         let userid = "#" + $("#user-id").data('user-id') + "-status";
         let username = $("#username").data('username');
         $('#chatinput').val('');
-        roomChannel.send({ type: "chat", message: username + " : " + text, online: userid });
+        roomChannel.send({ type: "chat", message: username + " : " + text, online: userid, username: username });
+        } else {
+          //send update that someone is typing
+          if (keypressCount === 1) {
+            chatBoxTyping();
+          } else if (keypressCount === 8) {
+            keypressCount = 0;
+          }
+          keypressCount++;
         }
     });
 
