@@ -68,13 +68,17 @@ document.addEventListener('turbolinks:load', () => {
         $(data.disconnected).attr('class', 'text-danger');
       }
       //change color of button for a second to show let user know new message
-      var chatToggle = $('#toggle-chat')
-      chatToggle.text("Toggle Chat (New Message from " + data.username + "!)");
-      chatToggle.attr('class', 'btn btn-primary btn-sm');
-      setTimeout(function(){
-        chatToggle.text("Toggle Chat");
-        chatToggle.attr('class', 'btn btn-dark btn-sm');
-      },4000);
+      var username = $("#username").data('username');
+      if (username !== data.username) {
+        var chatToggle = $('#toggle-chat')
+        chatToggle.text("Toggle Chat (New Message from " + data.username + "!)");
+        chatToggle.attr('class', 'btn btn-primary btn-sm');
+        setTimeout(function(){
+          chatToggle.text("Toggle Chat");
+          chatToggle.attr('class', 'btn btn-dark btn-sm');
+        },4000);
+      }
+      
     }
     //timer variable to avoid double timers on toggle bar
     var timer;
