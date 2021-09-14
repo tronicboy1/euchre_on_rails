@@ -53,6 +53,14 @@ document.addEventListener('turbolinks:load', () => {
       $(data.show).show('normal');
       $(data.hide).hide('normal');
     }
+
+    function sendMessage() {
+      let text = $('#chatinput').val();
+      let userid = "#" + $("#user-id").data('user-id') + "-status";
+      let username = $("#username").data('username');
+      $('#chatinput').val('');
+      roomChannel.send({ type: "chat", message: username + " : " + text, online: userid, username: username });
+    }
     
     function chatBoxUpdate(data) {
       console.log("message received")
@@ -89,12 +97,16 @@ document.addEventListener('turbolinks:load', () => {
     }
 
     function typingButtonChange(data) {
-      var chatToggle = $('#toggle-chat');
-      chatToggle.text("Toggle Chat (" + data.typing + " is typing)");
-      clearTimeout(timer);
-      timer = setTimeout(function(){
-        chatToggle.text("Toggle Chat");
-      },5000);
+      var username = $("#username").data("username");
+      //make sure that the user typing isnt receiving a typing notification
+      if (username !== data.typing) {
+        var chatToggle = $('#toggle-chat');
+        chatToggle.text("Toggle Chat (" + data.typing + " is typing)");
+        clearTimeout(timer);
+        timer = setTimeout(function(){
+          chatToggle.text("Toggle Chat");
+        },5000);
+      }
     }
 
     //universal functions used for sending commands
@@ -167,11 +179,7 @@ document.addEventListener('turbolinks:load', () => {
 
     //universal operations
     $('#submitchat').on('click', function() {
-      let userid = "#" + $("#user-id").data('user-id') + "-status";
-      let text = $('#chatinput').val();
-      let username = $("#username").data('username');
-      roomChannel.send({ type: "chat", message: username + " : " + text, online: userid });
-      $('#chatinput').val('');
+      sendMessage();
     });
 
     //index counter for keypress input so it doesnt send a keypress update on everykey
@@ -180,11 +188,7 @@ document.addEventListener('turbolinks:load', () => {
     $('#chatinput').keypress(function(e) {
       var code = e.keyCode || e.which;
       if (code == 13) {
-        let text = $('#chatinput').val();
-        let userid = "#" + $("#user-id").data('user-id') + "-status";
-        let username = $("#username").data('username');
-        $('#chatinput').val('');
-        roomChannel.send({ type: "chat", message: username + " : " + text, online: userid, username: username });
+        sendMessage();
         } else {
           //send update that someone is typing
           if (keypressCount === 1) {
