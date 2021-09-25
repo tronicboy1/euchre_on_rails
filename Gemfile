@@ -64,3 +64,5 @@ gem 'carrierwave'
 
 #install jquery for use with websockets
 gem 'jquery'
+
+gem 'react-rails'
