@@ -18,15 +18,16 @@ const ActionCableProvider = (props) => {
       },
       {
         connected() {
-          setChatBox((prevState) => {
-            return [...prevState, `${props.username} Joined the Room!`];
-          });
+          
         },
         disconnected() {
           // Called when the subscription has been terminated by the server
         },
         received(data) {
-          // Called when there's incoming data on the websocket for this channel
+          console.log(data);
+          setChatBox((prevState) => {
+            return [...prevState, `${props.username} Joined the Room!`];
+          });
         },
       }
     );
@@ -41,7 +42,7 @@ const ActionCableProvider = (props) => {
     userId: props.userId,
     username: props.username,
     roomChannel: roomChannel,
-    chatBox: chatBox,
+    chatBox: chatBox
   };
 
   return (

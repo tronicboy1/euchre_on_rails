@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from "react";
+import ChatBox from "./Chat/ChatBox";
 import ActionCableContext from "./Helpers/ActionCableContext";
 import ActionCableProvider from "./Helpers/ActionCableProvider";
 
@@ -13,9 +14,7 @@ const App = (props) => {
       username={props.username}
     >
       <Card>
-        <h1>Test {context.username}</h1>
-        <p>{props.roomId}</p>
-        <p>{props.userId}</p>
+        <ChatBox />
       </Card>
     </ActionCableProvider>
   );
