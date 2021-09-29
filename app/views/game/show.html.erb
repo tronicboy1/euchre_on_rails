@@ -3,7 +3,7 @@
 <div id='username' data-username="<%= current_user.username %>"></div>
 <div id='user-id' data-user-id="<%= current_user.id %>"></div>
 
-
+<%= react_component('App',{username: current_user.username, room_id: @room.id, user_id: current_user.id },{}) %>
 
 <%= render 'onlinebar' %>
 
