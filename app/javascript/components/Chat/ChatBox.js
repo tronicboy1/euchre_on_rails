@@ -17,6 +17,14 @@ const ChatBox = () => {
 
   console.log(toggleChat);
 
+  useEffect(() => {
+      setToggleText(`New Message from ${context.messages[0].username}`)
+      const timer = setTimeout(() => {
+          setToggleText("Toggle Chat");
+      }, 2000)
+      return () => {clearTimeout(timer)};
+  },[context.messages])
+
   const onToggleChat = () => {
     setToggleChat((prevState) => {
       return !prevState;
