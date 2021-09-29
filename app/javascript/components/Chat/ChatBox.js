@@ -18,9 +18,11 @@ const ChatBox = () => {
   console.log(toggleChat);
 
   const onToggleChat = () => {
-      setToggleChat((prevState) => {return !prevState})
+    setToggleChat((prevState) => {
+      return !prevState;
+    });
   };
-  
+
   return (
     <Card>
       <div className={styles["chat-box"]}>
@@ -30,12 +32,12 @@ const ChatBox = () => {
         >
           {toggleText}
         </Button>
-        {toggleChat && <>
-            <ChatText messages={context.messages}/>
+        {toggleChat && (
+          <>
+            <ChatText messages={context.messages} />
             <InputBar />
-            </>
-        }
-        
+          </>
+        )}
       </div>
     </Card>
   );
