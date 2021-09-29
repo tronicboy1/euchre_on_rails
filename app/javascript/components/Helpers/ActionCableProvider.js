@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 
 import ActionCableContext from "./ActionCableContext";
 import consumer from "../../channels/consumer";
+import actionCableReceivedHanlder from "./actionCableReceivedHandler";
 
 const ActionCableProvider = (props) => {
   const [chatBox, setChatBox] = useState([]);
   const [roomChannel, setRoomChannel] = useState(null);
   //setup activecable connection
   useEffect(() => {
-      console.log('use effect',props)
     const roomChannel = consumer.subscriptions.create(
       {
         channel: "RoomcontrolChannel",
@@ -25,14 +25,11 @@ const ActionCableProvider = (props) => {
         },
         received(data) {
           console.log(data);
-          setChatBox((prevState) => {
-            return [...prevState, `${props.username} Joined the Room!`];
-          });
+          actionCableReceivedHanlder(data,setChatBox);
         },
       }
     );
     setRoomChannel(roomChannel);
-    console.log(roomChannel);
   }, []);
 
   
