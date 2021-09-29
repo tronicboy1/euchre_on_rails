@@ -1,17 +1,18 @@
 .text {
+    display: flex;
+    flex-direction: column-reverse;
     width: 100%;
     margin-right: auto;
     margin-left: auto;
     margin-top: 0;
     margin-bottom: 0.25rem;
-    padding: 0.25rem;
+    padding: 0.5rem;
     background: white;
     border: white 1px solid;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
     height: 200px;
-    overflow-y: scroll;
-    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .text li {
