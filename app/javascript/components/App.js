@@ -13,9 +13,7 @@ const App = (props) => {
       userId={props.userId}
       username={props.username}
     >
-      <Card>
-        <ChatBox />
-      </Card>
+      <ChatBox />
     </ActionCableProvider>
   );
 };

@@ -5,7 +5,7 @@ const ActionCableContext = React.createContext({
     userId: 0,
     username: 'default',
     roomChannel: {},
-    chatBox: []
+    messages: []
 })
 
 export default ActionCableContext;

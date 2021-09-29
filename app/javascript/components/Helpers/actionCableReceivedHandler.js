@@ -1,7 +1,7 @@
-const actionCableReceivedHanlder = (data,setChatBox) => {
+const actionCableReceivedHanlder = (data,setMessages) => {
   if (typeof data.message !== "undefined") {
-    setChatBox((prevState) => {
-      return [...prevState, data.message];
+    setMessages((prevState) => {
+      return [...prevState, {id: prevState[prevState.length - 1].id + 1, content: data.message}];
     });
   }
 };

@@ -1,26 +1,44 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useState, useRef, useEffect } from "react";
 
 import ActionCableContext from "../Helpers/ActionCableContext";
+import Card from "../UI/Card";
+import Button from "../UI/Button";
+
+import styles from "./ChatBox.module.css";
+import InputBar from "./InputBar";
+import ChatText from "./ChatText";
 
 const ChatBox = () => {
-    const context = useContext(ActionCableContext);
+  const context = useContext(ActionCableContext);
 
-    console.log(context.roomChannel);
+  //state management
+  const [toggleText, setToggleText] = useState("Toggle Chat");
+  const [toggleChat, setToggleChat] = useState(true);
 
-    // useEffect(() => {
-    //     context.roomChannel.send({message: 'test1'})
-    // },[]);
+  console.log(toggleChat);
 
-    return (
-        <div>
-            <p>messages:</p>
-            {context.chatBox.map(message => (<p>{message}</p>))}
-            <p>Room ID: {context.roomId}</p>
-            <p>User ID: {context.userId}</p>
-            <p>Username: {context.username}</p>
-            <p>{typeof context.roomChannel}</p>
-        </div>
-    );
+  const onToggleChat = () => {
+      setToggleChat((prevState) => {return !prevState})
+  };
+  
+  return (
+    <Card>
+      <div className={styles["chat-box"]}>
+        <Button
+          onClick={onToggleChat}
+          className={toggleChat ? "chat-toggle" : "chat-toggle__hidden"}
+        >
+          {toggleText}
+        </Button>
+        {toggleChat && <>
+            <ChatText messages={context.messages}/>
+            <InputBar />
+            </>
+        }
+        
+      </div>
+    </Card>
+  );
 };
 
-export default ChatBox;
+export default React.memo(ChatBox);

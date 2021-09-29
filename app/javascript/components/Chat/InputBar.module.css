@@ -1,0 +1,10 @@
+.input-bar {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0.25rem;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}

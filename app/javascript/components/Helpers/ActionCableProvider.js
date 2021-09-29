@@ -5,7 +5,7 @@ import consumer from "../../channels/consumer";
 import actionCableReceivedHanlder from "./actionCableReceivedHandler";
 
 const ActionCableProvider = (props) => {
-  const [chatBox, setChatBox] = useState([]);
+  const [messages, setMessages] = useState([{id: 0, content: 'Welcome to Euchre on Rails!'}]);
   const [roomChannel, setRoomChannel] = useState(null);
   //setup activecable connection
   useEffect(() => {
@@ -25,7 +25,7 @@ const ActionCableProvider = (props) => {
         },
         received(data) {
           console.log(data);
-          actionCableReceivedHanlder(data,setChatBox);
+          actionCableReceivedHanlder(data,setMessages);
         },
       }
     );
@@ -39,7 +39,7 @@ const ActionCableProvider = (props) => {
     userId: props.userId,
     username: props.username,
     roomChannel: roomChannel,
-    chatBox: chatBox
+    messages: messages
   };
 
   return (
