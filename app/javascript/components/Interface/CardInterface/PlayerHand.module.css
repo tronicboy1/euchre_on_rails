@@ -1,0 +1,8 @@
+.playerhand {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+}

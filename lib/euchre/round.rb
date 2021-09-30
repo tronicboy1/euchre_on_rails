@@ -55,7 +55,7 @@ class Round
 
     #set turnup card and send to players
     @turnup = @deck.deal_card
-    ActionCable.server.broadcast(@channel,{ "img" => @turnup.b64_img, "element" => "turnup-card", "show" => "#turnup" })
+    ActionCable.server.broadcast(@channel,{ "img" => @turnup.b64_img, "kitty" => true, "show" => "#turnup" })
     sleep(0.1)
     #declare a counter to keep track of how many times players have passed
     @pass_count = 0
@@ -758,7 +758,7 @@ class Round
     @player_list.each do |player|
       if player.id != 0
         player.hand.each_with_index do |card, i|
-          ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "element" => "p#{player.player_no}-card#{i}", "show" => "#hand" })
+          ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "playerNo" => "p#{player.player_no}", "show" => "#hand", "cardNo" => i })
           sleep(0.1)
         end
       end
@@ -769,7 +769,7 @@ class Round
   def resend_player_cards(player)
     player.hand.each_with_index do |card, i|
       if !card.nil?
-        ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "element" => "p#{player.player_no}-card#{i}", "show" => "#hand", "hide" => "p#{player.player_no}-pickupcard" })
+        ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "playerNo" => "p#{player.player_no}", "show" => "#hand", "cardNo" => i })
         sleep(0.1)
       end
     end

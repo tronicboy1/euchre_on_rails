@@ -12,3 +12,25 @@
 .inner {
     margin: 1rem;
 }
+
+.gamecard {
+    background: rgb(219, 219, 219);
+    width: auto;
+    padding: 0.25rem;
+    margin: 0.1rem;
+    transition: all 0.2s;
+}
+
+.gamecard img {
+    border: rgb(56, 56, 56) 1px solid;
+    border-radius: 10px;
+    margin: auto;
+    width: 100%;
+    height: 100%;
+    max-width: 78px;
+    max-height: 112px;
+}
+
+.gamecard:hover {
+    transform: translateY(-1rem);
+}

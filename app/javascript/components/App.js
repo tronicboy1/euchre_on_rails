@@ -5,9 +5,9 @@ import ActionCableProvider from "./Helpers/ActionCableProvider";
 import ButtonInterface from "./Interface/ButtonInterface/ButtonInterface";
 
 import Card from "./UI/Card";
+import PlayerHand from "./Interface/CardInterface/PlayerHand";
 
 const App = (props) => {
-  const context = useContext(ActionCableContext);
   return (
     <ActionCableProvider
       roomId={props.roomId}
@@ -16,6 +16,7 @@ const App = (props) => {
       playerNo={props.playerNo}
     >
       <ChatBox />
+      <PlayerHand />
       <Card>
         <ButtonInterface />
       </Card>

@@ -14,7 +14,7 @@ const ButtonInterface = () => {
     context.roomChannel.send({ type: "gamecontrol", command: "start-game" });
   };
 
-  console.log(context.showButtons);
+  console.log("context showbuttons: ", context.gameState.showButtons);
 
   if (context.gameState.showButtons === "PICKUP_PASS") {
     return <PickupPass />;
