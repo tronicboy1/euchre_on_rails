@@ -223,7 +223,7 @@ class Round
   def call_trump
     if @pass_count == 4
       #hide turnup card and show buttons for picking trump
-      ActionCable.server.broadcast(@channel,{ "hide" => "#turnup", "show" => "#trump-selection" })
+      ActionCable.server.broadcast(@channel,{ "hide" => "#turnup", "show" => "#trump-selection", "interfaceState" => "CALL_SUIT" })
       sleep(0.1)
       @turnup = nil
     end
@@ -269,7 +269,7 @@ class Round
 
     else
       ActionCable.server.broadcast(@channel,{ "hide" => "#trump-selection", "show" => "#loner-selection", "element" => "#game-telop",
-        "gameupdate" => "Player #{@turn + 1}, go alone?" })
+        "gameupdate" => "Player #{@turn + 1}, go alone?", "interfaceState" => "LONER_YESNO" })
       @status = "loner_check"
       set_trump(input)
       order_symbol_set()

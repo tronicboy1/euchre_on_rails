@@ -8,7 +8,7 @@ import gameReducer from "./gameReducer";
 const ActionCableProvider = (props) => {
   const [messages, setMessages] = useState([{id: 0, content: 'Welcome to Euchre on Rails!'}]);
   const [roomChannel, setRoomChannel] = useState(null);
-  const [gameState, setGameState] = useReducer(gameReducer,{showButtons: false});
+  const [gameState, setGameState] = useReducer(gameReducer,{showButtons: "LONER_YESNO"});
   //setup activecable connection
   useEffect(() => {
     const roomChannel = consumer.subscriptions.create(
@@ -39,6 +39,7 @@ const ActionCableProvider = (props) => {
   const cableContext = {
     roomId: props.roomId,
     userId: props.userId,
+    playerNo: props.playerNo,
     username: props.username,
     roomChannel: roomChannel,
     messages: messages,
