@@ -20,7 +20,7 @@ class Round
     @ordered_player = nil
     @loner = nil
     #broadcast dealer to players
-    ActionCable.server.broadcast(@channel,{ "element" => "#p#{@turn + 1}-dealer", "gameupdate" => "●" })
+    ActionCable.server.broadcast(@channel,{ "type" => "DEALER", "gameupdate" => @dealer.username })
     sleep(0.1)
     next_player
     deal_cards
@@ -107,7 +107,7 @@ class Round
         end
       else
         @status = "pickup_or_pass"
-        ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
+        ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP",
           "gameupdate" => "Player #{@turn + 1}, Pass or Pickup?",
           "interfaceState" => "PICKUP_PASS", "hide" => "#loner-selection" })
         sleep(0.1)
@@ -145,9 +145,9 @@ class Round
     #must pass in card as an array bc using concat
     @dealer.add_cards([@turnup])
     ActionCable.server.broadcast(@channel,{ "img" => @turnup.b64_img,
-      "element" => "p#{@dealer.player_no}-pickupcard", "show" => "#p#{@dealer.player_no}-pickupcard", "hide" => "#turnup" })
+      "element" => "p#{@dealer.player_no}-pickupcard", "show" => "#p#{@dealer.player_no}-pickupcard", "interfaceState" => false })
     sleep(0.1)
-    ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
+    ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP",
       "gameupdate" => "Player #{@dealer.player_no}, choose card to throw away", "hide" => "#pickup-yesno" })
     sleep(0.1)
 
@@ -174,14 +174,10 @@ class Round
   end
 
   def throw_away_shared_code
-    ActionCable.server.broadcast(@channel,{ "hide" => "#pickup-yesno" })
-    sleep(0.1)
-    ActionCable.server.broadcast(@channel,{ "hide" => "#turnup" })
-    sleep(0.1)
     #check for loner
     if @current_player.id != 0
-      ActionCable.server.broadcast(@channel,{ "hide" => "#trump-selection", "show" => "#loner-selection", "element" => "#game-telop",
-        "gameupdate" => "Player #{@turn + 1}, go alone?", "interfaceState" => "LONER_YESNO" })
+      ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP",
+        "gameupdate" => "#{@current_player.username}, go alone?", "interfaceState" => "LONER_YESNO" })
       @status = "loner_check"
     #if computer start round
     else
@@ -241,7 +237,7 @@ class Round
           order_symbol_set()
           trump_str = {0 => "Spades", 1 => "Clubs", 2 => "Diamonds", 3 => "Hearts"}[@trump]
           ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
-            "gameupdate" => "Player #{@current_player.player_no} called #{trump_str} trump!", "hide" => "#trump-selection" })
+            "gameupdate" => "Player #{@current_player.player_no} called #{trump_str} trump!", "interfaceState" => false })
           sleep(2)
           setup_turn()
           next_player()
@@ -283,7 +279,7 @@ class Round
         "gameupdate" => "Player #{@turn + 1} is going alone!", "hide" => "#loner-selection" })
       sleep(1.5)
     else
-      ActionCable.server.broadcast(@channel,{ "hide" => "#loner-selection" })
+      ActionCable.server.broadcast(@channel,{ "interfaceState" => false })
       sleep(0.1)
     end
     setup_turn()
