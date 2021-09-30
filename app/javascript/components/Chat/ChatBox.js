@@ -15,13 +15,11 @@ const ChatBox = () => {
   const [toggleText, setToggleText] = useState("Toggle Chat");
   const [toggleChat, setToggleChat] = useState(true);
 
-  console.log(toggleChat);
-
   useEffect(() => {
       setToggleText(`New Message from ${context.messages[0].username}`)
       const timer = setTimeout(() => {
           setToggleText("Toggle Chat");
-      }, 2000)
+      }, 5000)
       return () => {clearTimeout(timer)};
   },[context.messages])
 
@@ -37,6 +35,7 @@ const ChatBox = () => {
         <Button
           onClick={onToggleChat}
           className={toggleChat ? "chat-toggle" : "chat-toggle__hidden"}
+          style={{background: toggleText != "Toggle Chat" ? "blue" : "red"}}
         >
           {toggleText}
         </Button>
