@@ -109,7 +109,7 @@ class Round
         @status = "pickup_or_pass"
         ActionCable.server.broadcast(@channel,{ "element" => "#game-telop",
           "gameupdate" => "Player #{@turn + 1}, Pass or Pickup?",
-          "show" => "#pickup-yesno", "hide" => "#loner-selection" })
+          "interfaceState" => "PICKUP_PASS", "hide" => "#loner-selection" })
         sleep(0.1)
       end
     else
