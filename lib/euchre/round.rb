@@ -181,7 +181,7 @@ class Round
     #check for loner
     if @current_player.id != 0
       ActionCable.server.broadcast(@channel,{ "hide" => "#trump-selection", "show" => "#loner-selection", "element" => "#game-telop",
-        "gameupdate" => "Player #{@turn + 1}, go alone?" })
+        "gameupdate" => "Player #{@turn + 1}, go alone?", "interfaceState" => "LONER_YESNO" })
       @status = "loner_check"
     #if computer start round
     else
@@ -268,8 +268,7 @@ class Round
       call_trump()
 
     else
-      ActionCable.server.broadcast(@channel,{ "hide" => "#trump-selection", "show" => "#loner-selection", "element" => "#game-telop",
-        "gameupdate" => "Player #{@turn + 1}, go alone?", "interfaceState" => "LONER_YESNO" })
+      ActionCable.server.broadcast(@channel,{"gameupdate" => "Player #{@turn + 1}, go alone?", "interfaceState" => "LONER_YESNO" })
       @status = "loner_check"
       set_trump(input)
       order_symbol_set()
