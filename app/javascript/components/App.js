@@ -6,6 +6,8 @@ import ButtonInterface from "./Interface/ButtonInterface/ButtonInterface";
 
 import Card from "./UI/Card";
 import PlayerHand from "./Interface/CardInterface/PlayerHand";
+import Kitty from "./Interface/Kitty/Kitty";
+import Interface from "./Interface/Interface";
 
 const App = (props) => {
   return (
@@ -15,11 +17,8 @@ const App = (props) => {
       username={props.username}
       playerNo={props.playerNo}
     >
+      <Interface />
       <ChatBox />
-      <PlayerHand />
-      <Card>
-        <ButtonInterface />
-      </Card>
     </ActionCableProvider>
   );
 };

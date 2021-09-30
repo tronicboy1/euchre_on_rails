@@ -2,7 +2,7 @@ import React, { useEffect, useReducer, useState } from "react";
 
 import ActionCableContext from "./ActionCableContext";
 import consumer from "../../channels/consumer";
-import actionCableReceivedHanlder from "./actionCableReceivedHandler";
+import actionCableReceivedHandler from "./actionCableReceivedHandler";
 import gameReducer from "./gameReducer";
 
 const ActionCableProvider = (props) => {
@@ -15,6 +15,7 @@ const ActionCableProvider = (props) => {
     showButtons: true,
     kitty: {},
     playerCards: [],
+    gameUpdate: ""
   });
   //setup activecable connection
   useEffect(() => {
@@ -32,7 +33,7 @@ const ActionCableProvider = (props) => {
         },
         received(data) {
           console.log(data);
-          actionCableReceivedHanlder(data, setMessages, setGameState);
+          actionCableReceivedHandler(data, setMessages, setGameState);
         },
       }
     );
@@ -47,6 +48,7 @@ const ActionCableProvider = (props) => {
     roomChannel: roomChannel,
     messages: messages,
     gameState: gameState,
+    setGameState: setGameState
   };
 
   return (

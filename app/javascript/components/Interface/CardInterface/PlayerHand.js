@@ -9,10 +9,12 @@ import Card from "../../UI/Card";
 const PlayerHand = () => {
   const context = useContext(ActionCableContext);
 
-  console.log("player hand", context.gameState.playerCards);
-
   const onCardClick = (cardNo) => {
     console.log("clicked", cardNo);
+    if (!context.gameState.showButtons) {
+        context.setGameState({type: "HIDE_CARD", cardNo: cardNo});
+    context.roomChannel.send({ type: "gamecontrol", command: cardNo, id: context.userId })
+    };
   };
 
   const PlayerCards = () => {

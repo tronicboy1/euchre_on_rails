@@ -1,4 +1,4 @@
-const actionCableReceivedHanlder = (data, setMessages, setGameState) => {
+const actionCableReceivedHandler = (data, setMessages, setGameState) => {
   if (typeof data.message !== "undefined") {
     setMessages((prevState) => {
       return [
@@ -15,7 +15,7 @@ const actionCableReceivedHanlder = (data, setMessages, setGameState) => {
     setGameState({ type: "CHANGE_INTERFACE", state: data.interfaceState });
   }
   if (typeof data.img !== "undefined") {
-    if (typeof data.kitty) {
+    if (data.kitty) {
       setGameState({ type: "RECEIVE_KITTY", b64Img: data.img });
     } 
     if (typeof data.playerNo !== "undefined") {
@@ -28,6 +28,9 @@ const actionCableReceivedHanlder = (data, setMessages, setGameState) => {
       });
     }
   }
+  if (typeof data.gameupdate !== 'undefined') {
+    setGameState({ type: "GAME_UPDATE", content: data.gameupdate })
+  }
 };
 
-export default actionCableReceivedHanlder;
+export default actionCableReceivedHandler;

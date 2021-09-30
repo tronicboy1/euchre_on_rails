@@ -13,6 +13,23 @@
     margin: 1rem;
 }
 
+.kitty {
+    width: fit-content;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    padding-bottom: 0.75rem;
+    text-align: center;
+}
+
+.kitty img {
+    border-radius: 10px;
+    margin: auto;
+    width: 100%;
+    height: 100%;
+    max-width: 70px;
+    max-height: 100px;
+}
+
 .gamecard {
     background: rgb(219, 219, 219);
     width: auto;
@@ -29,6 +46,7 @@
     height: 100%;
     max-width: 78px;
     max-height: 112px;
+    cursor: pointer;
 }
 
 .gamecard:hover {
