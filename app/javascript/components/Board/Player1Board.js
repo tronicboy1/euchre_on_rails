@@ -1,10 +1,31 @@
 import React from "react";
+import Kitty from "../Interface/Kitty/Kitty";
 import Card from "../UI/Card";
 import Image from "../UI/Image";
 
 import styles from "./Board.module.css";
 
 const Player1Board = (props) => {
+  if (props.showKitty === "PLACEHOLDER") {
+    return (
+      <Card>
+        <div className={styles.board}>
+          <Card className="boardcard">
+            <div className={styles.placeholder}>♤♧♢♡</div>
+          </Card>
+        </div>
+      </Card>
+    );
+  }
+  if (props.showKitty) {
+    return (
+      <Card>
+        <div className={`${styles.board} ${styles.kitty}`}>
+          <Kitty />
+        </div>
+      </Card>
+    );
+  }
   return (
     <Card>
       <div className={styles.board}>

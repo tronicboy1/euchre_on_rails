@@ -12,6 +12,7 @@ const Board = () => {
   if (context.playerNo === "p1") {
     return (
       <Player1Board
+        showKitty={context.gameState.showKitty}
         p1Card={p1Card}
         p2Card={p2Card}
         p3Card={p3Card}

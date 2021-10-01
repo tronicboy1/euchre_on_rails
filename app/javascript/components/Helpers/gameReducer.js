@@ -8,6 +8,12 @@ const hideCard = (card, cardNo) => {
 
 const gameReducer = (prev, action, playerNo) => {
   if (action.type === "STATUS_CHANGE") {
+    if (action.status === "call_trump") {
+      return { ...prev, status: action.status, showKitty: "PLACEHOLDER" }
+    }
+    if (action.status === "turn") {
+      return { ...prev, status: action.status, showKitty: false };
+    }
     return { ...prev, status: action.status };
   }
   if (
@@ -16,6 +22,17 @@ const gameReducer = (prev, action, playerNo) => {
   ) {
     //reset cards array if cards are longer than 6, ie a new hand was dealt
     if (prev.playerCards.length >= 5) {
+      return {
+        ...prev,
+        playerCards: [
+          {
+            b64Img: action.b64Img,
+            cardNo: action.cardNo,
+            playerNo: action.playerNo,
+            show: true,
+          },
+        ],
+      };
     }
     return {
       ...prev,
@@ -31,7 +48,15 @@ const gameReducer = (prev, action, playerNo) => {
     };
   }
   if (action.type === "RECEIVE_KITTY") {
-    return { ...prev, kitty: { b64Img: action.b64Img, show: true } };
+    return {
+      ...prev,
+      kitty: { b64Img: action.b64Img, show: true },
+      showHand: true,
+      showBoard: true,
+      showTelop: true,
+      showKitty: true,
+      showStartButton: false
+    };
   }
   if (action.type === "PLAYED_CARD") {
     if (action.playerNo === "p1") {
@@ -114,7 +139,12 @@ const gameReducer = (prev, action, playerNo) => {
       playerCards: [],
       kitty: {},
       playedCards: {},
-      gameUpdate: { ...prev.gameUpdate, trump: "", team1Tricks: 0, team2Tricks: 0 },
+      gameUpdate: {
+        ...prev.gameUpdate,
+        trump: "",
+        team1Tricks: 0,
+        team2Tricks: 0,
+      },
     };
   }
   return prev;

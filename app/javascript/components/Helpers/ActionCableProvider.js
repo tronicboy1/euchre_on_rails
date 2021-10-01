@@ -26,6 +26,11 @@ const ActionCableProvider = (props) => {
       team1Tricks: "",
       team2Tricks: ""
     },
+    showHand: false,
+    showKitty: false,
+    showTelop: false,
+    showBoard: false,
+    showStartButton: true
   });
   //setup activecable connection
   useEffect(() => {

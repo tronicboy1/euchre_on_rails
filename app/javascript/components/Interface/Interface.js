@@ -4,13 +4,11 @@ import GameTelop from "../Status/GameTelop/GameTelop";
 import Card from "../UI/Card";
 import ButtonInterface from "./ButtonInterface/ButtonInterface";
 import PlayerHand from "./CardInterface/PlayerHand";
-import Kitty from "./Kitty/Kitty";
 import Button from "../UI/Button";
 import Board from "../Board/Board";
 
 const Interface = () => {
   const context = useContext(ActionCableContext);
-  const status = context.gameState.status;
 
   const startGame = () => {
     context.roomChannel.send({ type: "gamecontrol", command: "start-game" });
@@ -18,10 +16,9 @@ const Interface = () => {
 
   return (
     <>
-      {context.gameState.playerCards.length >= 5 && <GameTelop />}
-      {status === "pickup_or_pass" ? <Kitty /> : status === "throw_away_card" ? <Kitty /> : <></> }
-      {status === "turn" && <Board/>}
-      {context.gameState.playerCards.length >= 5 && <PlayerHand />}
+      {context.gameState.showTelop && <GameTelop />}
+      {context.gameState.showBoard && <Board/>}
+      {context.gameState.showHand && <PlayerHand />}
       <Card>
         <ButtonInterface />
       </Card>
