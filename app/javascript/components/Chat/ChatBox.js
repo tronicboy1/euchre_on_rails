@@ -32,7 +32,7 @@ const ChatBox = () => {
   };
 
   return (
-    <Card>
+    <Card className="chat-box">
       <div className={styles["chat-box"]}>
         <Button
           onClick={onToggleChat}

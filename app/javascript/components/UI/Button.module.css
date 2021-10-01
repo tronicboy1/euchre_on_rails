@@ -40,6 +40,11 @@ button:active:disabled {
     width: 100%;
 }
 
+.gamestart {
+    height: 80px;
+    width: 100%;
+}
+
 .chat-toggle__hidden {
     height: 30px;
     width: 100%;

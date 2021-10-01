@@ -7,6 +7,8 @@ import PlayerHand from "./CardInterface/PlayerHand";
 import Button from "../UI/Button";
 import Board from "../Board/Board";
 
+import styles from "./Interface.module.css";
+
 const Interface = () => {
   const context = useContext(ActionCableContext);
 
@@ -15,19 +17,21 @@ const Interface = () => {
   };
 
   return (
-    <>
+    <div className={styles.interface}>
       {context.gameState.showTelop && <GameTelop />}
       {context.gameState.showBoard && <Board />}
       {context.gameState.showHand && <PlayerHand />}
-      <Card>
-        <ButtonInterface />
-      </Card>
+
+      <ButtonInterface />
+
       {context.gameState.showStartButton && (
-        <Card>
-          <Button onClick={startGame}>Start Game</Button>
+        <Card className="gamestart">
+          <Button className="gamestart" onClick={startGame}>
+            Start Game
+          </Button>
         </Card>
       )}
-    </>
+    </div>
   );
 };
 

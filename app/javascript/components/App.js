@@ -2,6 +2,8 @@ import React from "react";
 import ChatBox from "./Chat/ChatBox";
 import ActionCableProvider from "./Helpers/ActionCableProvider";
 
+import styles from "./App.module.css";
+
 import Interface from "./Interface/Interface";
 
 const App = (props) => {
@@ -12,8 +14,10 @@ const App = (props) => {
       username={props.username}
       playerNo={props.playerNo}
     >
-      <ChatBox />
-      <Interface />
+      <div className={styles.display}>
+        <Interface />
+        <ChatBox />
+      </div>
     </ActionCableProvider>
   );
 };

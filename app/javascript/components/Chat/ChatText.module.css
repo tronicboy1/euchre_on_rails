@@ -20,3 +20,9 @@
     margin-bottom: 0.1rem;
     list-style-type: none;
 }
+
+@media screen and (min-width:1024px) {
+    .text {
+        height: 80%;
+    }
+}
