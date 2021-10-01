@@ -57,6 +57,9 @@ const actionCableReceivedHandler = (data, setMessages, setGameState) => {
   if (data.clearBoard) {
     setGameState({ type: "CLEAR_BOARD" });
   }
+  if (data.clearHand) {
+    setGameState({ type: "CLEAR_HAND" });
+  }
 };
 
 export default actionCableReceivedHandler;

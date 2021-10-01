@@ -105,6 +105,9 @@ const gameReducer = (prev, action, playerNo) => {
   if (action.type === "CLEAR_BOARD") {
     return { ...prev, playedCards: {} };
   }
+  if (action.type === "CLEAR_HAND") {
+    return { ...prev, playerCards: [] };
+  }
   if (action.type === "NEW_HAND") {
     return {
       ...prev,

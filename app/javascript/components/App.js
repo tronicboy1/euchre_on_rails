@@ -3,7 +3,6 @@ import ChatBox from "./Chat/ChatBox";
 import ActionCableProvider from "./Helpers/ActionCableProvider";
 
 import Interface from "./Interface/Interface";
-import Board from "./Board/Board";
 
 const App = (props) => {
   return (
@@ -13,7 +12,6 @@ const App = (props) => {
       username={props.username}
       playerNo={props.playerNo}
     >
-      <Board />
       <Interface />
       <ChatBox />
     </ActionCableProvider>

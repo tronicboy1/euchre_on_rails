@@ -21,7 +21,7 @@ class Round
     @ordered_player = nil
     @loner = nil
     #broadcast dealer to players
-    ActionCable.server.broadcast(@channel,{ "type" => "DEALER", "gameupdate" => @dealer.username, "status" => @status })
+    ActionCable.server.broadcast(@channel,{ "type" => "DEALER", "gameupdate" => @dealer.username.capitalize, "status" => @status })
     sleep(0.1)
     next_player
     deal_cards
@@ -111,8 +111,7 @@ class Round
       else
         @status = "pickup_or_pass"
         ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP",
-          "gameupdate" => "#{@current_player.username}, Pass or Pickup?",
-          "interfaceState" => "PICKUP_PASS", "hide" => "#loner-selection", "status" => @status })
+          "gameupdate" => "#{@current_player.username.capitalize}, pass or pickup?", "status" => @status })
         sleep(0.1)
       end
     else
@@ -151,7 +150,7 @@ class Round
       "pickupcard" => true, "interfaceState" => false, "status" => @status })
     sleep(0.1)
     ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP",
-      "gameupdate" => "#{@dealer.username}, choose card to throw away", "hide" => "#pickup-yesno" })
+      "gameupdate" => "#{@dealer.username.capitalize}, choose card to throw away", "hide" => "#pickup-yesno" })
     sleep(0.1)
 
     #automatically throw_away_card for computers
@@ -181,7 +180,7 @@ class Round
     if @current_player.id != 0
       @status = "loner_check"
       ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP",
-        "gameupdate" => "#{@current_player.username}, go alone?", "interfaceState" => "LONER_YESNO", "status" => @status })
+        "gameupdate" => "#{@current_player.username.capitalize}, go alone?", "interfaceState" => "LONER_YESNO", "status" => @status })
     #if computer start round
     else
       setup_turn()
@@ -240,7 +239,7 @@ class Round
           order_symbol_set()
           trump_str = {0 => "Spades", 1 => "Clubs", 2 => "Diamonds", 3 => "Hearts"}[@trump]
           ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP",
-            "gameupdate" => "#{@current_player.username} called #{trump_str} trump!", "interfaceState" => false })
+            "gameupdate" => "#{@current_player.username.capitalize} called #{trump_str} trump!", "interfaceState" => false })
           sleep(2)
           setup_turn()
           next_player()
@@ -252,7 +251,7 @@ class Round
       else
         @pass_count += 1
         ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP",
-          "gameupdate" => "#{@current_player.username}, call trump or pass?",
+          "gameupdate" => "#{@current_player.username.capitalize}, call trump or pass?",
           "interfaceState" => "CALL_SUIT" })
       end
     else
@@ -268,7 +267,7 @@ class Round
 
     else
       @status = "loner_check"
-      ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP", "gameupdate" => "#{@current_player.username}, go alone?", "interfaceState" => "LONER_YESNO", "status" => @status })
+      ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP", "gameupdate" => "#{@current_player.username.capitalize}, go alone?", "interfaceState" => "LONER_YESNO", "status" => @status })
       set_trump(input)
       order_symbol_set()
     end
@@ -279,7 +278,7 @@ class Round
     if input["command"]
       @loner = {1 => 3, 2 => 4, 3 => 1, 4 => 2}[@current_player.player_no]
       ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP",
-        "gameupdate" => "#{@current_player.username} is going alone!" })
+        "gameupdate" => "#{@current_player.username.capitalize} is going alone!" })
       sleep(1.5)
     end
     setup_turn()
@@ -313,7 +312,7 @@ class Round
           turn()
         else
           ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP",
-            "gameupdate" => "#{@current_player.username}, choose a card to play." })
+            "gameupdate" => "#{@current_player.username.capitalize}, choose a card to play." })
           sleep(0.1)
         end
       else
@@ -356,7 +355,7 @@ class Round
           after_check(input,card)
         else
           @status = "turn"
-          ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP", "gameupdate" => "#{@current_player.username}, you can't lie to me.", "status" => @status })
+          ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP", "gameupdate" => "#{@current_player.username.capitalize}, you can't lie to me.", "status" => @status })
           sleep(0.1)
         end
       else
@@ -378,7 +377,7 @@ class Round
     #add card played to cards_played list in order played
     @cards_played.push([card,current_player])
     ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP",
-      "gameupdate" => "#{@current_player.username} played the #{card.to_s}" })
+      "gameupdate" => "#{@current_player.username.capitalize} played the #{card.to_s}" })
     sleep(0.1)
     #send player's card to board
     ActionCable.server.broadcast(@channel,{ "img" => card.b64_img,
@@ -740,7 +739,7 @@ class Round
   def order_symbol_set
     symbol_dic = {0=>"♠",1=>"♣",2=>"♦",3=>"♥"}
     symbol = symbol_dic[@trump]
-    ActionCable.server.broadcast(@channel,{ "type" => "ORDER_TRUMP", "player" => @current_player.username, "gameupdate" => symbol })
+    ActionCable.server.broadcast(@channel,{ "type" => "ORDER_TRUMP", "player" => @current_player.username.capitalize, "gameupdate" => symbol })
     sleep(0.1)
   end
 
@@ -771,7 +770,7 @@ class Round
   #resends player cards after pickup and throw away
   def resend_player_cards(player)
     #clear hand command for react
-    ActionCable.server.broadcast(@channel,{ "clear" => true })
+    ActionCable.server.broadcast(@channel,{ "clearHand" => true })
     sleep(0.1)
     player.hand.each_with_index do |card, i|
       if !card.nil?

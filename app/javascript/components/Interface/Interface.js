@@ -6,6 +6,7 @@ import ButtonInterface from "./ButtonInterface/ButtonInterface";
 import PlayerHand from "./CardInterface/PlayerHand";
 import Kitty from "./Kitty/Kitty";
 import Button from "../UI/Button";
+import Board from "../Board/Board";
 
 const Interface = () => {
   const context = useContext(ActionCableContext);
@@ -21,7 +22,8 @@ const Interface = () => {
     <>
       {context.gameState.playerCards.length >= 5 && <GameTelop />}
       {status === "pickup_or_pass" ? <Kitty /> : status === "throw_away_card" ? <Kitty /> : <></> }
-      {status !== "" && <PlayerHand />}
+      {status === "turn" && <Board/>}
+      {context.gameState.playerCards.length >= 5 && <PlayerHand />}
       <Card>
         <ButtonInterface />
       </Card>
