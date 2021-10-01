@@ -12,8 +12,8 @@ const App = (props) => {
       username={props.username}
       playerNo={props.playerNo}
     >
-      <Interface />
       <ChatBox />
+      <Interface />
     </ActionCableProvider>
   );
 };
