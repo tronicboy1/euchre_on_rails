@@ -12,7 +12,6 @@ const actionCableReceivedHandler = (data, setMessages, setGameState) => {
     });
   }
   if (data.status) {
-    console.log("status change", data);
     setGameState({ type: "STATUS_CHANGE", status: data.status });
   }
   if (data.img) {
@@ -20,7 +19,6 @@ const actionCableReceivedHandler = (data, setMessages, setGameState) => {
       setGameState({ type: "RECEIVE_KITTY", b64Img: data.img });
     }
     if (data.playerNo) {
-      console.log("Card received");
       setGameState({
         type: "RECEIVE_PLAYER_CARD",
         b64Img: data.img,

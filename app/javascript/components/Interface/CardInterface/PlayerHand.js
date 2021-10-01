@@ -11,7 +11,6 @@ const PlayerHand = () => {
   const status = context.gameState.status;
 
   const onCardClick = (cardNo) => {
-    console.log("clicked", cardNo);
     if (status === "turn" || status === "throw_away_card") {
       context.roomChannel.send({
         type: "gamecontrol",

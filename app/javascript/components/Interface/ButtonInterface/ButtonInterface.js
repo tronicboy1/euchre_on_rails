@@ -8,8 +8,6 @@ import PickupPass from "./PickupPass";
 const ButtonInterface = () => {
   const context = useContext(ActionCableContext);
 
-  console.log("context status: ", context.gameState.status);
-
   if (context.gameState.status === "pickup_or_pass") {
     return <PickupPass />;
   }

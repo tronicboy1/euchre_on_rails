@@ -114,6 +114,7 @@ const gameReducer = (prev, action, playerNo) => {
       playerCards: [],
       kitty: {},
       playedCards: {},
+      gameUpdate: { ...prev.gameUpdate, trump: "", team1Tricks: 0, team2Tricks: 0 },
     };
   }
   return prev;

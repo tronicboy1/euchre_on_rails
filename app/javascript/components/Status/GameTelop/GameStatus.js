@@ -4,7 +4,7 @@ import Card from "../../UI/Card";
 import styles from "./GameStatus.module.css";
 
 const GameStatus = (props) => {
-  const Team1Tricks = (props) => {
+  const Team1Tricks = () => {
     return (
       <>
         <div>{props.team1Tricks}</div>
@@ -12,7 +12,7 @@ const GameStatus = (props) => {
       </>
     );
   };
-  const Team2Tricks = (props) => {
+  const Team2Tricks = () => {
     return (
       <>
         <div>{props.team2Tricks}</div>
@@ -20,7 +20,7 @@ const GameStatus = (props) => {
       </>
     );
   };
-  const Team1Score = (props) => {
+  const Team1Score = () => {
     return (
       <>
         <div>{props.team1Score}</div>
@@ -28,7 +28,7 @@ const GameStatus = (props) => {
       </>
     );
   };
-  const Team2Score = (props) => {
+  const Team2Score = () => {
     return (
       <>
         <div>{props.team2Score}</div>
@@ -55,9 +55,9 @@ const GameStatus = (props) => {
           <div>Tricks:</div>
           <div className={styles.double}>
             {props.teamNo === 1 ? (
-              <Team1Tricks props={props} />
+              <Team1Tricks />
             ) : (
-              <Team2Tricks props={props} />
+              <Team2Tricks />
             )}
           </div>
         </div>
@@ -65,9 +65,9 @@ const GameStatus = (props) => {
           <div>Score: </div>
           <div className={styles.double}>
           {props.teamNo === 1 ? (
-              <Team1Score props={props} />
+              <Team1Score />
             ) : (
-              <Team2Score props={props} />
+              <Team2Score />
             )}
           </div>
         </div>
