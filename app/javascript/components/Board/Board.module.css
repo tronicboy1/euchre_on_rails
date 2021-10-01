@@ -19,3 +19,8 @@
     margin-right: auto;
     margin-left: auto;
 }
+
+.placeholder {
+    width: 70px;
+    height: 100px;
+}

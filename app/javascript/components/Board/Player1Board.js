@@ -10,20 +10,36 @@ const Player1Board = (props) => {
       <div className={styles.board}>
         <div className={styles.upper}>
           <Card className="boardcard">
-            <Image src={props.p3Card} />
+            {props.p3Card ? (
+              <Image src={props.p3Card} />
+            ) : (
+              <div className={styles.placeholder} />
+            )}
           </Card>
         </div>
         <div className={styles.middle}>
           <Card className="boardcard">
-            <Image src={props.p2Card} />
+            {props.p2Card ? (
+              <Image src={props.p2Card} />
+            ) : (
+              <div className={styles.placeholder} />
+            )}
           </Card>
           <Card className="boardcard">
-            <Image src={props.p4Card} />
+            {props.p4Card ? (
+              <Image src={props.p4Card} />
+            ) : (
+              <div className={styles.placeholder} />
+            )}
           </Card>
         </div>
         <div className={styles.lower}></div>
         <Card className="boardcard">
-          <Image src={props.p1Card} />
+          {props.p1Card ? (
+            <Image src={props.p1Card} />
+          ) : (
+            <div className={styles.placeholder} />
+          )}
         </Card>
       </div>
     </Card>
