@@ -18,7 +18,7 @@ const actionCableReceivedHandler = (data, setMessages, setGameState) => {
   if (data.img) {
     if (data.kitty) {
       setGameState({ type: "RECEIVE_KITTY", b64Img: data.img });
-    } 
+    }
     if (data.playerNo) {
       console.log("Card received");
       setGameState({
@@ -28,12 +28,31 @@ const actionCableReceivedHandler = (data, setMessages, setGameState) => {
         cardNo: data.cardNo,
       });
     }
+    if (data.playedCard) {
+      setGameState({
+        type: "PLAYED_CARD",
+        b64Img: data.img,
+        playerNo: data.playedCard,
+      });
+    }
+  }
+  if (data.hideCard) {
+    setGameState({ type: "HIDE_CARD", cardNo: data.cardNo });
   }
   if (data.gameupdate) {
-    setGameState({ type: "GAME_UPDATE", gameUpdateType: data.type, content: data.gameupdate, player: data.player });
+    setGameState({
+      type: "GAME_UPDATE",
+      gameUpdateType: data.type,
+      content: data.gameupdate,
+      player: data.player,
+      team1Tricks: data.team1Tricks,
+      team2Tricks: data.team2Tricks,
+      team1Score: data.team1Score,
+      team2Score: data.team2Score,
+    });
   }
   if (data.clear) {
-    setGameState({type: "NEW_HAND"});
+    setGameState({ type: "NEW_HAND" });
   }
 };
 

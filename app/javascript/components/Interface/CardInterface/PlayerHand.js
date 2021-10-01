@@ -13,27 +13,28 @@ const PlayerHand = () => {
   const onCardClick = (cardNo) => {
     console.log("clicked", cardNo);
     if (status === "turn" || status === "throw_away_card") {
-        context.setGameState({type: "HIDE_CARD", cardNo: cardNo});
-    context.roomChannel.send({ type: "gamecontrol", command: cardNo, id: context.userId })
-    };
+      context.roomChannel.send({
+        type: "gamecontrol",
+        command: cardNo,
+        id: context.userId,
+      });
+    }
   };
 
   const PlayerCards = () => {
     if (context.gameState.playerCards.length >= 5) {
       return context.gameState.playerCards
         .filter((card) => card.show)
-        .map(card => 
+        .map((card) => (
           <GameCard
             key={card.cardNo}
             cardNo={card.cardNo}
             b64Img={card.b64Img}
             onClick={onCardClick}
           />
-        );
+        ));
     }
-    return (
-        <div>No Cards</div>
-    );
+    return <div>No Cards</div>;
   };
 
   return (

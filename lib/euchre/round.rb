@@ -338,7 +338,7 @@ class Round
     def after_check(input,card)
       puts "card retrieved"
       #hide card played
-      ActionCable.server.broadcast(@channel,{ "hide" => "#p#{current_player.player_no}-card#{input["command"]}" })
+      ActionCable.server.broadcast(@channel,{ "hideCard" => true, "cardNo" => input["command"] })
       sleep(0.1)
       #set card played to nil
       @current_player.hand[input["command"]] = nil
@@ -382,7 +382,7 @@ class Round
     sleep(0.1)
     #send player's card to board
     ActionCable.server.broadcast(@channel,{ "img" => card.b64_img,
-      "element" => "p#{@current_player.player_no}-played-card", "show" => "#p#{@current_player.player_no}-played-card" })
+      "playedCard" => "p#{@current_player.player_no}" })
     sleep(1.5)
     #set status back to turn to avoid multiple input while waiting
     @status = "turn"
@@ -440,13 +440,15 @@ class Round
 
     #send winner to telop
     ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP",
-      "gameupdate" => "Player #{winner.player_no} won the trick!" })
+      "gameupdate" => "#{winner.username} won the trick!" })
     sleep(0.1)
     #add trick to player
     winner.tricks += 1
     #update tricks on screen
-    ActionCable.server.broadcast(@channel,{ "element" => "#p#{winner.player_no}-tricks",
-      "gameupdate" => winner.tricks })
+    team1_tricks = @player1.tricks + @player3.tricks
+    team2_tricks = @player2.tricks + @player4.tricks 
+    ActionCable.server.broadcast(@channel,{ "type" => "TRICKS",
+      "gameupdate" => "tricks", "team1Tricks" => team1_tricks, "team2Tricks" => team2_tricks })
     sleep(2)
     #check how many rounds have been played
     @round_count += 1
@@ -541,7 +543,7 @@ class Round
       if player.score > 10
         player.score = 10
       end
-      ActionCable.server.broadcast(@channel,{ "element" => "#p#{player.player_no}-score", "gameupdate" => player.score })
+      ActionCable.server.broadcast(@channel,{ "type" => "SCORE", "gameupdate" => player.score, "team1Score" => @player1.score, "team2Score" => @player2.score })
       sleep(0.1)
     end
     #deal new cards and start another round

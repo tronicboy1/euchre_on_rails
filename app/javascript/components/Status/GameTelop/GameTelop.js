@@ -8,10 +8,20 @@ import styles from "./GameTelop.module.css";
 const GameTelop = () => {
   const context = useContext(ActionCableContext);
 
+  let teamNo;
+
+  if (context.playerNo === "p1" || context.playerNo === "p3") {
+    teamNo = 1;
+  } else {
+    teamNo = 2;
+  }
+
   return (
     <Card>
       <div className={styles.gametelop}>
-        <h3>{context.gameState.gameUpdate.gameTelop}</h3>
+        <Card className="inner">
+          <h3 className={styles.gameupdate}>{context.gameState.gameUpdate.gameTelop}</h3>
+        </Card>
         <GameStatus
           dealer={context.gameState.gameUpdate.dealer}
           trump={context.gameState.gameUpdate.trump}
@@ -20,6 +30,7 @@ const GameTelop = () => {
           team2Tricks={context.gameState.gameUpdate.team2Tricks}
           team1Score={context.gameState.gameUpdate.team1Score}
           team2Score={context.gameState.gameUpdate.team2Score}
+          teamNo={teamNo}
         />
       </div>
     </Card>

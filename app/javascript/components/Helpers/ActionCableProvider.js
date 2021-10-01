@@ -15,15 +15,21 @@ const ActionCableProvider = (props) => {
     status: true,
     kitty: {},
     playerCards: [],
+    playedCards: {
+      p1: "",
+      p2: "",
+      p3: "",
+      p4: ""
+    },
     gameUpdate: {
       gameTelop: "",
       dealer: "",
       trump: "",
       orderedPlayer: "",
-      team1Score: 0,
-      team2Score: 0,
-      team1Tricks: 0,
-      team2Tricks: 0
+      team1Score: "",
+      team2Score: "",
+      team1Tricks: "",
+      team2Tricks: ""
     },
   });
   //setup activecable connection

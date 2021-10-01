@@ -1,0 +1,21 @@
+.board {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+}
+
+.upper {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.middle {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.lower {
+    margin-right: auto;
+    margin-left: auto;
+}
