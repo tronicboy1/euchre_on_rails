@@ -10,7 +10,10 @@
 }
 
 .inner {
-    margin: 1rem;
+    margin: 0.25rem;
+    background: rgb(219, 219, 219);
+    border-radius: 5px;
+    width: 100%;
 }
 
 .kitty {

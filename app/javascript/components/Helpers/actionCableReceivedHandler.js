@@ -1,5 +1,5 @@
 const actionCableReceivedHandler = (data, setMessages, setGameState) => {
-  if (typeof data.message !== "undefined") {
+  if (data.message) {
     setMessages((prevState) => {
       return [
         {
@@ -11,14 +11,15 @@ const actionCableReceivedHandler = (data, setMessages, setGameState) => {
       ];
     });
   }
-  if (typeof data.interfaceState !== "undefined") {
-    setGameState({ type: "CHANGE_INTERFACE", state: data.interfaceState });
+  if (data.status) {
+    console.log("status change", data);
+    setGameState({ type: "STATUS_CHANGE", status: data.status });
   }
-  if (typeof data.img !== "undefined") {
+  if (data.img) {
     if (data.kitty) {
       setGameState({ type: "RECEIVE_KITTY", b64Img: data.img });
     } 
-    if (typeof data.playerNo !== "undefined") {
+    if (data.playerNo) {
       console.log("Card received");
       setGameState({
         type: "RECEIVE_PLAYER_CARD",
@@ -28,8 +29,11 @@ const actionCableReceivedHandler = (data, setMessages, setGameState) => {
       });
     }
   }
-  if (typeof data.gameupdate !== 'undefined') {
-    setGameState({ type: "GAME_UPDATE", content: data.gameupdate })
+  if (data.gameupdate) {
+    setGameState({ type: "GAME_UPDATE", gameUpdateType: data.type, content: data.gameupdate, player: data.player });
+  }
+  if (data.clear) {
+    setGameState({type: "NEW_HAND"});
   }
 };
 

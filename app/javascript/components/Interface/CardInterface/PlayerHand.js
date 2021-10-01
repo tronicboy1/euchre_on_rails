@@ -8,21 +8,23 @@ import Card from "../../UI/Card";
 
 const PlayerHand = () => {
   const context = useContext(ActionCableContext);
+  const status = context.gameState.status;
 
   const onCardClick = (cardNo) => {
     console.log("clicked", cardNo);
-    if (!context.gameState.showButtons) {
+    if (status === "turn" || status === "throw_away_card") {
         context.setGameState({type: "HIDE_CARD", cardNo: cardNo});
     context.roomChannel.send({ type: "gamecontrol", command: cardNo, id: context.userId })
     };
   };
 
   const PlayerCards = () => {
-    if (context.gameState.playerCards.length === 5) {
+    if (context.gameState.playerCards.length >= 5) {
       return context.gameState.playerCards
         .filter((card) => card.show)
         .map(card => 
           <GameCard
+            key={card.cardNo}
             cardNo={card.cardNo}
             b64Img={card.b64Img}
             onClick={onCardClick}

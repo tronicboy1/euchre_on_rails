@@ -12,10 +12,19 @@ const ActionCableProvider = (props) => {
   const [roomChannel, setRoomChannel] = useState(null);
   const [gameState, setGameState] = useReducer(gameReducer, {
     playerNo: props.playerNo,
-    showButtons: true,
+    status: true,
     kitty: {},
     playerCards: [],
-    gameUpdate: ""
+    gameUpdate: {
+      gameTelop: "",
+      dealer: "",
+      trump: "",
+      orderedPlayer: "",
+      team1Score: 0,
+      team2Score: 0,
+      team1Tricks: 0,
+      team2Tricks: 0
+    },
   });
   //setup activecable connection
   useEffect(() => {
@@ -48,7 +57,7 @@ const ActionCableProvider = (props) => {
     roomChannel: roomChannel,
     messages: messages,
     gameState: gameState,
-    setGameState: setGameState
+    setGameState: setGameState,
   };
 
   return (

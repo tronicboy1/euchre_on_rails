@@ -1,18 +1,22 @@
-const hideCard = (card,cardNo) => {
-    if (card.cardNo === cardNo) {
-        card.show = false;
-        return card;
-    }
+const hideCard = (card, cardNo) => {
+  if (card.cardNo === cardNo) {
+    card.show = false;
     return card;
-}
+  }
+  return card;
+};
 
 const gameReducer = (prev, action, playerNo) => {
-  if (action.type === "CHANGE_INTERFACE") {
-    console.log(action);
-    return { ...prev, showButtons: action.state };
+  if (action.type === "STATUS_CHANGE") {
+    return { ...prev, status: action.status };
   }
-  if (action.type === "RECEIVE_PLAYER_CARD" && action.playerNo === prev.playerNo) {
-    console.log(action);
+  if (
+    action.type === "RECEIVE_PLAYER_CARD" &&
+    action.playerNo === prev.playerNo
+  ) {
+    //reset cards array if cards are longer than 6, ie a new hand was dealt
+    if (prev.playerCards.length >= 5) {
+    }
     return {
       ...prev,
       playerCards: [
@@ -30,12 +34,34 @@ const gameReducer = (prev, action, playerNo) => {
     return { ...prev, kitty: { b64Img: action.b64Img, show: true } };
   }
   if (action.type === "HIDE_CARD") {
-      const updatedPlayerCards = prev.playerCards.map(card => hideCard(card,action.cardNo));
-      return { ...prev, playerCards: updatedPlayerCards};
+    const updatedPlayerCards = prev.playerCards.map((card) =>
+      hideCard(card, action.cardNo)
+    );
+    return { ...prev, playerCards: updatedPlayerCards };
   }
   if (action.type === "GAME_UPDATE") {
-      return {...prev, gameUpdate: action.content};
+    if (action.gameUpdateType === "GAME_TELOP") {
+      return { ...prev, gameUpdate: {...prev.gameUpdate, gameTelop: action.content } };
+    }
+    if (action.gameUpdateType === "DEALER") {
+      return { ...prev, gameUpdate: {...prev.gameUpdate, dealer: action.content } };
+    }
+    if (action.gameUpdateType === "ORDER_TRUMP") {
+      return { ...prev, gameUpdate: {...prev.gameUpdate, trump: action.content, orderedPlayer: action.player } };
+    }
+    
   }
+  if (action.type === "DEALER") {
+    return { ...prev, dealer: action.content };
+  }
+  if (action.type === "NEW_HAND") {
+    return {
+      ...prev,
+      playerCards: [],
+      kitty: {},
+    };
+  }
+  return prev;
 };
 
 export default gameReducer;
