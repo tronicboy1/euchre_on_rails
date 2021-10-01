@@ -1,0 +1,9 @@
+.kitty {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.kitty h3 {
+    margin: 0.25rem;
+}

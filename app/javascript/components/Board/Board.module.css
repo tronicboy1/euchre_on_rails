@@ -1,0 +1,39 @@
+.board {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    max-height: 359px;
+    min-height: 173px;
+    transition: all 0.5s;
+}
+
+.board.kitty {
+    height: auto;
+}
+
+.upper {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.middle {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.lower {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.placeholder {
+    width: 56px;
+    height: 80px;
+    text-align: center;
+    font-size: x-large;
+    overflow-wrap: break-word;
+}

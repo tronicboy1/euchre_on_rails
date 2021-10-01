@@ -4,7 +4,7 @@ class RoomcontrolChannel < ApplicationCable::Channel
 
   def subscribed
     stream_from "chat_#{params[:room_id]}"
-    ActionCable.server.broadcast("chat_#{params[:room_id]}",{"message" => "\n#{params[:username]} entered room!", "online" => "##{params[:user_id]}-status"})
+    ActionCable.server.broadcast("chat_#{params[:room_id]}",{"message" => "#{params[:username]} entered room!", "online" => "##{params[:user_id]}-status"})
   end
 
   def receive(data)

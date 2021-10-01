@@ -1,0 +1,11 @@
+.playerhand {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: 0.5rem;
+    margin-left: auto;
+    margin-right: auto;
+    height: 110px;
+    text-align: center;
+    color: rgb(224, 224, 224);
+}

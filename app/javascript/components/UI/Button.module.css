@@ -1,0 +1,70 @@
+.button {
+    background: rgb(41, 41, 41);
+    border: rgb(41, 41, 41) 1px solid;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    padding: 0 0 0 0;
+    transition: all 0.3s;
+    height: 50px;
+}
+
+.button:hover,
+.button:active {
+    background: rgb(61, 61, 61);
+    border-color: rgb(61, 61, 61);
+}
+
+button:disabled,
+button:focus:disabled,
+button:hover:disabled,
+button:active:disabled {
+    background: #ccc;
+    border-color: #ccc;
+    color: #666666;
+    cursor: not-allowed;
+}
+
+.chat-button {
+    border-radius: 0px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    width: 20%;
+}
+
+.chat-toggle {
+    border-radius: 0px;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    height: 30px;
+    width: 100%;
+}
+
+.gamestart {
+    height: 80px;
+    width: 100%;
+}
+
+.chat-toggle__hidden {
+    height: 30px;
+    width: 100%;
+}
+
+.bar-left {
+    width: 100%;
+    border-radius: 0px;
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+}
+
+.bar-center {
+    width: 100%;
+    border-radius: 0px;
+}
+
+.bar-right {
+    width: 100%;
+    border-radius: 0px;
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
+}

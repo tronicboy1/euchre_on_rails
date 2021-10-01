@@ -1,0 +1,22 @@
+.textarea {
+    background: white;
+    border: white 1px solid;
+    color: black;
+    border-radius: 10px;
+    resize: none;
+    width: 100%;
+}
+
+.textarea:focus {
+    border: white 1px solid;
+}
+
+.textarea:disabled {
+    background: white;
+}
+
+.chatBox {
+    max-height: 200px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}

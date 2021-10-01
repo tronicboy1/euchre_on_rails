@@ -1,0 +1,41 @@
+.group {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    height: 60px;
+    padding: 0.1rem;
+}
+
+.status {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: small;
+    vertical-align: middle;
+    width: 100%;
+    height: 100%;
+    border-right: rgba(109, 109, 109, 0.5) 1px solid;
+    padding: 0.1rem;
+}
+
+.status.right {
+    border: none;
+}
+
+.single {
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: center;
+}
+
+.double {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+}
