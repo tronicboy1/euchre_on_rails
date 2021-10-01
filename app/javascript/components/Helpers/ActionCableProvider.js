@@ -15,12 +15,7 @@ const ActionCableProvider = (props) => {
     status: true,
     kitty: {},
     playerCards: [],
-    playedCards: {
-      p1: "",
-      p2: "",
-      p3: "",
-      p4: ""
-    },
+    playedCards: {},
     gameUpdate: {
       gameTelop: "",
       dealer: "",

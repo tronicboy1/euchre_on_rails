@@ -35,16 +35,28 @@ const gameReducer = (prev, action, playerNo) => {
   }
   if (action.type === "PLAYED_CARD") {
     if (action.playerNo === "p1") {
-      return { ...prev, playedCards: {...prev.playedCards, p1: action.b64Img } };
+      return {
+        ...prev,
+        playedCards: { ...prev.playedCards, p1: action.b64Img },
+      };
     }
     if (action.playerNo === "p2") {
-      return { ...prev, playedCards: {...prev.playedCards, p2: action.b64Img } };
+      return {
+        ...prev,
+        playedCards: { ...prev.playedCards, p2: action.b64Img },
+      };
     }
     if (action.playerNo === "p3") {
-      return { ...prev, playedCards: {...prev.playedCards, p3: action.b64Img } };
+      return {
+        ...prev,
+        playedCards: { ...prev.playedCards, p3: action.b64Img },
+      };
     }
     if (action.playerNo === "p4") {
-      return { ...prev, playedCards: {...prev.playedCards, p4: action.b64Img } };
+      return {
+        ...prev,
+        playedCards: { ...prev.playedCards, p4: action.b64Img },
+      };
     }
   }
   if (action.type === "HIDE_CARD") {
@@ -82,7 +94,7 @@ const gameReducer = (prev, action, playerNo) => {
         gameUpdate: {
           ...prev.gameUpdate,
           team1Tricks: action.team1Tricks,
-          team2Tricks: action.team2Tricks
+          team2Tricks: action.team2Tricks,
         },
       };
     }
@@ -90,11 +102,15 @@ const gameReducer = (prev, action, playerNo) => {
   if (action.type === "DEALER") {
     return { ...prev, dealer: action.content };
   }
+  if (action.type === "CLEAR_BOARD") {
+    return { ...prev, playedCards: {} };
+  }
   if (action.type === "NEW_HAND") {
     return {
       ...prev,
       playerCards: [],
       kitty: {},
+      playedCards: {},
     };
   }
   return prev;

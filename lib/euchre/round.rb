@@ -456,7 +456,7 @@ class Round
     if @round_count < 5
       @count = 0
       @status = "turn"
-      ActionCable.server.broadcast(@channel,{ "status" => @status })
+      ActionCable.server.broadcast(@channel,{ "status" => @status, "clearBoard" => true })
       sleep(0.1)
       @cards_played = []
       @current_player = winner
