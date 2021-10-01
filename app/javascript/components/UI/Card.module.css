@@ -38,7 +38,7 @@
     width: auto;
     padding: 0.25rem;
     opacity: 1;
-    animation: fade 2s linear;
+    animation: fade .5s linear;
 }
 
 .boardcard img {
@@ -46,6 +46,7 @@
     margin: auto;
     width: auto;
     height: 80px;
+    animation: fade 0.2s linear;
 }
 
 .gamecard {
@@ -54,6 +55,8 @@
     padding: 0.25rem;
     margin: 0.1rem;
     transition: all 0.2s;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 .gamecard img {

@@ -17,12 +17,16 @@ const Interface = () => {
   return (
     <>
       {context.gameState.showTelop && <GameTelop />}
-      {context.gameState.showBoard && <Board/>}
+      {context.gameState.showBoard && <Board />}
       {context.gameState.showHand && <PlayerHand />}
       <Card>
         <ButtonInterface />
       </Card>
-      <Button onClick={startGame}>Start Game</Button>
+      {context.gameState.showStartButton && (
+        <Card>
+          <Button onClick={startGame}>Start Game</Button>
+        </Card>
+      )}
     </>
   );
 };
