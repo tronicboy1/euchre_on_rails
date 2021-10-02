@@ -17,7 +17,7 @@ const GameTelop = () => {
   }
 
   return (
-    <Card>
+    <Card className="gametelop">
       <div className={styles.gametelop}>
         <Card className="inner">
           <h3 className={styles.gameupdate}>{context.gameState.gameUpdate.gameTelop}</h3>

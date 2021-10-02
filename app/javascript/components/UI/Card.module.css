@@ -14,7 +14,7 @@
 }
 
 .inner {
-    margin: 0.25rem;
+    margin-bottom: 0.2rem;
     background: rgb(219, 219, 219);
     border-radius: 5px;
     width: 100%;
@@ -61,7 +61,7 @@
     justify-content: center;
     align-content: center;
     background: rgb(219, 219, 219);
-    width: auto;
+    max-width: 65px;
     padding: 0.25rem;
     margin-top: 0.1rem;
     margin-bottom: 0.1rem;
@@ -83,6 +83,12 @@
     transform: translateY(-0.5rem);
 }
 
+.gametelop {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
 @media screen and (min-width: 1024px) {
     .chat-box {
         width: 29%;
@@ -100,8 +106,8 @@
 
 @media screen and (max-width: 400px) {
     .card {
-        margin-top: 0.1rem;
-        margin-bottom: 0.1rem;
+        margin-top: 0.15rem;
+        margin-bottom: 0.15rem;
     }
     .gamecard {
         padding: 0.15rem;
