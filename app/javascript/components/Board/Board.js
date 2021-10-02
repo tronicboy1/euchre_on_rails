@@ -20,6 +20,7 @@ const Board = () => {
         p2Card={p2Card}
         p3Card={p3Card}
         p4Card={p4Card}
+        playerNames={context.playerNames}
       />
     );
   }

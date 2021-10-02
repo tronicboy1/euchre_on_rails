@@ -19,7 +19,7 @@ const PlayerCards = React.memo(({ cards, onCardClick }) => {
         />
       ));
   }
-  return <div className={styles.playerhand}>Reloading Cards</div>;
+  return <div className={styles.playerhand}>Loading Cards</div>;
 });
 
 const PlayerHand = () => {

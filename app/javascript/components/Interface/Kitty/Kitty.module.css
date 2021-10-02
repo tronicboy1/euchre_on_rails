@@ -7,3 +7,9 @@
 .kitty h3 {
     margin: 0.25rem;
 }
+
+@media screen and (max-width: 400px) {
+    .kitty h3 {
+        font-size: medium;
+    }
+}

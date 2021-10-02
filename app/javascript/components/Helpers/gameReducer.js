@@ -154,6 +154,7 @@ const gameReducer = (prev, action, playerNo) => {
         trump: "",
         team1Tricks: 0,
         team2Tricks: 0,
+        orderedPlayer: ""
       },
     };
   }

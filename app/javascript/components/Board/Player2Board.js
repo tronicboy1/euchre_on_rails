@@ -31,6 +31,7 @@ const Player2Board = (props) => {
       <div className={styles.board}>
         <div className={styles.upper}>
           <Card className="boardcard">
+            <small>{props.playerNames.p4}</small>
             {props.p4Card ? (
               <Image src={props.p4Card} />
             ) : (
@@ -40,6 +41,7 @@ const Player2Board = (props) => {
         </div>
         <div className={styles.middle}>
           <Card className="boardcard">
+            <small>{props.playerNames.p3}</small>
             {props.p3Card ? (
               <Image src={props.p3Card} />
             ) : (
@@ -47,6 +49,7 @@ const Player2Board = (props) => {
             )}
           </Card>
           <Card className="boardcard">
+            <small>{props.playerNames.p1}</small>
             {props.p1Card ? (
               <Image src={props.p1Card} />
             ) : (
