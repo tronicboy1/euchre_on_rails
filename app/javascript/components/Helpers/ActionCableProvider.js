@@ -21,8 +21,8 @@ const ActionCableProvider = (props) => {
       dealer: "",
       trump: "",
       orderedPlayer: "",
-      team1Score: "",
-      team2Score: "",
+      team1Score: 0,
+      team2Score: 0,
       team1Tricks: "",
       team2Tricks: ""
     },
