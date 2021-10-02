@@ -59,6 +59,7 @@ const ActionCableProvider = (props) => {
     userId: props.userId,
     playerNo: props.playerNo,
     username: props.username,
+    playerNames: props.playerNames,
     roomChannel: roomChannel,
     messages: messages,
     gameState: gameState,

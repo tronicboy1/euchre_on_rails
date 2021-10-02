@@ -5,6 +5,7 @@ const ActionCableContext = React.createContext({
     userId: 0,
     playerNo: 0,
     username: 'default',
+    playeNames: {},
     roomChannel: {},
     messages: [],
     gameState: {},

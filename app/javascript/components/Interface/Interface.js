@@ -11,6 +11,7 @@ import styles from "./Interface.module.css";
 
 const Interface = () => {
   const context = useContext(ActionCableContext);
+  console.log(context);
 
   const startGame = () => {
     context.roomChannel.send({ type: "gamecontrol", command: "start-game" });

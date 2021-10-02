@@ -123,6 +123,16 @@ const gameReducer = (prev, action, playerNo) => {
         },
       };
     }
+    if (action.gameUpdateType === "SCORE") {
+      return {
+        ...prev,
+        gameUpdate: {
+          ...prev.gameUpdate,
+          team1Score: action.team1Score,
+          team2Score: action.team2Score,
+        },
+      };
+    }
   }
   if (action.type === "DEALER") {
     return { ...prev, dealer: action.content };

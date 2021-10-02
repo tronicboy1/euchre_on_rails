@@ -13,6 +13,7 @@ const App = (props) => {
       userId={props.userId}
       username={props.username}
       playerNo={props.playerNo}
+      playerNames={props.playerNames}
     >
       <div className={styles.display}>
         <Interface />

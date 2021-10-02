@@ -10,6 +10,22 @@ class GameController < ApplicationController
       redirect_to '/game/new'
     else
       @room ||= Room.find(refresh_userinfo_from_db.room_id)
+      @player1_username = User.find(@room.player1_id).username
+      if @room.player2_id != 0
+        @player2_username = User.find(@room.player2_id).username
+      else
+        @player2_username = "Computer 1"
+      end
+      if @room.player3_id != 0
+        @player3_username = User.find(@room.player3_id).username
+      else
+        @player3_username = "Computer 2"
+      end
+      if @room.player4_id != 0
+        @player4_username = User.find(@room.player4_id).username
+      else
+        @player4_username = "Computer 3"
+      end
     end
   end
 
