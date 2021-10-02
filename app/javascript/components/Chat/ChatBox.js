@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 
 import ActionCableContext from "../Helpers/ActionCableContext";
 import Card from "../UI/Card";
@@ -16,14 +16,19 @@ const ChatBox = () => {
   const [toggleChat, setToggleChat] = useState(true);
 
   useEffect(() => {
-      if (context.messages[0].username) {
-        setToggleText(`New Message from ${context.messages[0].username}`)
-      }
-      const timer = setTimeout(() => {
-          setToggleText("Toggle Chat");
-      }, 2000)
-      return () => {clearTimeout(timer)};
-  },[context.messages])
+    if (
+      context.messages[0].username &&
+      context.messages[0].username !== context.username
+    ) {
+      setToggleText(`New Message from ${context.messages[0].username}`);
+    }
+    const timer = setTimeout(() => {
+      setToggleText("Toggle Chat");
+    }, 2000);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [context.messages]);
 
   const onToggleChat = () => {
     setToggleChat((prevState) => {
@@ -37,7 +42,7 @@ const ChatBox = () => {
         <Button
           onClick={onToggleChat}
           className={toggleChat ? "chat-toggle" : "chat-toggle__hidden"}
-          style={{background: toggleText != "Toggle Chat" ? "blue" : "red"}}
+          style={{ background: toggleText != "Toggle Chat" ? "blue" : "red" }}
         >
           {toggleText}
         </Button>

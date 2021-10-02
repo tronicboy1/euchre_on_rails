@@ -47,7 +47,6 @@ const ActionCableProvider = (props) => {
           // Called when the subscription has been terminated by the server
         },
         received(data) {
-          console.log(data);
           actionCableReceivedHandler(data, setMessages, setGameState);
         },
       }
