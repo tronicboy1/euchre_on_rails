@@ -108,9 +108,13 @@
     .card {
         margin-top: 0.15rem;
         margin-bottom: 0.15rem;
+        width: 95%;
     }
     .gamecard {
         padding: 0.15rem;
         margin: 0.1rem;
+    }
+    .kitty {
+        width: fit-content;
     }
 }
