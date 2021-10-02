@@ -30,7 +30,8 @@
 }
 
 .kitty img {
-    border-radius: 10px;
+    border-radius: 8px;
+    border: rgb(56, 56, 56) 1px solid;
     margin: auto;
     width: auto;
     height: 100%;
