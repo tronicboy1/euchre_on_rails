@@ -337,7 +337,7 @@ class Round
     def after_check(input,card)
       puts "card retrieved"
       #hide card played
-      ActionCable.server.broadcast(@channel,{ "hideCard" => true, "cardNo" => input["command"] })
+      ActionCable.server.broadcast(@channel,{ "hideCard" => true, "cardNo" => input["command"], "playerNo" => "p#{@current_player.player_no}" })
       sleep(0.1)
       #set card played to nil
       @current_player.hand[input["command"]] = nil
@@ -770,7 +770,7 @@ class Round
   #resends player cards after pickup and throw away
   def resend_player_cards(player)
     #clear hand command for react
-    ActionCable.server.broadcast(@channel,{ "clearHand" => true })
+    ActionCable.server.broadcast(@channel,{ "clearHand" => true, "playerNo" => "p#{player.player_no}" })
     sleep(0.1)
     player.hand.each_with_index do |card, i|
       if !card.nil?

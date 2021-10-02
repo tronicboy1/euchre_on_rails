@@ -1,5 +1,5 @@
-const hideCard = (card, cardNo) => {
-  if (card.cardNo === cardNo) {
+const hideCard = (card, cardNo, playerNo) => {
+  if (card.cardNo === cardNo && card.playerNo === playerNo) {
     card.show = false;
     return card;
   }
@@ -9,7 +9,7 @@ const hideCard = (card, cardNo) => {
 const gameReducer = (prev, action, playerNo) => {
   if (action.type === "STATUS_CHANGE") {
     if (action.status === "call_trump") {
-      return { ...prev, status: action.status, showKitty: "PLACEHOLDER" }
+      return { ...prev, status: action.status, showKitty: "PLACEHOLDER" };
     }
     if (action.status === "turn") {
       return { ...prev, status: action.status, showKitty: false };
@@ -55,7 +55,7 @@ const gameReducer = (prev, action, playerNo) => {
       showBoard: true,
       showTelop: true,
       showKitty: true,
-      showStartButton: false
+      showStartButton: false,
     };
   }
   if (action.type === "PLAYED_CARD") {
@@ -86,7 +86,7 @@ const gameReducer = (prev, action, playerNo) => {
   }
   if (action.type === "HIDE_CARD") {
     const updatedPlayerCards = prev.playerCards.map((card) =>
-      hideCard(card, action.cardNo)
+      hideCard(card, action.cardNo, action.playerNo)
     );
     return { ...prev, playerCards: updatedPlayerCards };
   }
@@ -130,7 +130,7 @@ const gameReducer = (prev, action, playerNo) => {
   if (action.type === "CLEAR_BOARD") {
     return { ...prev, playedCards: {} };
   }
-  if (action.type === "CLEAR_HAND") {
+  if (action.type === "CLEAR_HAND" && action.playerNo === prev.playerNo) {
     return { ...prev, playerCards: [] };
   }
   if (action.type === "NEW_HAND") {

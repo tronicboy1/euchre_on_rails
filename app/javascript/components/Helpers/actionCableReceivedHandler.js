@@ -35,7 +35,7 @@ const actionCableReceivedHandler = (data, setMessages, setGameState) => {
     }
   }
   if (data.hideCard) {
-    setGameState({ type: "HIDE_CARD", cardNo: data.cardNo });
+    setGameState({ type: "HIDE_CARD", cardNo: data.cardNo, playerNo: data.playerNo });
   }
   if (data.gameupdate) {
     setGameState({
