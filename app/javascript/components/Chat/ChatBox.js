@@ -24,7 +24,7 @@ const ChatBox = () => {
     }
     const timer = setTimeout(() => {
       setToggleText("Toggle Chat");
-    }, 2000);
+    }, 4000);
     return () => {
       clearTimeout(timer);
     };
@@ -37,7 +37,7 @@ const ChatBox = () => {
   };
 
   return (
-    <Card className="chat-box">
+    <Card className2={toggleText !== "Toggle Chat" && "highlight"} className="chat-box">
       <div className={styles["chat-box"]}>
         <Button
           onClick={onToggleChat}

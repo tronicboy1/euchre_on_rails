@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ActionCableContext from "../../Helpers/ActionCableContext";
 
 import CallSuit from "./CallSuit";
@@ -8,17 +8,37 @@ import Card from "../../UI/Card";
 
 const ButtonInterface = () => {
   const context = useContext(ActionCableContext);
+  const [highlightButtons, setHighlightButtons] = useState(false);
+
+  useEffect(() => {
+    if (context.gameState.currentPlayer === context.playerNo) {
+      setHighlightButtons(true);
+    } else {
+      setHighlightButtons(false);
+    }
+  }, [context.gameState.currentPlayer]);
 
   if (context.gameState.status === "pickup_or_pass") {
-    return <Card><PickupPass /></Card>;
+    return (
+      <Card className={highlightButtons && "highlight"}>
+        <PickupPass />
+      </Card>
+    );
   }
   if (context.gameState.status === "call_trump") {
-    return <Card><CallSuit /></Card>;
+    return (
+      <Card className={highlightButtons && "highlight"}>
+        <CallSuit />
+      </Card>
+    );
   }
   if (context.gameState.status === "loner_check") {
-    return <Card><LonerYesNo /></Card>;
+    return (
+      <Card className={highlightButtons && "highlight"}>
+        <LonerYesNo />
+      </Card>
+    );
   }
-  return null;
 };
 
 export default ButtonInterface;

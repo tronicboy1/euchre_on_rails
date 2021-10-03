@@ -30,7 +30,8 @@ const ActionCableProvider = (props) => {
     showKitty: false,
     showTelop: false,
     showBoard: false,
-    showStartButton: true
+    showStartButton: true,
+    currentPlayer: ""
   });
   //setup activecable connection
   useEffect(() => {

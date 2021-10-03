@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import ActionCableContext from "../../Helpers/ActionCableContext";
 
 import styles from "./PlayerHand.module.css";
@@ -26,6 +26,16 @@ const PlayerHand = () => {
   const context = useContext(ActionCableContext);
   const status = context.gameState.status;
 
+  const [highlightBackground, setHighlightBackground] = useState(false);
+
+  useEffect(() => {
+    if (context.gameState.currentPlayer === context.playerNo && (status === "turn" || status === "trick_check")) {
+      setHighlightBackground(true);
+    } else {
+      setHighlightBackground(false);
+    }
+  },[context.gameState.currentPlayer]);
+
   const onCardClick = useCallback((cardNo) => {
     if (status === "turn" || status === "throw_away_card") {
       context.roomChannel.send({
@@ -33,11 +43,12 @@ const PlayerHand = () => {
         command: cardNo,
         id: context.userId,
       });
+      setHighlightBackground(false);
     }
   });
 
   return (
-    <Card>
+    <Card className={highlightBackground && "highlight"}>
       <div className={styles.playerhand}>
         <PlayerCards cards={context.gameState.playerCards} onCardClick={onCardClick}/>
       </div>

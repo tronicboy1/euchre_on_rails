@@ -11,7 +11,6 @@ import styles from "./Interface.module.css";
 
 const Interface = () => {
   const context = useContext(ActionCableContext);
-  console.log(context);
 
   const startGame = () => {
     context.roomChannel.send({ type: "gamecontrol", command: "start-game" });
@@ -23,7 +22,9 @@ const Interface = () => {
       {context.gameState.showBoard && <Board />}
       {context.gameState.showHand && <PlayerHand />}
 
-      <ButtonInterface />
+      {["pickup_or_pass", "call_trump", "loner_check"].includes(
+        context.gameState.status
+      ) && <ButtonInterface />}
 
       {context.gameState.showStartButton && (
         <Card className="gamestart">

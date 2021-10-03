@@ -703,6 +703,11 @@ class Round
       @turn += 1
       @current_player = @player_list[@turn]
     end
+    #send current player no to react
+    if @status != "start"
+      ActionCable.server.broadcast(@channel,{ "currentPlayer" => "p#{@current_player.player_no}" })
+      sleep(0.1)
+    end
   end
 
   def set_trump(input)

@@ -14,6 +14,9 @@ const actionCableReceivedHandler = (data, setMessages, setGameState) => {
   if (data.status) {
     setGameState({ type: "STATUS_CHANGE", status: data.status });
   }
+  if (data.currentPlayer) {
+    setGameState({ type: "CURRENT_PLAYER", currentPlayer: data.currentPlayer })
+  }
   if (data.img) {
     if (data.kitty) {
       setGameState({ type: "RECEIVE_KITTY", b64Img: data.img });

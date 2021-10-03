@@ -16,6 +16,9 @@ const gameReducer = (prev, action, playerNo) => {
     }
     return { ...prev, status: action.status };
   }
+  if (action.type === "CURRENT_PLAYER") {
+    return { ...prev, currentPlayer: action.currentPlayer };
+  }
   if (
     action.type === "RECEIVE_PLAYER_CARD" &&
     action.playerNo === prev.playerNo

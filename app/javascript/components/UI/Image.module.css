@@ -1,0 +1,13 @@
+.img {
+    display: block;
+}
+
+.left {
+    transform: rotate(90deg);
+    transform-origin: top left;
+}
+
+.right {
+    transform: rotate(-90deg);
+    transform-origin: top left;
+}
