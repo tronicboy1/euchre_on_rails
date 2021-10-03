@@ -40,7 +40,7 @@ const Player4Board = (props) => {
           </Card>
         </div>
         <div className={styles.middle}>
-          <Card className="boardcard" className2="left" >
+          <Card className="boardcard">
             <small>{props.playerNames.p1}</small>
             {props.p1Card ? (
               <Image src={props.p1Card} />
@@ -48,7 +48,7 @@ const Player4Board = (props) => {
               <div className={styles.placeholder} />
             )}
           </Card>
-          <Card className="boardcard" className2="right" >
+          <Card className="boardcard">
             <small>{props.playerNames.p3}</small>
             {props.p3Card ? (
               <Image src={props.p3Card} />
