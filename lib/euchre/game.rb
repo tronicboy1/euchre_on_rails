@@ -34,43 +34,43 @@
       @round = Round.new(@player1,@player2,@player3,@player4,0,@channel,@status)
     end
 
-    #this function is used to resend cards if a player refreshes the page midgame or disconnects
-    def resend_gui(dic)
-      player = @round.player_list[dic["player_no"]]
-      @round.resend_player_cards(player)
-      sleep(0.1)
-      if @round.status == "pickup_or_pass"
-        ActionCable.server.broadcast(@channel,{ "img" => @round.turnup.b64_img, "element" => "turnup-card", "show" => "#turnup" })
-        sleep(0.1)
-        ActionCable.server.broadcast(@channel,{ "show" => "#pickup-yesno", "hide" => "null" })
-        sleep(0.1)
-      elsif @round.status == "throw_away_card" && user_input["id"] == @round.dealer.id
-        ActionCable.server.broadcast(@channel,{ "show" => "#turnup", "hide" => "null" })
-        sleep(0.1)
-        ActionCable.server.broadcast(@channel,{ "show" => "#pickup-yesno", "hide" => "null" })
-        sleep(0.1)
-      elsif @round.status == "call_trump"
-        ActionCable.server.broadcast(@channel,{ "hide" => "#pickup-yesno", "show" => "#trump-selection" })
-        sleep(0.1)
-        ActionCable.server.broadcast(@channel,{ "hide" => "#turnup" })
-        sleep(0.1)
-      elsif @round.status == "loner_check"
-        ActionCable.server.broadcast(@channel,{ "hide" => "#trump-selection", "show" => "#loner-selection" })
-        sleep(0.1)
-      elsif @round.status == "turn"
-        @round.cards_played.each do |card,player|
-          ActionCable.server.broadcast(@channel,{ "img" => card.b64_img,
-            "element" => "p#{player.player_no}-played-card", "show" => "#p#{player.player_no}-played-card" })
-          sleep(0.1)
-        end
-        ActionCable.server.broadcast(@channel,{ "hide" => "#pickup-yesno" })
-        sleep(0.1)
-        ActionCable.server.broadcast(@channel,{ "hide" => "#trump-selection" })
-        sleep(0.1)
-        ActionCable.server.broadcast(@channel,{ "hide" => "#loner-selection" })
-        sleep(0.1)
-      end
-    end
+    #this function is used to resend cards if a player refreshes the page midgame or disconnects NOT NEEDED WITH REACT UPDATE
+    # def resend_gui(dic)
+    #   player = @round.player_list[dic["player_no"]]
+    #   @round.resend_player_cards(player)
+    #   sleep(0.1)
+    #   if @round.status == "pickup_or_pass"
+    #     ActionCable.server.broadcast(@channel,{ "img" => @round.turnup.b64_img, "element" => "turnup-card", "show" => "#turnup" })
+    #     sleep(0.1)
+    #     ActionCable.server.broadcast(@channel,{ "show" => "#pickup-yesno", "hide" => "null" })
+    #     sleep(0.1)
+    #   elsif @round.status == "throw_away_card" && user_input["id"] == @round.dealer.id
+    #     ActionCable.server.broadcast(@channel,{ "show" => "#turnup", "hide" => "null" })
+    #     sleep(0.1)
+    #     ActionCable.server.broadcast(@channel,{ "show" => "#pickup-yesno", "hide" => "null" })
+    #     sleep(0.1)
+    #   elsif @round.status == "call_trump"
+    #     ActionCable.server.broadcast(@channel,{ "hide" => "#pickup-yesno", "show" => "#trump-selection" })
+    #     sleep(0.1)
+    #     ActionCable.server.broadcast(@channel,{ "hide" => "#turnup" })
+    #     sleep(0.1)
+    #   elsif @round.status == "loner_check"
+    #     ActionCable.server.broadcast(@channel,{ "hide" => "#trump-selection", "show" => "#loner-selection" })
+    #     sleep(0.1)
+    #   elsif @round.status == "turn"
+    #     @round.cards_played.each do |card,player|
+    #       ActionCable.server.broadcast(@channel,{ "img" => card.b64_img,
+    #         "element" => "p#{player.player_no}-played-card", "show" => "#p#{player.player_no}-played-card" })
+    #       sleep(0.1)
+    #     end
+    #     ActionCable.server.broadcast(@channel,{ "hide" => "#pickup-yesno" })
+    #     sleep(0.1)
+    #     ActionCable.server.broadcast(@channel,{ "hide" => "#trump-selection" })
+    #     sleep(0.1)
+    #     ActionCable.server.broadcast(@channel,{ "hide" => "#loner-selection" })
+    #     sleep(0.1)
+    #   end
+    # end
 
     def game_control(user_input)
       if user_input["id"] == @round.current_player.id

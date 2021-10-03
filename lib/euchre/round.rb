@@ -56,7 +56,7 @@ class Round
 
     #set turnup card and send to players
     @turnup = @deck.deal_card
-    ActionCable.server.broadcast(@channel,{ "img" => @turnup.b64_img, "kitty" => true, "show" => "#turnup" })
+    ActionCable.server.broadcast(@channel,{ "img" => @turnup.b64_img, "kitty" => true })
     sleep(0.1)
     #declare a counter to keep track of how many times players have passed
     @pass_count = 0
@@ -150,7 +150,7 @@ class Round
       "pickupcard" => true, "interfaceState" => false, "status" => @status })
     sleep(0.1)
     ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP",
-      "gameupdate" => "#{@dealer.username.capitalize}, choose card to throw away", "hide" => "#pickup-yesno" })
+      "gameupdate" => "#{@dealer.username.capitalize}, choose card to throw away" })
     sleep(0.1)
 
     #automatically throw_away_card for computers
@@ -168,8 +168,6 @@ class Round
   def throw_away_card(input)
     @dealer.hand.delete_at input["command"]
     resend_player_cards(@dealer)
-    sleep(0.1)
-    ActionCable.server.broadcast(@channel,{ "hide" => "#p#{@dealer.player_no}-pickupcard" })
     sleep(0.1)
     #setup for turn start
     throw_away_shared_code()
@@ -760,7 +758,7 @@ class Round
     @player_list.each do |player|
       if player.id != 0
         player.hand.each_with_index do |card, i|
-          ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "playerNo" => "p#{player.player_no}", "show" => "#hand", "cardNo" => i })
+          ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "playerNo" => "p#{player.player_no}", "cardNo" => i })
           sleep(0.1)
         end
       end
@@ -774,7 +772,7 @@ class Round
     sleep(0.1)
     player.hand.each_with_index do |card, i|
       if !card.nil?
-        ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "playerNo" => "p#{player.player_no}", "show" => "#hand", "cardNo" => i })
+        ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "playerNo" => "p#{player.player_no}", "cardNo" => i })
         sleep(0.1)
       end
     end
