@@ -29,12 +29,16 @@ const PlayerHand = () => {
   const [highlightBackground, setHighlightBackground] = useState(false);
 
   useEffect(() => {
-    if (context.gameState.currentPlayer === context.playerNo && (status === "turn" || status === "trick_check")) {
+    if (
+      context.gameState.currentPlayer === context.playerNo &&
+      status === "turn" &&
+      context.gameState.playerCards.length > 0
+    ) {
       setHighlightBackground(true);
     } else {
       setHighlightBackground(false);
     }
-  },[context.gameState.currentPlayer]);
+  }, [context.gameState.currentPlayer, context.gameState.status]);
 
   const onCardClick = useCallback((cardNo) => {
     if (status === "turn" || status === "throw_away_card") {
@@ -50,7 +54,10 @@ const PlayerHand = () => {
   return (
     <Card className={highlightBackground && "highlight"}>
       <div className={styles.playerhand}>
-        <PlayerCards cards={context.gameState.playerCards} onCardClick={onCardClick}/>
+        <PlayerCards
+          cards={context.gameState.playerCards}
+          onCardClick={onCardClick}
+        />
       </div>
     </Card>
   );
