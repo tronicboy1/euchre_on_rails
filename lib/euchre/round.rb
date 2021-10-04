@@ -17,6 +17,7 @@ class Round
     @dealer = @player_list[@turn]
     @trump = nil
     @round_count = 0
+    @cards_played = []
     #record the player who ordered trump for keeping score
     @ordered_player = nil
     @loner = nil
@@ -773,7 +774,7 @@ class Round
   #resends player cards after pickup and throw away
   def resend_player_cards(player)
     #clear hand command for react
-    ActionCable.server.broadcast(@channel,{ "clearHand" => true, "playerNo" => "p#{player.player_no}" })
+    ActionCable.server.broadcast(@channel,{ "clearHand" => true, "playerNo" => "p#{player.player_no}", "status" => @status })
     sleep(0.1)
     player.hand.each_with_index do |card, i|
       if !card.nil?
@@ -781,6 +782,19 @@ class Round
         sleep(0.1)
       end
     end
+    @cards_played.each do |card,player|
+      ActionCable.server.broadcast(@channel,{ "img" => card.b64_img,
+        "playedCard" => "p#{player.player_no}" })
+    end
+    ActionCable.server.broadcast(@channel,{ "type" => "DEALER", "gameupdate" => @dealer.username.capitalize, "status" => @status })
+    sleep(0.1)
+    ActionCable.server.broadcast(@channel,{ "type" => "SCORE", "gameupdate" => player.score, "team1Score" => @player1.score, "team2Score" => @player2.score })
+    sleep(0.1)
+    team1_tricks = @player1.tricks + @player3.tricks
+    team2_tricks = @player2.tricks + @player4.tricks 
+    ActionCable.server.broadcast(@channel,{ "type" => "TRICKS", "gameupdate" => "tricks", "team1Tricks" => team1_tricks, "team2Tricks" => team2_tricks })
+    ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP", "gameupdate" => "Game Restored" })
+    order_symbol_set()
   end
 
   def new_update(text)

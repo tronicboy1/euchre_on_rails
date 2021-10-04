@@ -6,20 +6,20 @@ import styles from "./PlayerHand.module.css";
 import GameCard from "../../UI/GameCard";
 import Card from "../../UI/Card";
 
-const PlayerCards = React.memo(({ cards, onCardClick }) => {
-  if (cards.length >= 5) {
-    return cards
-      .filter((card) => card.show)
-      .map((card) => (
-        <GameCard
-          key={card.cardNo}
-          cardNo={card.cardNo}
-          b64Img={card.b64Img}
-          onClick={onCardClick}
-        />
-      ));
+const PlayerCards = React.memo(({ cards, onCardClick, status }) => {
+  if (cards.length !== 5 && ["start", "pickup_or_pass", "call_trump", "throw_away_card"].includes(status)) {
+    return <div className={styles.playerhand}>Loading Cards</div>;
   }
-  return <div className={styles.playerhand}>Loading Cards</div>;
+  return cards
+    .filter((card) => card.show)
+    .map((card) => (
+      <GameCard
+        key={card.cardNo}
+        cardNo={card.cardNo}
+        b64Img={card.b64Img}
+        onClick={onCardClick}
+      />
+    ));
 });
 
 const PlayerHand = () => {
@@ -57,6 +57,7 @@ const PlayerHand = () => {
         <PlayerCards
           cards={context.gameState.playerCards}
           onCardClick={onCardClick}
+          status={status}
         />
       </div>
     </Card>

@@ -8,11 +8,38 @@ const hideCard = (card, cardNo, playerNo) => {
 
 const gameReducer = (prev, action, playerNo) => {
   if (action.type === "STATUS_CHANGE") {
+    if (action.status === "pickup_or_pass") {
+      return {
+        ...prev,
+        status: action.status,
+        showKitty: true,
+        showTelop: true,
+        showBoard: true,
+        showStartButton: false,
+        showHand: true
+      };
+    }
     if (action.status === "call_trump") {
-      return { ...prev, status: action.status, showKitty: "PLACEHOLDER" };
+      return {
+        ...prev,
+        status: action.status,
+        showKitty: "PLACEHOLDER",
+        showTelop: true,
+        showBoard: true,
+        showStartButton: false,
+        showHand: true
+      };
     }
     if (action.status === "turn") {
-      return { ...prev, status: action.status, showKitty: false };
+      return {
+        ...prev,
+        status: action.status,
+        showKitty: false,
+        showTelop: true,
+        showBoard: true,
+        showStartButton: false,
+        showHand: true,
+      };
     }
     return { ...prev, status: action.status };
   }
@@ -157,7 +184,7 @@ const gameReducer = (prev, action, playerNo) => {
         trump: "",
         team1Tricks: 0,
         team2Tricks: 0,
-        orderedPlayer: ""
+        orderedPlayer: "",
       },
     };
   }

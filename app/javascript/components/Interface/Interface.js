@@ -13,7 +13,7 @@ const Interface = () => {
   const context = useContext(ActionCableContext);
 
   const startGame = () => {
-    context.roomChannel.send({ type: "gamecontrol", command: "start-game" });
+    context.roomChannel.send({ type: "gamecontrol", command: "start-game", playerNo: context.playerNo, userId: context.userId });
   };
 
   return (

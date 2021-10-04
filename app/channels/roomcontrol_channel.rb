@@ -40,11 +40,13 @@ class RoomcontrolChannel < ApplicationCable::Channel
   private
   def gamecontrol_shori(dic)
     if dic["command"] == "start-game"
-      $game_dict[params[:room_id]] = Game.new(params[:room_id])
-      $game_dict[params[:room_id]].start_game
-    #reloads gui for players who left page
-    elsif dic["command"] == "reload_gui"
-      $game_dict[params[:room_id]].resend_gui(dic)
+      if $game_dict.key?(params[:room_id])
+        #puts $game_dict[params[:room_id]]
+        $game_dict[params[:room_id]].resend_gui(dic)
+      else
+        $game_dict[params[:room_id]] = Game.new(params[:room_id])
+        $game_dict[params[:room_id]].start_game
+      end
     else
       $game_dict[params[:room_id]].game_control(dic)
     end
