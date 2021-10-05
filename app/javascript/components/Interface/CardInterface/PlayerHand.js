@@ -7,7 +7,7 @@ import GameCard from "../../UI/GameCard";
 import Card from "../../UI/Card";
 
 const PlayerCards = React.memo(({ cards, onCardClick, status }) => {
-  if (cards.length !== 5 && ["start", "pickup_or_pass", "call_trump", "throw_away_card"].includes(status)) {
+  if (cards.length !== 5 && status !== "turn") {
     return <div className={styles.playerhand}>Loading Cards</div>;
   }
   return cards

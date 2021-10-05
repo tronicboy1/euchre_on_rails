@@ -7,8 +7,6 @@ import styles from "./CallSuit.module.css";
 const CallSuit = () => {
     const context = useContext(ActionCableContext);
 
-    console.log(context);
-
     const onCallSpades = () => {
         context.roomChannel.send({ type: "gamecontrol", command: 0, id: context.userId });
     };

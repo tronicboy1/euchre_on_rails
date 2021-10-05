@@ -498,7 +498,7 @@ class Round
         @player1.score += 2
         @player3.score += 2
         ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP",
-          "gameupdate" => "Player 2 and 4 were Euchred!" })
+          "gameupdate" => "#{@player2.username.capitalize} and #{@player4.username} were Euchred!" })
         sleep(0.1)
         new_update("#{@player2.username} and #{@player4.username} were Euchred!")
       end
@@ -529,7 +529,7 @@ class Round
         @player2.score += 2
         @player4.score += 2
         ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP",
-          "gameupdate" => "Players 1 and 3 were Euchred!" })
+          "gameupdate" => "#{@player1.username} and #{@player3.username} were Euchred!" })
         sleep(0.1)
         new_update("#{@player1.username} and #{@player3.username} were Euchred!")
       end
@@ -548,10 +548,10 @@ class Round
     if @player1.score >= 10
       #end game here
       new_update("#{@player1.username} and #{@player3.username} won a game!")
-      ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP", "gameupdate" => "Player 1 and Player 3 won the game!" })
+      ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP", "gameupdate" => "#{@player1.username} and #{@player3.username} won the game!" })
     elsif @player2.score >= 10
       new_update("#{@player2.username} and #{@player4.username} won a game!")
-      ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP", "gameupdate" => "Player 2 and Player 4 won the game!" })
+      ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP", "gameupdate" => "#{@player2.username} and #{@player4.username} won the game!" })
     else
       #start new round here
       start_new_round()
@@ -570,6 +570,7 @@ class Round
     @round_count = 0
     @orderer_player = nil
     @loner = nil
+    @cards_played = []
     #clear hand command for react
     ActionCable.server.broadcast(@channel,{ "clear" => true })
     sleep(0.1)
