@@ -787,6 +787,10 @@ class Round
       ActionCable.server.broadcast(@channel,{ "img" => card.b64_img,
         "playedCard" => "p#{player.player_no}" })
     end
+    if @status == "pickup_or_pass"
+      ActionCable.server.broadcast(@channel,{ "img" => @turnup.b64_img, "kitty" => true })
+      sleep(0.1)
+    end
     ActionCable.server.broadcast(@channel,{ "type" => "DEALER", "gameupdate" => @dealer.username.capitalize, "status" => @status })
     sleep(0.1)
     ActionCable.server.broadcast(@channel,{ "type" => "SCORE", "gameupdate" => player.score, "team1Score" => @player1.score, "team2Score" => @player2.score })
