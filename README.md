@@ -5,10 +5,10 @@ An online Euchre (Michigan style!) game using Ruby on Rails.
 
 Built with:
 1. Rails
-2. Bootstrap
-3. javascript SocketIO
-4. PostgreSQL
-5. jquery
+2. React.js (Rails-react)
+3. Redux React
+4. Bootstrap (for non react elements)
+5. PostgreSQL
 
 Getting Started
 __________________________
@@ -46,7 +46,7 @@ Steps for Heroku:
 Usage
 __________________________
 
-This project acts as an example of how you can use SocketIO to have users directly interact with a server and implement interactive usage of Python with user interface. Feel free to adapt it or improve it as you see fit.
+This project acts as an example of how you can use adapt ActionCable to handle much more than just chat and file transfer. Feel free to adapt it or improve it as you see fit.
 
 Playing:
 1. create account
