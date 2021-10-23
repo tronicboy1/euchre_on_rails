@@ -5,6 +5,7 @@ import styles from "./PlayerHand.module.css";
 
 import GameCard from "../../UI/GameCard";
 import Card from "../../UI/Card";
+import { useSelector } from "react-redux";
 
 const PlayerCards = React.memo(({ cards, onCardClick, status }) => {
   if (cards.length !== 5 && status !== "turn") {
@@ -24,21 +25,20 @@ const PlayerCards = React.memo(({ cards, onCardClick, status }) => {
 
 const PlayerHand = () => {
   const context = useContext(ActionCableContext);
-  const status = context.gameState.status;
+  const cards = useSelector((state) => state.gameState.playerCards);
+  const status = useSelector((state) => state.gameState.status);
+  const currentPlayer = useSelector((state) => state.gameState.currentPlayer);
+  const playerNo = useSelector((state) => state.gameState.playerNo);
 
   const [highlightBackground, setHighlightBackground] = useState(false);
 
   useEffect(() => {
-    if (
-      context.gameState.currentPlayer === context.playerNo &&
-      status === "turn" &&
-      context.gameState.playerCards.length > 0
-    ) {
+    if (currentPlayer === playerNo && status === "turn" && cards.length > 0) {
       setHighlightBackground(true);
     } else {
       setHighlightBackground(false);
     }
-  }, [context.gameState.currentPlayer, context.gameState.status]);
+  }, [currentPlayer, status]);
 
   const onCardClick = useCallback((cardNo) => {
     if (status === "turn" || status === "throw_away_card") {
@@ -55,7 +55,7 @@ const PlayerHand = () => {
     <Card className={highlightBackground && "highlight"}>
       <div className={styles.playerhand}>
         <PlayerCards
-          cards={context.gameState.playerCards}
+          cards={cards}
           onCardClick={onCardClick}
           status={status}
         />

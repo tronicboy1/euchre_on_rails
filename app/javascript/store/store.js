@@ -1,6 +1,6 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 import gameStateSlice from "./game-state-slice";
-import { current } from "immer";
+import gameUpdateSlice from "./game-update-slice";
 
 const chatSlice = createSlice({
   name: "chat",
@@ -21,9 +21,11 @@ const store = configureStore({
   reducer: {
     gameState: gameStateSlice.reducer,
     chat: chatSlice.reducer,
+    gameUpdate: gameUpdateSlice.reducer
   },
 });
 
 export const gameStateActions = gameStateSlice.actions;
 export const chatActions = chatSlice.actions;
+export const gameUpdateActions = gameUpdateSlice.actions;
 export default store;

@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useSelector } from "react-redux";
 import ActionCableContext from "../../Helpers/ActionCableContext";
 import Card from "../../UI/Card";
 import GameStatus from "./GameStatus";
@@ -7,6 +8,9 @@ import styles from "./GameTelop.module.css";
 
 const GameTelop = () => {
   const context = useContext(ActionCableContext);
+  const gameUpdate = useSelector(state => state.gameUpdate);
+
+  console.log(gameUpdate);
 
   let teamNo;
 
@@ -20,16 +24,16 @@ const GameTelop = () => {
     <Card className="gametelop">
       <div className={styles.gametelop}>
         <Card className="inner">
-          <h3 className={styles.gameupdate}>{context.gameState.gameUpdate.gameTelop}</h3>
+          <h3 className={styles.gameupdate}>{gameUpdate.gameTelop}</h3>
         </Card>
         <GameStatus
-          dealer={context.gameState.gameUpdate.dealer}
-          trump={context.gameState.gameUpdate.trump}
-          orderedPlayer={context.gameState.gameUpdate.orderedPlayer}
-          team1Tricks={context.gameState.gameUpdate.team1Tricks}
-          team2Tricks={context.gameState.gameUpdate.team2Tricks}
-          team1Score={context.gameState.gameUpdate.team1Score}
-          team2Score={context.gameState.gameUpdate.team2Score}
+          dealer={gameUpdate.dealer}
+          trump={gameUpdate.trump}
+          orderedPlayer={gameUpdate.orderedPlayer}
+          team1Tricks={gameUpdate.team1Tricks}
+          team2Tricks={gameUpdate.team2Tricks}
+          team1Score={gameUpdate.team1Score}
+          team2Score={gameUpdate.team2Score}
           teamNo={teamNo}
         />
       </div>

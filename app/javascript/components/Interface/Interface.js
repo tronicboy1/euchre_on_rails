@@ -8,9 +8,13 @@ import Button from "../UI/Button";
 import Board from "../Board/Board";
 
 import styles from "./Interface.module.css";
+import { useSelector } from "react-redux";
 
 const Interface = () => {
   const context = useContext(ActionCableContext);
+  const gameStatus = useSelector(state => state.gameState);
+
+  console.log(gameStatus);
 
   const startGame = () => {
     context.roomChannel.send({ type: "gamecontrol", command: "start-game", playerNo: context.playerNo, userId: context.userId });

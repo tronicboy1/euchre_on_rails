@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useSelector } from "react-redux";
 import ActionCableContext from "../Helpers/ActionCableContext";
 import Player1Board from "./Player1Board";
 import Player2Board from "./Player2Board";
@@ -7,15 +8,17 @@ import Player4Board from "./Player4Board";
 
 const Board = () => {
   const context = useContext(ActionCableContext);
-  const p1Card = context.gameState.playedCards.p1;
-  const p2Card = context.gameState.playedCards.p2;
-  const p3Card = context.gameState.playedCards.p3;
-  const p4Card = context.gameState.playedCards.p4;
+  const playedCards = useSelector(state => state.gameState.playedCards);
+  const showKitty = useSelector(state => state.gameState.showKitty);
+  const p1Card = playedCards.p1;
+  const p2Card = playedCards.p2;
+  const p3Card = playedCards.p3;
+  const p4Card = playedCards.p4;
 
   if (context.playerNo === "p1") {
     return (
       <Player1Board
-        showKitty={context.gameState.showKitty}
+        showKitty={showKitty}
         p1Card={p1Card}
         p2Card={p2Card}
         p3Card={p3Card}
@@ -27,7 +30,7 @@ const Board = () => {
   if (context.playerNo === "p2") {
     return (
       <Player2Board
-        showKitty={context.gameState.showKitty}
+        showKitty={showKitty}
         p1Card={p1Card}
         p2Card={p2Card}
         p3Card={p3Card}
@@ -39,7 +42,7 @@ const Board = () => {
   if (context.playerNo === "p3") {
     return (
       <Player3Board
-        showKitty={context.gameState.showKitty}
+        showKitty={showKitty}
         p1Card={p1Card}
         p2Card={p2Card}
         p3Card={p3Card}
@@ -51,7 +54,7 @@ const Board = () => {
   if (context.playerNo === "p4") {
     return (
       <Player4Board
-        showKitty={context.gameState.showKitty}
+        showKitty={showKitty}
         p1Card={p1Card}
         p2Card={p2Card}
         p3Card={p3Card}
