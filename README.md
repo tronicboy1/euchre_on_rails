@@ -5,10 +5,10 @@ An online Euchre (Michigan style!) game using Ruby on Rails.
 
 Built with:
 1. Rails
-2. Bootstrap
-3. javascript SocketIO
-4. PostgreSQL
-5. jquery
+2. React.js (Rails-react)
+3. Redux React
+4. Bootstrap (for non react elements)
+5. PostgreSQL
 
 Getting Started
 __________________________
