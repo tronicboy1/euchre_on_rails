@@ -14,8 +14,6 @@ const Interface = () => {
   const context = useContext(ActionCableContext);
   const gameState = useSelector(state => state.gameState);
 
-  console.log(gameState);
-
   const startGame = () => {
     context.roomChannel.send({ type: "gamecontrol", command: "start-game", playerNo: context.playerNo, userId: context.userId });
   };

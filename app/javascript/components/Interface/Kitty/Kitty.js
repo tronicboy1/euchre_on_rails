@@ -11,7 +11,7 @@ const Kitty = () => {
     <Card className="kitty">
       <div className={styles.kitty}>
           <h3>Kitty</h3>
-        <img src={imgData} />
+        {kitty.b64Img && <img src={imgData} />}
       </div>
     </Card>
   );

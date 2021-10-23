@@ -92,6 +92,7 @@ const gameStateSlice = createSlice({
     },
     clearBoard(state) {
       state.playedCards = {};
+      state.currentPlayer = "";
     },
     clearHand(state) {
       state.playerCards = [];

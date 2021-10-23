@@ -10,8 +10,6 @@ const GameTelop = () => {
   const context = useContext(ActionCableContext);
   const gameUpdate = useSelector(state => state.gameUpdate);
 
-  console.log(gameUpdate);
-
   let teamNo;
 
   if (context.playerNo === "p1" || context.playerNo === "p3") {

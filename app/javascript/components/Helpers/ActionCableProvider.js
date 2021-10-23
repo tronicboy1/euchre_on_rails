@@ -10,8 +10,6 @@ const ActionCableProvider = (props) => {
   const dispatch = useDispatch();
   const [roomChannel, setRoomChannel] = useState(null);
 
-  console.log("context reloaded");
-
   //setup activecable connection
   useEffect(() => {
     const roomChannel = consumer.subscriptions.create(
