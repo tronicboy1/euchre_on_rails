@@ -65,10 +65,11 @@ const actionCableReceivedHandler = (data, dispatch) => {
   }
   if (data.clearBoard) {
     dispatch(gameStateActions.clearBoard());
+    dispatch(gameUpdateActions.clearUpdates());
   }
   if (data.clearHand) {
     dispatch(gameStateActions.clearHand());
-    dispatch(gameUpdateActions.clearHand());
+    dispatch(gameUpdateActions.clearUpdates());
   }
 };
 
