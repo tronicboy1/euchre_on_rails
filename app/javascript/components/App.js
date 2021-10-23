@@ -2,7 +2,11 @@ import React from "react";
 import ActionCableProvider from "./Helpers/ActionCableProvider";
 import { Provider } from "react-redux";
 import store from "../store/store";
-import WrappedApp from "./WrappedApp";
+
+import styles from "./App.module.css";
+
+import Interface from "./Interface/Interface";
+import ChatBox from "./Chat/ChatBox";
 
 const App = (props) => {
   return (
@@ -14,7 +18,10 @@ const App = (props) => {
         playerNo={props.playerNo}
         playerNames={props.playerNames}
       >
-        <WrappedApp />
+        <div className={styles.display}>
+          <Interface />
+          <ChatBox />
+        </div>
       </ActionCableProvider>
     </Provider>
   );
