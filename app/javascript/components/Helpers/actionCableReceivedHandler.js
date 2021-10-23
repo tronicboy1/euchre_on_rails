@@ -1,65 +1,74 @@
-const actionCableReceivedHandler = (data, setMessages, setGameState) => {
+import {
+  gameStateActions,
+  chatActions,
+  gameUpdateActions,
+} from "../../store/store";
+
+const actionCableReceivedHandler = (data, dispatch) => {
   if (data.message) {
-    setMessages((prevState) => {
-      return [
-        {
-          id: prevState[0].id + 1,
-          content: data.message,
-          username: data.username,
-        },
-        ...prevState,
-      ];
-    });
+    dispatch(chatActions.addMessage(data));
   }
   if (data.status) {
-    setGameState({ type: "STATUS_CHANGE", status: data.status });
+    dispatch(gameStateActions.statusChange(data));
   }
   if (data.currentPlayer) {
-    setGameState({ type: "CURRENT_PLAYER", currentPlayer: data.currentPlayer })
+    dispatch(gameStateActions.currentPlayer(data));
   }
   if (data.img) {
     if (data.kitty) {
-      setGameState({ type: "RECEIVE_KITTY", b64Img: data.img });
+      dispatch(gameStateActions.receiveKitty(data));
     }
     if (data.playerNo) {
-      setGameState({
-        type: "RECEIVE_PLAYER_CARD",
-        b64Img: data.img,
-        playerNo: data.playerNo,
-        cardNo: data.cardNo,
-      });
+      dispatch(gameStateActions.receivePlayerCard(data));
     }
     if (data.playedCard) {
-      setGameState({
-        type: "PLAYED_CARD",
-        b64Img: data.img,
-        playerNo: data.playedCard,
-      });
+      dispatch(gameStateActions.playedCard(data));
     }
   }
   if (data.hideCard) {
-    setGameState({ type: "HIDE_CARD", cardNo: data.cardNo, playerNo: data.playerNo });
+    dispatch(gameStateActions.hideCard(data));
   }
   if (data.gameupdate) {
-    setGameState({
-      type: "GAME_UPDATE",
-      gameUpdateType: data.type,
-      content: data.gameupdate,
-      player: data.player,
-      team1Tricks: data.team1Tricks,
-      team2Tricks: data.team2Tricks,
-      team1Score: data.team1Score,
-      team2Score: data.team2Score,
-    });
+    if (data.type === "GAME_TELOP") {
+      dispatch(gameUpdateActions.gameTelop(data.gameupdate));
+    }
+    if (data.type === "DEALER") {
+      dispatch(gameUpdateActions.dealer(data.gameupdate));
+    }
+    if (data.type === "ORDER_TRUMP") {
+      dispatch(
+        gameUpdateActions.orderTrump({
+          trump: data.gameupdate,
+          player: data.player,
+        })
+      );
+    }
+    if (data.type === "TRICKS") {
+      dispatch(
+        gameUpdateActions.tricks({
+          team1Tricks: data.team1Tricks,
+          team2Tricks: data.team2Tricks,
+        })
+      );
+    }
+    if (data.type === "SCORE") {
+      dispatch(
+        gameUpdateActions.score({
+          team1Score: data.team1Score,
+          team2Score: data.team2Score,
+        })
+      );
+    }
   }
   if (data.clear) {
-    setGameState({ type: "NEW_HAND" });
+    dispatch(gameStateActions.newHand());
   }
   if (data.clearBoard) {
-    setGameState({ type: "CLEAR_BOARD" });
+    dispatch(gameStateActions.clearBoard());
   }
   if (data.clearHand) {
-    setGameState({ type: "CLEAR_HAND" });
+    dispatch(gameStateActions.clearHand());
+    dispatch(gameUpdateActions.clearHand());
   }
 };
 

@@ -1,38 +1,15 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import ActionCableContext from "./ActionCableContext";
 import consumer from "../../channels/consumer";
 import actionCableReceivedHandler from "./actionCableReceivedHandler";
-import gameReducer from "./gameReducer";
+import { useDispatch } from "react-redux";
+import { gameStateActions } from "../../store/store";
 
 const ActionCableProvider = (props) => {
-  const [messages, setMessages] = useState([
-    { id: 0, content: "Welcome to Euchre on Rails!" },
-  ]);
+  const dispatch = useDispatch();
   const [roomChannel, setRoomChannel] = useState(null);
-  const [gameState, setGameState] = useReducer(gameReducer, {
-    playerNo: props.playerNo,
-    status: true,
-    kitty: {},
-    playerCards: [],
-    playedCards: {},
-    gameUpdate: {
-      gameTelop: "",
-      dealer: "",
-      trump: "",
-      orderedPlayer: "",
-      team1Score: 0,
-      team2Score: 0,
-      team1Tricks: "",
-      team2Tricks: ""
-    },
-    showHand: false,
-    showKitty: false,
-    showTelop: false,
-    showBoard: false,
-    showStartButton: true,
-    currentPlayer: ""
-  });
+
   //setup activecable connection
   useEffect(() => {
     const roomChannel = consumer.subscriptions.create(
@@ -48,11 +25,12 @@ const ActionCableProvider = (props) => {
           // Called when the subscription has been terminated by the server
         },
         received(data) {
-          actionCableReceivedHandler(data, setMessages, setGameState);
+          actionCableReceivedHandler(data, dispatch);
         },
       }
     );
     setRoomChannel(roomChannel);
+    dispatch(gameStateActions.setPlayerNo(props.playerNo))
   }, []);
 
   const cableContext = {
@@ -62,9 +40,6 @@ const ActionCableProvider = (props) => {
     username: props.username,
     playerNames: props.playerNames,
     roomChannel: roomChannel,
-    messages: messages,
-    gameState: gameState,
-    setGameState: setGameState,
   };
 
   return (

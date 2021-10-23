@@ -8,9 +8,11 @@ import Button from "../UI/Button";
 import Board from "../Board/Board";
 
 import styles from "./Interface.module.css";
+import { useSelector } from "react-redux";
 
 const Interface = () => {
   const context = useContext(ActionCableContext);
+  const gameState = useSelector(state => state.gameState);
 
   const startGame = () => {
     context.roomChannel.send({ type: "gamecontrol", command: "start-game", playerNo: context.playerNo, userId: context.userId });
@@ -18,15 +20,15 @@ const Interface = () => {
 
   return (
     <div className={styles.interface}>
-      {context.gameState.showTelop && <GameTelop />}
-      {context.gameState.showBoard && <Board />}
-      {context.gameState.showHand && <PlayerHand />}
+      {gameState.showTelop && <GameTelop />}
+      {gameState.showBoard && <Board />}
+      {gameState.showHand && <PlayerHand />}
 
       {["pickup_or_pass", "call_trump", "loner_check"].includes(
-        context.gameState.status
+        gameState.status
       ) && <ButtonInterface />}
 
-      {context.gameState.showStartButton && (
+      {gameState.showStartButton && (
         <Card className="gamestart">
           <Button className="gamestart" onClick={startGame}>
             Start Game

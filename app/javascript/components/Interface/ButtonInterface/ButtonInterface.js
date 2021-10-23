@@ -1,38 +1,39 @@
-import React, { useContext, useEffect, useState } from "react";
-import ActionCableContext from "../../Helpers/ActionCableContext";
+import React, { useEffect, useState } from "react";
 
 import CallSuit from "./CallSuit";
 import LonerYesNo from "./LonerYesNo";
 import PickupPass from "./PickupPass";
 import Card from "../../UI/Card";
+import { useSelector } from "react-redux";
 
 const ButtonInterface = () => {
-  const context = useContext(ActionCableContext);
+  const status = useSelector(state => state.gameState.status);
+  const gameState = useSelector(state => state.gameState);
   const [highlightButtons, setHighlightButtons] = useState(false);
 
   useEffect(() => {
-    if (context.gameState.currentPlayer === context.playerNo) {
+    if (gameState.currentPlayer === gameState.playerNo) {
       setHighlightButtons(true);
     } else {
       setHighlightButtons(false);
     }
-  }, [context.gameState.currentPlayer]);
+  }, [gameState.currentPlayer]);
 
-  if (context.gameState.status === "pickup_or_pass") {
+  if (status === "pickup_or_pass") {
     return (
       <Card className={highlightButtons && "highlight"}>
         <PickupPass />
       </Card>
     );
   }
-  if (context.gameState.status === "call_trump") {
+  if (status === "call_trump") {
     return (
       <Card className={highlightButtons && "highlight"}>
         <CallSuit />
       </Card>
     );
   }
-  if (context.gameState.status === "loner_check") {
+  if (status === "loner_check") {
     return (
       <Card className={highlightButtons && "highlight"}>
         <LonerYesNo />
