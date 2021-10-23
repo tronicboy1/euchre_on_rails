@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import initialGameState from "./initial-game-state";
 
 const hideCard = (card, cardNo, playerNo) => {
-  if ((card.cardNo === cardNo && card.playerNo === playerNo)) {
+  if (card.cardNo === cardNo && card.playerNo === playerNo) {
     card.show = false;
     return card;
   }
@@ -30,6 +30,13 @@ const gameStateSlice = createSlice({
         state.showStartButton = false;
         state.showHand = true;
       }
+      if (status === "throw_away_card") {
+        state.showKitty = false;
+        state.showTelop = true;
+        state.showBoard = true;
+        state.showStartButton = false;
+        state.showHand = true;
+      }
       if (status === "turn") {
         state.showKitty = false;
         state.showTelop = true;
@@ -45,16 +52,7 @@ const gameStateSlice = createSlice({
     receivePlayerCard(state, action) {
       if (action.payload.playerNo === state.playerNo) {
         //reset cards array if cards are longer than 6, ie a new hand was dealt
-        if (state.playerCards.length >= 5) {
-          state.playerCards = [
-            {
-              b64Img: action.payload.img,
-              cardNo: action.payload.cardNo,
-              playerNo: action.payload.playerNo,
-              show: true,
-            },
-          ];
-        } else {
+        if (state.playerCards.length < 5) {
           state.playerCards.push({
             b64Img: action.payload.img,
             cardNo: action.payload.cardNo,
@@ -92,12 +90,17 @@ const gameStateSlice = createSlice({
         hideCard(card, action.payload.cardNo, action.payload.playerNo)
       );
     },
-    dealer(state, action) {},
-    clearBoard(state, action) {},
-    clearHand(state, action) {
-      console.log("hand clear");
+    clearBoard(state) {
+      state.playedCards = {};
     },
-    newHand(state, action) {},
+    clearHand(state) {
+      state.playerCards = [];
+    },
+    newHand(state) {
+      state.playerCards = [];
+      state.kitty = {};
+      state.playedCards = {};
+    },
     setPlayerNo(state, action) {
       state.playerNo = action.payload;
     },

@@ -31,6 +31,12 @@ const gameUpdateSlice = createSlice({
           state.team1Score = action.payload.team1Score;
           state.team2Score = action.payload.team2Score;
       },
+      clearHand(state) {
+          state.trump = "";
+          state.team1Tricks = 0;
+          state.team2Tricks = 0;
+          state.orderedPlayer = "";
+      }
   }
 });
 

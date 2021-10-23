@@ -1,14 +1,12 @@
-import React, { useContext } from "react";
-
+import React from "react";
 import Card from "../../UI/Card";
-
 import styles from "./Kitty.module.css";
-import ActionCableContext from "../../Helpers/ActionCableContext";
+import { useSelector } from "react-redux";
 
 const Kitty = () => {
-  const context = useContext(ActionCableContext);
+  const kitty = useSelector(state => state.gameState.kitty);
 
-  const imgData = "data:image/png;base64," + context.gameState.kitty.b64Img;
+  const imgData = "data:image/png;base64," + kitty.b64Img;
   return (
     <Card className="kitty">
       <div className={styles.kitty}>
