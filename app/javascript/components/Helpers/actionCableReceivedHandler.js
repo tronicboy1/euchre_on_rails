@@ -1,15 +1,6 @@
 const actionCableReceivedHandler = (data, setMessages, setGameState) => {
   if (data.message) {
-    setMessages((prevState) => {
-      return [
-        {
-          id: prevState[0].id + 1,
-          content: data.message,
-          username: data.username,
-        },
-        ...prevState,
-      ];
-    });
+    setMessages(data);
   }
   if (data.status) {
     setGameState({ type: "STATUS_CHANGE", status: data.status });

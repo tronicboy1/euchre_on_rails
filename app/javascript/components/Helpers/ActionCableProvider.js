@@ -4,11 +4,14 @@ import ActionCableContext from "./ActionCableContext";
 import consumer from "../../channels/consumer";
 import actionCableReceivedHandler from "./actionCableReceivedHandler";
 import gameReducer from "./gameReducer";
+import { useDispatch } from "react-redux";
+import { chatActions } from "../../store/store";
 
 const ActionCableProvider = (props) => {
-  const [messages, setMessages] = useState([
-    { id: 0, content: "Welcome to Euchre on Rails!" },
-  ]);
+
+  console.log("context re rendered");
+
+  const dispatch = useDispatch();
   const [roomChannel, setRoomChannel] = useState(null);
   const [gameState, setGameState] = useReducer(gameReducer, {
     playerNo: props.playerNo,
@@ -33,6 +36,9 @@ const ActionCableProvider = (props) => {
     showStartButton: true,
     currentPlayer: ""
   });
+  const setChat = (message) => {
+    dispatch(chatActions.addMessage(message));
+  };
   //setup activecable connection
   useEffect(() => {
     const roomChannel = consumer.subscriptions.create(
@@ -48,7 +54,7 @@ const ActionCableProvider = (props) => {
           // Called when the subscription has been terminated by the server
         },
         received(data) {
-          actionCableReceivedHandler(data, setMessages, setGameState);
+          actionCableReceivedHandler(data, setChat, setGameState);
         },
       }
     );
@@ -62,7 +68,6 @@ const ActionCableProvider = (props) => {
     username: props.username,
     playerNames: props.playerNames,
     roomChannel: roomChannel,
-    messages: messages,
     gameState: gameState,
     setGameState: setGameState,
   };

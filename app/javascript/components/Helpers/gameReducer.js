@@ -16,7 +16,7 @@ const gameReducer = (prev, action, playerNo) => {
         showTelop: true,
         showBoard: true,
         showStartButton: false,
-        showHand: true
+        showHand: true,
       };
     }
     if (action.status === "call_trump") {
@@ -27,7 +27,7 @@ const gameReducer = (prev, action, playerNo) => {
         showTelop: true,
         showBoard: true,
         showStartButton: false,
-        showHand: true
+        showHand: true,
       };
     }
     if (action.status === "turn") {
@@ -170,8 +170,10 @@ const gameReducer = (prev, action, playerNo) => {
   if (action.type === "CLEAR_BOARD") {
     return { ...prev, playedCards: {} };
   }
-  if (action.type === "CLEAR_HAND" && action.playerNo === prev.playerNo) {
-    return { ...prev, playerCards: [] };
+  if (action.type === "CLEAR_HAND") {
+    if (action.playerNo === prev.playerNo) {
+      return { ...prev, playerCards: [] };
+    }
   }
   if (action.type === "NEW_HAND") {
     return {
