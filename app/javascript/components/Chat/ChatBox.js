@@ -12,6 +12,7 @@ import ActionCableContext from "../Helpers/ActionCableContext";
 const ChatBox = (props) => {
   const chat = useSelector((state) => state.chat);
   const context = useContext(ActionCableContext);
+  const showStartButton = useSelector(state => state.gameState.showStartButton);
 
   //state management
   const [toggleText, setToggleText] = useState("Toggle Chat");
@@ -42,7 +43,7 @@ const ChatBox = (props) => {
   };
 
   return (
-    <Card style={{ marginTop: "100vh" }} className2={toggleText !== "Toggle Chat" && "highlight"} className="chat-box">
+    <Card style={{ marginTop: !showStartButton ? "101vh" : "1rem" }} className2={toggleText !== "Toggle Chat" && "highlight"} className="chat-box">
       <div className={styles["chat-box"]}>
         <Button
           onClick={onToggleChat}

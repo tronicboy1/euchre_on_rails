@@ -13,11 +13,9 @@
 @media screen and (max-width: 400px) {
     .gametelop {
         padding: 0.15rem;
-        width: 95%;
     }
     .gameupdate {
         padding: 0.15rem;
-        height: 45px;
         font-size: medium;
     }
 }
