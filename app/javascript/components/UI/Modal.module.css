@@ -1,0 +1,22 @@
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    display: inline-flex;
+}
+
+.contents {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    margin: auto;
+    padding: 1rem;
+    background: white;
+    border: 1px white solid;
+    border-radius: 10px;
+    color: black;
+    box-shadow: 0px 0px 10px 10px rgba(0, 0, 0, 0.199);
+}

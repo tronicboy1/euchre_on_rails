@@ -9,7 +9,7 @@ import InputBar from "./InputBar";
 import ChatText from "./ChatText";
 import ActionCableContext from "../Helpers/ActionCableContext";
 
-const ChatBox = () => {
+const ChatBox = (props) => {
   const chat = useSelector((state) => state.chat);
   const context = useContext(ActionCableContext);
 
@@ -37,14 +37,16 @@ const ChatBox = () => {
       return !prevState;
     });
   };
+  const toggleSettings = () => {
+    props.setShowSettings(prev => !prev);
+  };
 
   return (
-    <Card className2={toggleText !== "Toggle Chat" && "highlight"} className="chat-box">
+    <Card style={{ marginTop: "100vh" }} className2={toggleText !== "Toggle Chat" && "highlight"} className="chat-box">
       <div className={styles["chat-box"]}>
         <Button
           onClick={onToggleChat}
           className={toggleChat ? "chat-toggle" : "chat-toggle__hidden"}
-          style={{ background: toggleText != "Toggle Chat" ? "blue" : "red" }}
         >
           {toggleText}
         </Button>
@@ -54,6 +56,7 @@ const ChatBox = () => {
             <InputBar />
           </>
         )}
+        <Button style={{ height: "50px", marginTop: "0.5rem" }} onClick={toggleSettings}>Options</Button>
       </div>
     </Card>
   );
