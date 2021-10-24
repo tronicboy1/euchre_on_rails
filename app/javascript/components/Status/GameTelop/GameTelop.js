@@ -22,7 +22,7 @@ const GameTelop = () => {
     <Card className="gametelop">
       <div className={styles.gametelop}>
         <Card className="inner">
-          <h3 className={styles.gameupdate}>{gameUpdate.gameTelop}</h3>
+          <div className={styles.gameupdate}>{gameUpdate.gameTelop}</div>
         </Card>
         <GameStatus
           dealer={gameUpdate.dealer}
