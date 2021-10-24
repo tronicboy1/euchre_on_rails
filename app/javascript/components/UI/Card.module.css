@@ -25,6 +25,7 @@
 }
 
 .inner {
+    flex: 1;
     margin-bottom: 0.2rem;
     background: rgb(219, 219, 219);
     border-radius: 5px;
@@ -32,6 +33,7 @@
 }
 
 .kitty {
+    margin: auto;
     width: fit-content;
     background: rgb(219, 219, 219);
     padding-left: 0.75rem;
@@ -77,6 +79,40 @@
     transform: rotate(-90deg);
 }
 
+.gametelop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 25vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.board {
+    position: absolute;
+    top: 26vh;
+    left: 0;
+    right: 0;
+    height: 47vh;
+}
+
+.hand {
+    position: absolute;
+    top: 74vh;
+    left: 0;
+    right: 0;
+    height: 14vh;
+}
+
+.buttons {
+    position: absolute;
+    top: 89vh;
+    left: 0;
+    right: 0;
+}
+
 .gamecard {
     display: flex;
     justify-content: center;
@@ -102,12 +138,6 @@
 
 .gamecard:hover {
     transform: translateY(-0.5rem);
-}
-
-.gametelop {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
 }
 
 @media screen and (min-width: 1024px) {

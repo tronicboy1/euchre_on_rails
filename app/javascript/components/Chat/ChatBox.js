@@ -42,7 +42,7 @@ const ChatBox = (props) => {
   };
 
   return (
-    <Card style={{  }} className2={toggleText !== "Toggle Chat" && "highlight"} className="chat-box">
+    <Card style={{ marginTop: "100vh" }} className2={toggleText !== "Toggle Chat" && "highlight"} className="chat-box">
       <div className={styles["chat-box"]}>
         <Button
           onClick={onToggleChat}

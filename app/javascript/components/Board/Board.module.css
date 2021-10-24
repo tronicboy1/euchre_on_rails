@@ -5,8 +5,8 @@
     align-content: center;
     padding-top: 0.75rem;
     padding-bottom: 0.75rem;
-    max-height: 359px;
-    min-height: 173px;
+    height: 100%;
+    width: 100%;
     transition: all 0.5s;
 }
 

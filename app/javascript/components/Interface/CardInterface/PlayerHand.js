@@ -52,7 +52,7 @@ const PlayerHand = () => {
   });
 
   return (
-    <Card className={highlightBackground && "highlight"}>
+    <Card className="hand" className2={highlightBackground && "highlight"}>
       <div className={styles.playerhand}>
         <PlayerCards
           cards={cards}

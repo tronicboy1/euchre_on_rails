@@ -7,8 +7,8 @@ import Card from "../../UI/Card";
 import { useSelector } from "react-redux";
 
 const ButtonInterface = () => {
-  const status = useSelector(state => state.gameState.status);
-  const gameState = useSelector(state => state.gameState);
+  const status = useSelector((state) => state.gameState.status);
+  const gameState = useSelector((state) => state.gameState);
   const [highlightButtons, setHighlightButtons] = useState(false);
 
   useEffect(() => {
@@ -19,27 +19,13 @@ const ButtonInterface = () => {
     }
   }, [gameState.currentPlayer]);
 
-  if (status === "pickup_or_pass") {
-    return (
-      <Card className={highlightButtons && "highlight"}>
-        <PickupPass />
-      </Card>
-    );
-  }
-  if (status === "call_trump") {
-    return (
-      <Card className={highlightButtons && "highlight"}>
-        <CallSuit />
-      </Card>
-    );
-  }
-  if (status === "loner_check") {
-    return (
-      <Card className={highlightButtons && "highlight"}>
-        <LonerYesNo />
-      </Card>
-    );
-  }
+  return (
+    <Card className="buttons">
+      {status === "pickup_or_pass" && <PickupPass />}
+      {status === "call_trump" && <CallSuit />}
+      {status === "loner_check" && <LonerYesNo />}
+    </Card>
+  );
 };
 
 export default ButtonInterface;
