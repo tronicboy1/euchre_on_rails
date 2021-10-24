@@ -113,6 +113,10 @@
     right: 0;
 }
 
+.chat-box {
+    transition: none;
+}
+
 .gamecard {
     display: flex;
     justify-content: center;
@@ -143,6 +147,7 @@
 @media screen and (min-width: 1024px) {
     .chat-box {
         width: 29%;
+        margin-top: 0.5rem !important;
     }
 }
 
