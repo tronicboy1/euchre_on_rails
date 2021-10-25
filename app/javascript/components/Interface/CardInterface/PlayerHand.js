@@ -3,7 +3,7 @@ import ActionCableContext from "../../Helpers/ActionCableContext";
 
 import styles from "./PlayerHand.module.css";
 
-import GameCard from "../../UI/GameCard";
+import GameCard from "./GameCard";
 import Card from "../../UI/Card";
 import { useSelector } from "react-redux";
 
