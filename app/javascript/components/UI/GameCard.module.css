@@ -1,12 +1,11 @@
 .gamecard {
     border: rgb(0, 0, 0) 1px solid;
-    outline: 3px solid rgb(219, 219, 219);
     border-radius: 8px;
     margin: auto;
     width: auto;
     height: auto;
     cursor: pointer;
-    box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.308);
+    box-shadow: 0 0 0 3px rgb(219, 219, 219), inset 0 0 3px 3px rgba(0, 0, 0, 0.452);
 }
 
 .gamecard:hover {
