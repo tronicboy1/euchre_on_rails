@@ -1,0 +1,20 @@
+.gamecard {
+    border: rgb(219, 219, 219) 2px solid;
+    border-radius: 8px;
+    margin: auto;
+    width: auto;
+    height: auto;
+    cursor: pointer;
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.377);
+}
+
+.gamecard:hover {
+    transform: translateY(-0.5rem);
+}
+
+@media screen and (max-width: 500px) {
+    .gamecard {
+        width: 15vw;
+        transform: none !important;
+    }
+}

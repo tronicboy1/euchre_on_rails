@@ -1,6 +1,6 @@
 import React from "react";
 
-import Card from "./Card";
+import styles from "./GameCard.module.css";
 
 const GameCard = (props) => {
     const cardNo = props.cardNo;
@@ -11,9 +11,9 @@ const GameCard = (props) => {
     const imgData = "data:image/png;base64," + props.b64Img;
 
     return (
-        <Card className="gamecard">
-            <img onClick={onCardClick} src={imgData} />
-        </Card>
+        //<Card className="gamecard">
+            <img className={styles.gamecard} onClick={onCardClick} src={imgData} />
+        //</Card>
     );
 };
 

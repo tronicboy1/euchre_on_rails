@@ -8,6 +8,7 @@
     margin-left: auto;
     margin-right: auto;
     transition: all 0.5s;
+    user-select: none;
 }
 
 .card.highlight {
@@ -123,6 +124,7 @@
     align-content: center;
     background: rgb(219, 219, 219);
     width: fit-content;
+    height: fit-content;
     padding: 0.25rem;
     margin-top: 0.1rem;
     margin-bottom: 0.1rem;
@@ -136,7 +138,7 @@
     border-radius: 8px;
     margin: auto;
     width: auto;
-    height: 100%;
+    height: auto;
     cursor: pointer;
 }
 
@@ -181,7 +183,7 @@
         background: rgb(116, 116, 116);
     }
     50% {
-        background: rgb(36, 112, 1);
+        background: rgb(52, 199, 89);
     }
     100% {
         background: rgb(116, 116, 116);
@@ -193,7 +195,7 @@
         background: rgb(116, 116, 116);
     }
     50% {
-        background: rgb(36, 112, 1);
+        background: rgb(52, 199, 89);
     }
     100% {
         background: rgb(116, 116, 116);

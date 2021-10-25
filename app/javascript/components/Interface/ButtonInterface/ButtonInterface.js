@@ -20,7 +20,7 @@ const ButtonInterface = () => {
   }, [gameState.currentPlayer]);
 
   return (
-    <Card className="buttons">
+    <Card className="buttons" className2={highlightButtons && "highlight"}>
       {status === "pickup_or_pass" && <PickupPass />}
       {status === "call_trump" && <CallSuit />}
       {status === "loner_check" && <LonerYesNo />}

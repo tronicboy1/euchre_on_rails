@@ -10,7 +10,7 @@ const Settings = (props) => {
     window.location.href = baseURL + "/logout";
   };
   const handleLeaveRoom = () => {
-      window.location.href = baseURL + "/game/leave";
+    window.location.href = baseURL + "/game/leave";
   };
   return (
     <Modal
