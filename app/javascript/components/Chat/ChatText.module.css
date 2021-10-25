@@ -23,8 +23,7 @@
 
 @media screen and (min-width:1024px) {
     .text {
-        height: 80%;
-        max-height: 600px;
+        height: 50vh;
         overflow-y: auto;
     }
 }

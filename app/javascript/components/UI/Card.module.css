@@ -149,7 +149,7 @@
     .chat-box {
         width: 29%;
         margin-top: 0.5rem !important;
-        height: 80vh;
+        height: fit-content;
     }
     .gametelop {
         position: relative;
