@@ -2,6 +2,7 @@
     border: rgb(0, 0, 0) 1px solid;
     border-radius: 8px;
     margin: auto;
+    overflow: hidden;
     width: auto;
     height: auto;
     cursor: pointer;
@@ -13,7 +14,7 @@
 }
 
 .blurred {
-    filter: blur(10px) grayscale(100%);
+    filter: blur(5px) grayscale(100%);
 }
 
 @media screen and (max-width: 500px) {
