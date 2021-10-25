@@ -13,8 +13,7 @@
 }
 
 .blurred {
-    filter: blur(10px);
-    filter: grayscale(100%);
+    filter: blur(10px), grayscale(100%);
 }
 
 @media screen and (max-width: 500px) {

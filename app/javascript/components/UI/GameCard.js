@@ -7,9 +7,12 @@ const GameCard = (props) => {
   const cardNo = props.cardNo;
 
   useEffect(() => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       setCardBlurred(false);
     }, 1000)
+    return () => {
+      clearTimeout(timer);
+    }
   }, [cardBlurred])
 
   const onCardClick = () => {
