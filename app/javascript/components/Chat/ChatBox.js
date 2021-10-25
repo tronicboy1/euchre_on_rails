@@ -12,7 +12,7 @@ import ActionCableContext from "../Helpers/ActionCableContext";
 const ChatBox = (props) => {
   const chat = useSelector((state) => state.chat);
   const context = useContext(ActionCableContext);
-  const showStartButton = useSelector(state => state.gameState.showStartButton);
+  const gameState = useSelector((state) => state.gameState);
 
   //state management
   const [toggleText, setToggleText] = useState("Toggle Chat");
@@ -39,11 +39,24 @@ const ChatBox = (props) => {
     });
   };
   const toggleSettings = () => {
-    props.setShowSettings(prev => !prev);
+    props.setShowSettings((prev) => !prev);
   };
 
+  const noButtons = gameState.status !== "pickup_or_pass" && gameState.status !== "call_trump" && gameState.status !== "loner_check" && !gameState.showStartButton;
+
   return (
-    <Card style={{ marginTop: !showStartButton ? "101vh" : "1rem" }} className2={toggleText !== "Toggle Chat" && "highlight"} className="chat-box">
+    <Card
+      style={{
+        marginTop:
+          noButtons
+            ? "91vh"
+            : !gameState.showStartButton
+            ? "101vh"
+            : "1rem",
+      }}
+      className2={toggleText !== "Toggle Chat" && "highlight"}
+      className="chat-box"
+    >
       <div className={styles["chat-box"]}>
         <Button
           onClick={onToggleChat}
@@ -57,7 +70,12 @@ const ChatBox = (props) => {
             <InputBar />
           </>
         )}
-        <Button style={{ height: "50px", marginTop: "0.5rem" }} onClick={toggleSettings}>Options</Button>
+        <Button
+          style={{ height: "50px", marginTop: "0.5rem" }}
+          onClick={toggleSettings}
+        >
+          Options
+        </Button>
       </div>
     </Card>
   );
