@@ -1,10 +1,19 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import styles from "./GameCard.module.css";
 
 const GameCard = (props) => {
+  const [cardBlurred, setCardBlurred] = useState(false);
   const cardNo = props.cardNo;
+
+  useEffect(() => {
+    setTimeout(() => {
+      setCardBlurred(false);
+    }, 1000)
+  }, [cardBlurred])
+
   const onCardClick = () => {
+    setCardBlurred(true);
     props.onClick(cardNo);
   };
 
@@ -12,7 +21,7 @@ const GameCard = (props) => {
 
   return (
     //<Card className="gamecard">
-    <img className={styles.gamecard} onClick={onCardClick} src={imgData} />
+    <img className={`${styles.gamecard} ${cardBlurred && styles.blurred}`} onClick={onCardClick} src={imgData} />
     //</Card>
   );
 };

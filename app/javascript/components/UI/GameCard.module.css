@@ -12,6 +12,11 @@
     transform: translateY(-0.5rem);
 }
 
+.blurred {
+    filter: blur(10px);
+    filter: grayscale(100%);
+}
+
 @media screen and (max-width: 500px) {
     .gamecard {
         width: 15vw;
