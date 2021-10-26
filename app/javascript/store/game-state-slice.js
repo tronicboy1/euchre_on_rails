@@ -60,7 +60,7 @@ const gameStateSlice = createSlice({
             show: true,
           });
         } else {
-          state.playedCards = [
+          state.playerCards = [
             {
               b64Img: action.payload.img,
               cardNo: action.payload.cardNo,
@@ -103,8 +103,10 @@ const gameStateSlice = createSlice({
       state.playedCards = {};
       state.currentPlayer = "";
     },
-    clearHand(state) {
-      state.playerCards = [];
+    clearHand(state,action) {
+      if (action.payload.playerNo === state.playerNo) {
+        state.playerCards = [];
+      }
     },
     newHand(state) {
       state.playerCards = [];
