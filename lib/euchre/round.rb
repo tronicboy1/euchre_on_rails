@@ -222,7 +222,6 @@ class Round
       #hide turnup card and show buttons for picking trump
       ActionCable.server.broadcast(@channel,{ "interfaceState" => "CALL_SUIT" })
       sleep(0.1)
-      @turnup = nil
     end
 
     if @pass_count <= 8
@@ -260,7 +259,10 @@ class Round
   end
 
   def call_trump_input(input)
-    if input["command"] == false
+    if input["command"] == @turnup.suit
+      ActionCable.server.broadcast(@channel, {"type" => "GAME_TELOP",
+        "gameupdate" => "You cannot call kitty suit as trump!"})
+    elsif input["command"] == false
       next_player()
       call_trump()
 
@@ -459,6 +461,7 @@ class Round
       @cards_played = []
       @current_player = winner
       @first_card_suit = nil
+      @turnup = nil
       @turn = winner.player_no - 1
       turn()
     else
