@@ -32,38 +32,44 @@ const Board = () => {
   }
   if (context.playerNo === "p2") {
     return (
-      <Player2Board
-        showKitty={showKitty}
-        p1Card={p1Card}
-        p2Card={p2Card}
-        p3Card={p3Card}
-        p4Card={p4Card}
-        playerNames={context.playerNames}
-      />
+      <Card className="board">
+        <Player2Board
+          showKitty={showKitty}
+          p1Card={p1Card}
+          p2Card={p2Card}
+          p3Card={p3Card}
+          p4Card={p4Card}
+          playerNames={context.playerNames}
+        />
+      </Card>
     );
   }
   if (context.playerNo === "p3") {
     return (
-      <Player3Board
-        showKitty={showKitty}
-        p1Card={p1Card}
-        p2Card={p2Card}
-        p3Card={p3Card}
-        p4Card={p4Card}
-        playerNames={context.playerNames}
-      />
+      <Card className="board">
+        <Player3Board
+          showKitty={showKitty}
+          p1Card={p1Card}
+          p2Card={p2Card}
+          p3Card={p3Card}
+          p4Card={p4Card}
+          playerNames={context.playerNames}
+        />
+      </Card>
     );
   }
   if (context.playerNo === "p4") {
     return (
-      <Player4Board
-        showKitty={showKitty}
-        p1Card={p1Card}
-        p2Card={p2Card}
-        p3Card={p3Card}
-        p4Card={p4Card}
-        playerNames={context.playerNames}
-      />
+      <Card className="board">
+        <Player4Board
+          showKitty={showKitty}
+          p1Card={p1Card}
+          p2Card={p2Card}
+          p3Card={p3Card}
+          p4Card={p4Card}
+          playerNames={context.playerNames}
+        />
+      </Card>
     );
   }
 };
