@@ -59,6 +59,15 @@ const gameStateSlice = createSlice({
             playerNo: action.payload.playerNo,
             show: true,
           });
+        } else {
+          state.playedCards = [
+            {
+              b64Img: action.payload.img,
+              cardNo: action.payload.cardNo,
+              playerNo: action.payload.playerNo,
+              show: true,
+            },
+          ];
         }
       }
     },
