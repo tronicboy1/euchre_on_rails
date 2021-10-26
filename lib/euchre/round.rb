@@ -222,6 +222,9 @@ class Round
       #hide turnup card and show buttons for picking trump
       ActionCable.server.broadcast(@channel,{ "interfaceState" => "CALL_SUIT" })
       sleep(0.1)
+      #must set turnup to nil because it is referenced in set trump
+      @turnup_suit = @turnup.suit
+      @turnup = nil
     end
 
     if @pass_count <= 8
@@ -259,13 +262,13 @@ class Round
   end
 
   def call_trump_input(input)
-    if input["command"] == @turnup.suit
+    #check if player is trying to set trump to the suit of turned down kitty
+    if input["command"] == @turnup_suit
       ActionCable.server.broadcast(@channel, {"type" => "GAME_TELOP",
         "gameupdate" => "You cannot call kitty suit as trump!"})
     elsif input["command"] == false
       next_player()
       call_trump()
-
     else
       @status = "loner_check"
       ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP", "gameupdate" => "#{@current_player.username.capitalize}, go alone?", "interfaceState" => "LONER_YESNO", "status" => @status })
