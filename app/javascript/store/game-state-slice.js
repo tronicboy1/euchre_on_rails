@@ -31,7 +31,7 @@ const gameStateSlice = createSlice({
         state.showHand = true;
       }
       if (status === "throw_away_card") {
-        state.showKitty = false;
+        state.showKitty = true;
         state.showTelop = true;
         state.showBoard = true;
         state.showStartButton = false;
