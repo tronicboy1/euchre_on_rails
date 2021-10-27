@@ -2,9 +2,8 @@ import React, { useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { authActions } from "../../store/auth-slice";
 
-import styles from "./Login.module.css";
+import styles from "./Authentication.module.css";
 
-import Card from "../../components/UI/Card";
 import Input from "../../components/UI/Input";
 import Button from "../../components/UI/Button";
 import { gameStateActions } from "../../store/store";
@@ -20,7 +19,7 @@ const Login = (props) => {
   const [invalidCred, setInvalidCred] = useState(false);
 
   const changeMode = () => {
-    props.setMode('REGISTER');
+    props.setMode("REGISTER");
   };
 
   const handleSubmit = (e) => {
@@ -63,7 +62,7 @@ const Login = (props) => {
   };
 
   return (
-    <Card className="form">
+    <>
       <form className={styles.form} onSubmit={handleSubmit}>
         {invalidCred && <p>Login information is invalid.</p>}
         <Input
@@ -86,7 +85,7 @@ const Login = (props) => {
         <p>Not registered?</p>
         <Button onClick={changeMode}>Register</Button>
       </div>
-    </Card>
+    </>
   );
 };
 

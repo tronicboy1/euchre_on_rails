@@ -1,15 +1,105 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 
-import styles from "./Register.module.css";
+import styles from "./Authentication.module.css";
 
-import Card from "../../components/UI/Card";
+import Input from "../../components/UI/Input";
+import Button from "../../components/UI/Button";
+import { useSelector, useDispatch } from "react-redux";
+import { authActions } from "../../store/auth-slice";
 
 const Register = (props) => {
-  const changeMode = () => {
-    props.setMode('LOGIN');
+  const csrfToken = useSelector((state) => state.auth.csrfToken);
+  const dispatch = useDispatch();
+  const username = useRef("");
+  const password = useRef("");
+  const passwordCheck = useRef("");
+  const [formValid, setFormValid] = useState({
+    passwordIsValid: true,
+    usernameIsValid: true,
+  });
+  const [submitError, setSubmitError] = useState(false);
+
+  const validator = (value) => {
+    if (value) {
+      return value.trim().length > 0;
+    }
+    return false;
   };
 
-  return <Card></Card>;
+  const changeMode = () => {
+    props.setMode("LOGIN");
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const passwordIsValid =
+      validator(password.current.value) &&
+      passwordCheck.current.value === password.current.value;
+    const usernameIsValid = validator(username.current.value);
+
+    const isValid = usernameIsValid && passwordIsValid;
+    if (isValid) {
+      fetch("/register/json", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: { "X-CSRF-Token": csrfToken },
+        body: JSON.stringify({
+          username: username.current.value,
+          password: password.current.value,
+        }),
+      })
+        .then((result) => result.json())
+        .then((data) => {
+          if (data.auth) {
+            dispatch(authActions.setAuth(data));
+            dispatch(authActions.setUsers(data.users));
+          } else {
+            setSubmitError(true);
+          }
+        })
+        .catch((e) => console.log(e));
+    } else {
+      setFormValid({ passwordIsValid, usernameIsValid });
+    }
+  };
+
+  return (
+    <>
+      <form className={styles.form} onSubmit={handleSubmit}>
+        {submitError && (
+          <p>
+            Something went wrong! Are you sure you are not already registered?
+          </p>
+        )}
+        <Input
+          className={!formValid.usernameIsValid && "invalid"}
+          ref={username}
+          type="username"
+          name="username"
+          label="Username"
+        />
+        <Input
+          className={!formValid.passwordIsValid && "invalid"}
+          ref={password}
+          type="password"
+          name="password"
+          label="Password"
+        />
+        <Input
+          className={!formValid.passwordIsValid && "invalid"}
+          ref={passwordCheck}
+          type="password"
+          name="passwordCheck"
+          label="Confirm password"
+        />
+        <Button type="submit">Register</Button>
+      </form>
+      <div className={styles.register}>
+        <p>Already registered?</p>
+        <Button onClick={changeMode}>Login</Button>
+      </div>
+    </>
+  );
 };
 
 export default Register;

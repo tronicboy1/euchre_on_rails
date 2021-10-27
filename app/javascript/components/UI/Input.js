@@ -21,6 +21,7 @@ const Input = (props, ref) => {
           value={props.value}
           onChange={props.onChange}
           onKeyPress={props.onKeyPress}
+          onBlur={props.onBlur}
         />
       </div>
     );

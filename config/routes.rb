@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   post "login", to: "sessions#create"
   get "logout", to: "sessions#destroy"
   post "login/json", to: "sessions#createJson"
+  post "register/json", to: "users#createJson"
 
   mount ActionCable.server, at: "/cable"
 end
