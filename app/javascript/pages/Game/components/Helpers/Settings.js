@@ -1,6 +1,6 @@
 import React from "react";
-import Modal from "../UI/Modal";
-import Button from "../UI/Button";
+import Modal from "../../../../components/UI/Modal";
+import Button from "../../../../components/UI/Button";
 
 const Settings = (props) => {
   const baseURL = `${window.location.protocol}//${

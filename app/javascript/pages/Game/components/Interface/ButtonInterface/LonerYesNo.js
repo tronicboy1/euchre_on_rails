@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import ActionCableContext from "../../Helpers/ActionCableContext";
-import Button from "../../UI/Button";
+import Button from "../../../../../components/UI/Button";
 
 import styles from "./LonerYesNo.module.css";
 

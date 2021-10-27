@@ -1,7 +1,7 @@
 import React from "react";
 import Kitty from "../Interface/Kitty/Kitty";
-import Card from "../UI/Card";
-import Image from "../UI/Image";
+import Card from "../../../../components/UI/Card";
+import Image from "../../../../components/UI/Image";
 
 import styles from "./Board.module.css";
 

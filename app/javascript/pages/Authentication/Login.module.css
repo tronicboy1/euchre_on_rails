@@ -1,0 +1,25 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.form input {
+    margin-bottom: 1rem;
+    border: 1px solid grey;
+    border-radius: 8px;
+    width: 100%;
+    height: 40px;
+}
+
+.form label {
+    color: white;
+}
+
+.form p {
+    color: white;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 1rem;
+    text-align: center;
+}

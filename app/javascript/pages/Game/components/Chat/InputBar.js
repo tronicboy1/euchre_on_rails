@@ -4,8 +4,8 @@ import styles from "./InputBar.module.css";
 
 import ActionCableContext from "../Helpers/ActionCableContext";
 
-import Button from "../UI/Button";
-import Input from "../UI/Input";
+import Button from "../../../../components/UI/Button";
+import Input from "../../../../components/UI/Input";
 
 const InputBar = () => {
   const context = useContext(ActionCableContext);

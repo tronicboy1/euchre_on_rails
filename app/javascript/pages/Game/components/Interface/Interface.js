@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import ActionCableContext from "../Helpers/ActionCableContext";
 import GameTelop from "../Status/GameTelop/GameTelop";
-import Card from "../UI/Card";
+import Card from "../../../../components/UI/Card";
 import ButtonInterface from "./ButtonInterface/ButtonInterface";
 import PlayerHand from "./CardInterface/PlayerHand";
-import Button from "../UI/Button";
+import Button from "../../../../components/UI/Button";
 import Board from "../Board/Board";
 
 import styles from "./Interface.module.css";

@@ -1,6 +1,7 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 import gameStateSlice from "./game-state-slice";
 import gameUpdateSlice from "./game-update-slice";
+import authSlice from "./auth-slice";
 
 const chatSlice = createSlice({
   name: "chat",
@@ -21,7 +22,8 @@ const store = configureStore({
   reducer: {
     gameState: gameStateSlice.reducer,
     chat: chatSlice.reducer,
-    gameUpdate: gameUpdateSlice.reducer
+    gameUpdate: gameUpdateSlice.reducer,
+    auth: authSlice
   },
 });
 

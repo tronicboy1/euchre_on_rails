@@ -3,7 +3,7 @@ import ActionCableContext from "../../Helpers/ActionCableContext";
 
 import styles from "./PickupPass.module.css";
 
-import Button from "../../UI/Button";
+import Button from "../../../../../components/UI/Button";
 
 const PickupPass = (props) => {
   const context = useContext(ActionCableContext);

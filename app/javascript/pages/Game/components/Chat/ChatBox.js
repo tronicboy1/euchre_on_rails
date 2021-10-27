@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useSelector } from "react-redux";
 
-import Card from "../UI/Card";
-import Button from "../UI/Button";
+import Card from "../../../../components/UI/Card";
+import Button from "../../../../components/UI/Button";
 
 import styles from "./ChatBox.module.css";
 import InputBar from "./InputBar";

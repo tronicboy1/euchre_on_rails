@@ -4,7 +4,7 @@ import ActionCableContext from "../../Helpers/ActionCableContext";
 import styles from "./PlayerHand.module.css";
 
 import GameCard from "./GameCard";
-import Card from "../../UI/Card";
+import Card from "../../../../../components/UI/Card";
 import { useSelector } from "react-redux";
 
 const PlayerCards = React.memo(({ cards, onCardClick, status }) => {

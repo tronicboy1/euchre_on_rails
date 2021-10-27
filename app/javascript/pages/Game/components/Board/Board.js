@@ -5,7 +5,7 @@ import Player1Board from "./Player1Board";
 import Player2Board from "./Player2Board";
 import Player3Board from "./Player3Board";
 import Player4Board from "./Player4Board";
-import Card from "../UI/Card";
+import Card from "../../../../components/UI/Card";
 
 const Board = () => {
   const context = useContext(ActionCableContext);

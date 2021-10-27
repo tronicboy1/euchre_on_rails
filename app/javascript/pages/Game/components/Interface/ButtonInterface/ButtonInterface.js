@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import CallSuit from "./CallSuit";
 import LonerYesNo from "./LonerYesNo";
 import PickupPass from "./PickupPass";
-import Card from "../../UI/Card";
+import Card from "../../../../../components/UI/Card";
 import { useSelector } from "react-redux";
 
 const ButtonInterface = () => {

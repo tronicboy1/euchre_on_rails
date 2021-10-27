@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { useSelector } from "react-redux";
 import ActionCableContext from "../../Helpers/ActionCableContext";
-import Card from "../../UI/Card";
+import Card from "../../../../../components/UI/Card";
 import GameStatus from "./GameStatus";
 
 import styles from "./GameTelop.module.css";
