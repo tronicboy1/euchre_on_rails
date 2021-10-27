@@ -8,6 +8,7 @@ import Select from "../../components/UI/Select";
 import Button from "../../components/UI/Button";
 import { getGameUpdates, sendCreateRoomRequest } from "../../store/auth-actions";
 import GameUpdates from "./GameUpdates";
+import Settings from "../Game/components/Helpers/Settings";
 
 const CreateRoom = () => {
   const dispatch = useDispatch();
@@ -20,6 +21,7 @@ const CreateRoom = () => {
 
   //state
   const [formError, setFormError] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   //refs
   const p2Ref = useRef("");
@@ -49,8 +51,13 @@ const CreateRoom = () => {
     }
   };
 
+  const toggleSettings = () => {
+    setShowSettings(prev => !prev);
+  };
+
   return (
     <>
+    {showSettings && <Settings setShowSettings={setShowSettings} />}
       <Card className="form">
         <Card className="form-inner">
           <h1>Welcome back, {username}</h1>
@@ -85,6 +92,9 @@ const CreateRoom = () => {
             <Button type="submit">Create Room</Button>
           </form>
         </Card>
+      </Card>
+      <Card className="form">
+          <Button style={{ width: "100%" }} onClick={toggleSettings}>Options</Button>
       </Card>
     </>
   );

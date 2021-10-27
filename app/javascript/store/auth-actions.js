@@ -69,23 +69,21 @@ const destroyRoom = (token, roomId) => {
   })
     .then((response) => response.json())
     .then((data) => {
-      return data;
+      console.log(data);
     })
     .catch((e) => console.log(e));
 };
 
 export const leaveRoom = (token, roomId) => {
   return (dispatch) => {
-    const result = destroyRoom(token,roomId);
-    console.log(result);
+    destroyRoom(token,roomId);
     dispatch(authActions.leaveRoom())
   };
 };
 
 export const logoutUser = (token, roomId) => {
   return (dispatch) => {
-    const result = destroyRoom(token,roomId);
-    console.log(result);
+    destroyRoom(token,roomId);
     dispatch(authActions.logout());
   };
 };

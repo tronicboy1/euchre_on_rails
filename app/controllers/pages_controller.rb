@@ -11,8 +11,8 @@ class PagesController < ApplicationController
 
   def destroyJson
     json_request = ActionController::Parameters.new(JSON.parse(request.body.read))
-    json_request.permit(:room_id)
-    room_id = json_request[:room_id]
+    json_request.permit(:roomId)
+    room_id = json_request[:roomId]
     destroy_room(room_id)
     render json: { status: "room deleted" }
   end
