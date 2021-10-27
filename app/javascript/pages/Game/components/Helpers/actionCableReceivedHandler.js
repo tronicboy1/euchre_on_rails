@@ -2,7 +2,7 @@ import {
   gameStateActions,
   chatActions,
   gameUpdateActions,
-} from "../../store/store";
+} from "../../../../store/store";
 
 const actionCableReceivedHandler = (data, dispatch) => {
   if (data.message) {

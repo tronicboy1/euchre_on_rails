@@ -7,7 +7,7 @@ import ActionCableContext from "../Helpers/ActionCableContext";
 import Button from "../UI/Button";
 import Input from "../UI/Input";
 
-const InputBar = (props) => {
+const InputBar = () => {
   const context = useContext(ActionCableContext);
   const [input, setInput] = useState("");
 

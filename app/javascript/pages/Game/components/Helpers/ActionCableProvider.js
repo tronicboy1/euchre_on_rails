@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 
 import ActionCableContext from "./ActionCableContext";
-import consumer from "../../channels/consumer";
+import consumer from "../../../../channels/consumer";
 import actionCableReceivedHandler from "./actionCableReceivedHandler";
 import { useDispatch } from "react-redux";
-import { gameStateActions } from "../../store/store";
+import { gameStateActions } from "../../../../store/store";
 
 const ActionCableProvider = (props) => {
   const dispatch = useDispatch();
