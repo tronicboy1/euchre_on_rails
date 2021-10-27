@@ -57,8 +57,8 @@ module ApplicationHelper
     return !@current_user.nil?
   end
 
-  def destroy_room
-    room = Room.find(current_user.room_id)
+  def destroy_room(room_id)
+    room = Room.find(room_id)
     associated_users = [room.player1_id, room.player2_id, room.player3_id, room.player4_id]
     associated_users.each do |id|
       if id != 0
@@ -68,7 +68,6 @@ module ApplicationHelper
       end
     end
     #remove room from global dict memory
-    room_id = room.id
     $game_dict.delete(:room_id)
     room.destroy
   end

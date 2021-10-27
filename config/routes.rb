@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   get "login", to: "sessions#new"
   post "login", to: "sessions#create"
   get "logout", to: "sessions#destroy"
+  post "game/leave/json", to: "pages#destroyJson"
   post "login/json", to: "sessions#createJson"
   post "register/json", to: "users#createJson"
   post "game/new/json", to: "game#createJson"

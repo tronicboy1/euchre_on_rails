@@ -38,6 +38,10 @@ const authSlice = createSlice({
     setGameUpdates(state, action) {
       state.gameUpdates = action.payload;
     },
+    leaveRoom(state) {
+      state.roomId = null;
+      state.playerNames = [];
+    },
     logout(state) {
       state = initialState;
     }

@@ -60,10 +60,32 @@ export const getGameUpdates = (address) => {
   };
 };
 
-export const leaveRoom = (address, token, roomId) => {
-  return (dispatch) => {};
+const destroyRoom = (token, roomId) => {
+  fetch("game/leave/json", {
+    method: "POST",
+    credentials: "same-origin",
+    headers: { "X-CSRF-Token": token },
+    body: JSON.stringify({ roomId }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      return data;
+    })
+    .catch((e) => console.log(e));
 };
 
-export const logout = (address, token, roomId) => {
-  return (dispatch) => {};
+export const leaveRoom = (token, roomId) => {
+  return (dispatch) => {
+    const result = destroyRoom(token,roomId);
+    console.log(result);
+    dispatch(authActions.leaveRoom())
+  };
+};
+
+export const logoutUser = (token, roomId) => {
+  return (dispatch) => {
+    const result = destroyRoom(token,roomId);
+    console.log(result);
+    dispatch(authActions.logout());
+  };
 };

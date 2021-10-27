@@ -1,16 +1,19 @@
 import React from "react";
 import Modal from "../../../../components/UI/Modal";
 import Button from "../../../../components/UI/Button";
+import { useDispatch, useSelector } from "react-redux";
+import { leaveRoom, logoutUser } from "../../../../store/auth-actions";
 
 const Settings = (props) => {
-  const baseURL = `${window.location.protocol}//${
-    window.location.href.split("/")[2]
-  }`;
+  const dispatch = useDispatch();
+  const token = useSelector(state => state.auth.csrfToken);
+  const roomId = useSelector(state => state.auth.roomId);
+  console.log(token, roomId);
   const handleLogout = () => {
-    window.location.href = baseURL + "/logout";
+    dispatch(logoutUser(token, roomId));
   };
   const handleLeaveRoom = () => {
-    window.location.href = baseURL + "/game/leave";
+    dispatch(leaveRoom(token, roomId));
   };
   return (
     <Modal
