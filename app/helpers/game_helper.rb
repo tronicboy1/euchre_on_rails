@@ -61,8 +61,6 @@ module GameHelper
     @users = User.all
     #do not collect users currently in a room
     @users = @users.collect { |user| [user.username, user.id] if user.room_id.nil? }
-    #remove user from list to avoid bugs
-    @users.delete([current_user.username, current_user.id])
     #remove blank arrays from list
     @users.delete_if { |x| x.nil? }
     @users.unshift(["Computer", "computer"])

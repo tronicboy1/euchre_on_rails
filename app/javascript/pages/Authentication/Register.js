@@ -6,9 +6,11 @@ import Input from "../../components/UI/Input";
 import Button from "../../components/UI/Button";
 import { useSelector, useDispatch } from "react-redux";
 import { authActions } from "../../store/auth-slice";
+import { sendAuthRequest } from "../../store/auth-actions";
 
 const Register = (props) => {
   const csrfToken = useSelector((state) => state.auth.csrfToken);
+  const authErrors = useSelector((state) => state.auth.authErrors);
   const dispatch = useDispatch();
   const username = useRef("");
   const password = useRef("");
@@ -17,7 +19,6 @@ const Register = (props) => {
     passwordIsValid: true,
     usernameIsValid: true,
   });
-  const [submitError, setSubmitError] = useState(false);
 
   const validator = (value) => {
     if (value) {
@@ -39,25 +40,14 @@ const Register = (props) => {
 
     const isValid = usernameIsValid && passwordIsValid;
     if (isValid) {
-      fetch("/register/json", {
-        method: "POST",
-        credentials: "same-origin",
-        headers: { "X-CSRF-Token": csrfToken },
-        body: JSON.stringify({
-          username: username.current.value,
-          password: password.current.value,
-        }),
-      })
-        .then((result) => result.json())
-        .then((data) => {
-          if (data.auth) {
-            dispatch(authActions.setAuth(data));
-            dispatch(authActions.setUsers(data.users));
-          } else {
-            setSubmitError(true);
-          }
-        })
-        .catch((e) => console.log(e));
+      dispatch(
+        sendAuthRequest(
+          "/register/json",
+          username.current.value,
+          password.current.value,
+          csrfToken
+        )
+      );
     } else {
       setFormValid({ passwordIsValid, usernameIsValid });
     }
@@ -66,7 +56,7 @@ const Register = (props) => {
   return (
     <>
       <form className={styles.form} onSubmit={handleSubmit}>
-        {submitError && (
+        {authErrors && (
           <p>
             Something went wrong! Are you sure you are not already registered?
           </p>

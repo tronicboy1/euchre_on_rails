@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   isAuth: false,
+  authErrors: null,
   csrfToken: null,
   userId: null,
   roomId: null,
@@ -28,6 +29,9 @@ const authSlice = createSlice({
     },
     setUsers(state, action) {
       state.users = action.payload;
+    },
+    setAuthErrors(state, action) {
+      state.authErrors = action.payload;
     }
   },
 });

@@ -1,22 +1,22 @@
 import React, { useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { authActions } from "../../store/auth-slice";
 
 import styles from "./Authentication.module.css";
 
 import Input from "../../components/UI/Input";
 import Button from "../../components/UI/Button";
-import { gameStateActions } from "../../store/store";
+import { sendAuthRequest } from "../../store/auth-actions";
 
 const Login = (props) => {
   const dispatch = useDispatch();
   const csrfToken = useSelector((state) => state.auth.csrfToken);
+  const authErrors = useSelector(state => state.auth.authErrors);
   const usernameRef = useRef("");
   const passwordRef = useRef("");
 
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
-  const [invalidCred, setInvalidCred] = useState(false);
+  
 
   const changeMode = () => {
     props.setMode("REGISTER");
@@ -27,30 +27,7 @@ const Login = (props) => {
     const username = usernameRef.current.value;
     const password = passwordRef.current.value;
     if (username && password) {
-      fetch("/login/json", {
-        method: "POST",
-        credentials: "same-origin",
-        headers: { "X-CSRF-Token": csrfToken },
-        body: JSON.stringify({
-          username: usernameRef.current.value,
-          password: passwordRef.current.value,
-        }),
-      })
-        .then((result) => result.json())
-        .then((data) => {
-          if (data.auth) {
-            dispatch(authActions.setAuth(data));
-            dispatch(authActions.setUsers(data.users));
-            if (data.roomId) {
-              dispatch(gameStateActions.setPlayerNo(data.playerNo));
-              dispatch(authActions.setRoom(data));
-            }
-            console.log(data);
-          } else {
-            setInvalidCred(true);
-          }
-        })
-        .catch((e) => console.log(e));
+      dispatch(sendAuthRequest('/login/json', username, password, csrfToken));
     } else {
       if (!username) {
         setUsernameError(true);
@@ -64,7 +41,7 @@ const Login = (props) => {
   return (
     <>
       <form className={styles.form} onSubmit={handleSubmit}>
-        {invalidCred && <p>Login information is invalid.</p>}
+        {authErrors && <p>Login information is invalid.</p>}
         <Input
           className={usernameError && "invalid"}
           ref={usernameRef}

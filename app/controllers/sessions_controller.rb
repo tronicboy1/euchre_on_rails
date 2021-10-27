@@ -15,6 +15,8 @@ class SessionsController < ApplicationController
     json_request.permit(:username, :password)
     username = json_request["username"].downcase
     password = json_request["password"]
+    puts username
+    puts password
     user = User.find_by(username: username)
     if user
       auth = user.authenticate(password)
@@ -50,7 +52,7 @@ class SessionsController < ApplicationController
             room.player2_id => "p2",
             room.player3_id => "p3",
             room.player4_id => "p4",
-          }[current_user.id]
+          }[user.id]
           render json: { auth: true, roomId: user.room_id, userId: user.id, username: user.username, users: user_list, playerNames: player_names, playerNo: player_no }
         else
           render json: { auth: true, roomId: user.room_id, userId: user.id, username: user.username, users: user_list }
