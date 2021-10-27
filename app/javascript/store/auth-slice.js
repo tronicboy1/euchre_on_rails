@@ -8,7 +8,8 @@ const initialState = {
   roomId: null,
   username: null,
   playerNames: [],
-  users: []
+  users: [],
+  gameUpdates: []
 };
 
 const authSlice = createSlice({
@@ -28,10 +29,17 @@ const authSlice = createSlice({
       state.playerNames = action.payload.playerNames;
     },
     setUsers(state, action) {
-      state.users = action.payload;
+      //remove user from list to avoid selection of self in create room
+      state.users = action.payload.filter(user => user[1] !== state.userId);
     },
     setAuthErrors(state, action) {
       state.authErrors = action.payload;
+    },
+    setGameUpdates(state, action) {
+      state.gameUpdates = action.payload;
+    },
+    logout(state) {
+      state = initialState;
     }
   },
 });

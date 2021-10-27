@@ -11,7 +11,7 @@ const Select = (props, ref) => {
   return (
     <div className={styles.box}>
       <label htmlFor={props.name}>{props.label}</label>
-      <select name={props.name} ref={ref}>
+      <select disabled={props.disabled} name={props.name} ref={ref}>
         {options}
       </select>
     </div>

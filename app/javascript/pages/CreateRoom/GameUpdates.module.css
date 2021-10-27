@@ -1,0 +1,9 @@
+.updates {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    height: 40vh;
+    overflow-y: scroll;
+    border: 1px solid grey;
+    border-radius: 8px;
+}

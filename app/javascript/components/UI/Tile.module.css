@@ -1,0 +1,19 @@
+.tile {
+    border: 1px solid white;
+    border-bottom: 1px solid grey;
+    background: white;
+    color: black;
+    width: 100%;
+    padding: 1rem;
+}
+
+.tile p {
+    padding: 0;
+    margin-bottom: 0;
+}
+
+.last {
+    border-bottom-color: white;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}

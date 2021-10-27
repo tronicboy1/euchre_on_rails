@@ -9,13 +9,13 @@ module GameHelper
   end
 
   #add all users to room object and commit to database
-  def setup_room
-    player1_id = current_user.id
-    player2_id = params[:player2_id][:id]
-    player3_id = params[:player3_id][:id]
-    player4_id = params[:player4_id][:id]
+  def setup_room(players)
+    player1_id = players["p1"]
+    player2_id = players["p2"]
+    player3_id = players["p3"]
+    player4_id = players["p4"]
     new_room = Room.new
-    new_room.room_name = params[:room_name][:room_name]
+    new_room.room_name = Time.now.to_s
     new_room.player1_id = player1_id
     #only add human players to playerid array to avoid error
     playerid_arr = [player1_id]
@@ -43,14 +43,15 @@ module GameHelper
       new_room.player4_id = player4_id
       playerid_arr.push(player4_id)
     end
-    if new_room.save
-      new_room_id = Room.find_by(room_name: params[:room_name][:room_name]).id
+    saved = new_room.save
+    if saved
+      new_room_id = Room.find_by(room_name: new_room.room_name).id
 
       #add roomid to all players rooms array
       playerid_arr.each do |id|
         add_roomid_to_player(id, new_room_id)
       end
-      return true
+      return new_room_id
     else
       return false
     end

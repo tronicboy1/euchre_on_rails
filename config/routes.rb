@@ -11,6 +11,8 @@ Rails.application.routes.draw do
   get "logout", to: "sessions#destroy"
   post "login/json", to: "sessions#createJson"
   post "register/json", to: "users#createJson"
+  post "game/new/json", to: "game#createJson"
+  get "game-updates/json", to: "pages#fetchUpdates"
 
   mount ActionCable.server, at: "/cable"
 end
