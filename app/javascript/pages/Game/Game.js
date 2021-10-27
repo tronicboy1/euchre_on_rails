@@ -8,19 +8,13 @@ import ChatBox from "./components/Chat/ChatBox";
 import Settings from "./components/Helpers/Settings";
 import { useSelector } from "react-redux";
 
-const Game = (props) => {
+const Game = () => {
   const [showSettings, setShowSettings] = useState(false);
 
-  const state = useSelector(state => state);
+  const state = useSelector((state) => state);
   console.log(state);
   return (
-    <ActionCableProvider
-      roomId={props.roomId}
-      userId={props.userId}
-      username={props.username}
-      playerNo={props.playerNo}
-      playerNames={props.playerNames}
-    >
+    <ActionCableProvider>
       {showSettings && <Settings setShowSettings={setShowSettings} />}
       <div className={styles.display}>
         <Interface />

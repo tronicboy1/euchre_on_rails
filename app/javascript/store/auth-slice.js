@@ -7,6 +7,7 @@ const initialState = {
   roomId: null,
   username: null,
   playerNames: [],
+  users: []
 };
 
 const authSlice = createSlice({
@@ -25,6 +26,9 @@ const authSlice = createSlice({
       state.roomId = action.payload.roomId;
       state.playerNames = action.payload.playerNames;
     },
+    setUsers(state, action) {
+      state.users = action.payload;
+    }
   },
 });
 

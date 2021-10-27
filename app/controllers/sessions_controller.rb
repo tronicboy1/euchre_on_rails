@@ -1,6 +1,7 @@
 class SessionsController < ApplicationController
   #include CurrentUser
   include ApplicationHelper
+  include GameHelper
 
   def new
   end
@@ -16,6 +17,7 @@ class SessionsController < ApplicationController
     password = json_request["password"]
     user = User.find_by(username: username)
     auth = user.authenticate(password)
+    user_list = add_player_list()
     if auth
       if user.room_id
         room = Room.find_by(id: user.room_id)
@@ -48,9 +50,9 @@ class SessionsController < ApplicationController
           room.player3_id => "p3",
           room.player4_id => "p4",
         }[current_user.id]
-        render json: { auth: true, roomId: user.room_id, userId: user.id, username: user.username, playerNames: player_names, playerNo: player_no }
+        render json: { auth: true, roomId: user.room_id, userId: user.id, username: user.username, users: user_list, playerNames: player_names, playerNo: player_no }
       else
-        render json: { auth: true, roomId: user.room_id, userId: user.id, username: user.username }
+        render json: { auth: true, roomId: user.room_id, userId: user.id, username: user.username, users: user_list }
       end
     else
       render json: { auth: false }

@@ -3,11 +3,16 @@ import React, { useEffect, useState } from "react";
 import ActionCableContext from "./ActionCableContext";
 import consumer from "../../../../channels/consumer";
 import actionCableReceivedHandler from "./actionCableReceivedHandler";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { gameStateActions } from "../../../../store/store";
 
 const ActionCableProvider = (props) => {
   const dispatch = useDispatch();
+  const roomId = useSelector(state => state.auth.roomId);
+  const userId = useSelector(state => state.auth.userId);
+  const username = useSelector(state => state.auth.username);
+  const playerNames = useSelector(state => state.auth.playerNames);
+  const playerNo = useSelector(state => state.gameState.playerNo);
   const [roomChannel, setRoomChannel] = useState(null);
 
   //setup activecable connection
@@ -15,9 +20,9 @@ const ActionCableProvider = (props) => {
     const roomChannel = consumer.subscriptions.create(
       {
         channel: "RoomcontrolChannel",
-        room_id: props.roomId,
-        username: props.username,
-        user_id: props.userId,
+        room_id: roomId,
+        username: username,
+        user_id: userId,
       },
       {
         connected() {},
@@ -30,16 +35,15 @@ const ActionCableProvider = (props) => {
       }
     );
     setRoomChannel(roomChannel);
-    dispatch(gameStateActions.setPlayerNo(props.playerNo))
-  }, []);
+  }, [roomId,userId,username]);
 
   const cableContext = {
-    roomId: props.roomId,
-    userId: props.userId,
-    playerNo: props.playerNo,
-    username: props.username,
-    playerNames: props.playerNames,
-    roomChannel: roomChannel,
+    roomId,
+    userId,
+    playerNo,
+    username,
+    playerNames,
+    roomChannel,
   };
 
   return (

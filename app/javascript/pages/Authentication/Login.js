@@ -9,7 +9,7 @@ import Input from "../../components/UI/Input";
 import Button from "../../components/UI/Button";
 import { gameStateActions } from "../../store/store";
 
-const Login = () => {
+const Login = (props) => {
   const dispatch = useDispatch();
   const csrfToken = useSelector((state) => state.auth.csrfToken);
   const usernameRef = useRef("");
@@ -18,6 +18,10 @@ const Login = () => {
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [invalidCred, setInvalidCred] = useState(false);
+
+  const changeMode = () => {
+    props.setMode('REGISTER');
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -37,8 +41,10 @@ const Login = () => {
         .then((data) => {
           if (data.auth) {
             dispatch(authActions.setAuth(data));
+            dispatch(authActions.setUsers(data.users));
             if (data.roomId) {
               dispatch(gameStateActions.setPlayerNo(data.playerNo));
+              dispatch(authActions.setRoom(data));
             }
             console.log(data);
           } else {
@@ -76,6 +82,10 @@ const Login = () => {
         />
         <Button type="submit">Login</Button>
       </form>
+      <div className={styles.register}>
+        <p>Not registered?</p>
+        <Button onClick={changeMode}>Register</Button>
+      </div>
     </Card>
   );
 };

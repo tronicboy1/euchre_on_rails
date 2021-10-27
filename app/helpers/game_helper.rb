@@ -1,13 +1,13 @@
 module GameHelper
   include ApplicationHelper
 
-  def add_roomid_to_player(id,room_id)
+  def add_roomid_to_player(id, room_id)
     user = User.find(id)
     user.room_id = room_id
     #password validation will prevent from saving so must disable
     user.save(validate: false)
-
   end
+
   #add all users to room object and commit to database
   def setup_room
     player1_id = current_user.id
@@ -35,7 +35,7 @@ module GameHelper
       new_room.player3_id = player3_id
       playerid_arr.push(player3_id)
     end
-    if [player2_id,player3_id].include?(player4_id) && player4_id != "computer"
+    if [player2_id, player3_id].include?(player4_id) && player4_id != "computer"
       return false
     elsif player4_id == "computer"
       new_room.player4_id = 0
@@ -48,7 +48,7 @@ module GameHelper
 
       #add roomid to all players rooms array
       playerid_arr.each do |id|
-        add_roomid_to_player(id,new_room_id)
+        add_roomid_to_player(id, new_room_id)
       end
       return true
     else
@@ -56,17 +56,16 @@ module GameHelper
     end
   end
 
-
   #create list with computer and all users in list so player can create room accessable to friends
   def add_player_list
     @users = User.all
     #do not collect users currently in a room
-    @users = @users.collect{|user| [user.username,user.id] if user.room_id.nil?}
+    @users = @users.collect { |user| [user.username, user.id] if user.room_id.nil? }
     #remove user from list to avoid bugs
-    @users.delete([current_user.username,current_user.id])
+    @users.delete([current_user.username, current_user.id])
     #remove blank arrays from list
-    @users.delete_if{|x| x.nil?}
-    @users.unshift(["Computer","computer"])
+    @users.delete_if { |x| x.nil? }
+    @users.unshift(["Computer", "computer"])
+    return @users
   end
-
 end
