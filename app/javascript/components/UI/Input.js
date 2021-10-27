@@ -15,6 +15,7 @@ const Input = (props, ref) => {
           className={`${styles.input} ${styles[props.className]}`}
           type={props.type}
           name={props.name}
+          autoComplete="on"
           ref={ref}
           id={props.name}
           placeholder={props.placeholder}
