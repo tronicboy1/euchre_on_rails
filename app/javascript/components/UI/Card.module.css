@@ -11,6 +11,28 @@
     user-select: none;
 }
 
+.form {
+    padding: 1rem;
+    margin-bottom: 1rem !important;
+    max-width: 600px;
+    opacity: 0;
+    animation: slideIn 1s forwards;
+    z-index: 10;
+}
+
+.form-animation-delay {
+    animation-delay: 1.8s;
+    animation-duration: 1.5s;
+}
+
+.form-inner {
+    padding: 1rem;
+    margin: 0;
+    background: rgb(219, 219, 219);
+    border-radius: 5px;
+    width: 100%;
+}
+
 .card.highlight {
     -webkit-animation: pulse 2s ease-in-out infinite alternate;
     animation: pulse 2s ease-in-out infinite alternate;
@@ -183,6 +205,17 @@
     }
     100% {
         opacity: 1
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(6rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 

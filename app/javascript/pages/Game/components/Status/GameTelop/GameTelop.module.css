@@ -1,0 +1,24 @@
+.gametelop {
+    width: 99%;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 0.25rem;
+}
+
+.gameupdate {
+    padding: 0.75rem;
+    text-align: center;
+    font-size: calc(1.2rem + 1.5vw)
+}
+
+@media screen and (max-width: 400px) {
+    .gametelop {
+        padding: 0.15rem;
+    }
+    .gameupdate {
+        padding: 0.15rem;
+        font-size: medium;
+    }
+}

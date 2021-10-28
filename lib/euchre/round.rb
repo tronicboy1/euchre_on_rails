@@ -67,7 +67,8 @@ class Round
   def computer_pickup_check
     #count how many cards computer has of turnup card suit
     same_suit_count = 0
-    has_bower = @turnup.value == 10
+    #set has bower to true if comp is dealer and the kitty is a bower
+    has_bower = @turnup.value == 10 && @dealer == @current_player
     left_bower_id = {0 => [1,10], 1 => [0,10], 2 => [3,10], 3 => [2,10]}[@turnup.suit]
     @current_player.hand.each do |card|
       if card.suit == @turnup.suit

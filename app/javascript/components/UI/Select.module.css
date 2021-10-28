@@ -1,0 +1,17 @@
+.box {
+    display: block;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.box select {
+    height: 40px;
+    border: 1px solid grey;
+    border-radius: 8px;
+    width: 100%;
+    outline: none !important;
+}
+
+.box label {
+    margin-bottom: 0.5rem;
+}

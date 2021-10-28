@@ -15,3 +15,8 @@
     border-top-left-radius: 5px;
     width: 80%;
 }
+
+.invalid {
+    background-color: rgb(255, 218, 218);
+    border-color: rgb(255, 108, 108);
+}

@@ -1,0 +1,78 @@
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+    background: rgb(41, 41, 41);
+    box-shadow: 3px 0 5px rgba(0, 0, 0, 0.185);
+    color: white;
+    padding: 0 1rem 0 1rem;
+    overflow: hidden;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.icon {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height: 100%;
+    opacity: 0;
+    animation: fade 2s forwards;
+    animation-delay: 2s;
+}
+
+.icon img {
+    height: 60%;
+    width: auto;
+    margin-right: 0.5rem;
+}
+
+.nav {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    opacity: 0;
+    animation: fade 2s forwards;
+    animation-delay: 2s;
+}
+
+.nav ul {
+    display: flex;
+    flex-direction: row;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav li {
+    color: black;
+    margin-left: 1rem;
+    background-color: rgb(219, 219, 219);
+    width: 80px;
+    border-color: rgb(219, 219, 219);
+    border-radius: 8px;
+    text-align: center;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.nav .selected {
+    background-color: rgb(116, 116, 116) !important;
+    border-color: rgb(116, 116, 116) !important;
+    color: white !important;
+}
+
+@keyframes fade {
+    0% {
+        opacity: 0
+    }
+    100% {
+        opacity: 1
+    }
+}
