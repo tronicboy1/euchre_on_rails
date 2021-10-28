@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   isAuth: false,
+  loggedOut: false,
   authState: 'LOGIN',
   authErrors: null,
   createRoomErrors: null,
@@ -20,6 +21,7 @@ const authSlice = createSlice({
   reducers: {
     setAuth(state, action) {
       state.isAuth = true;
+      state.loggedOut = false;
       state.userId = action.payload.userId;
       state.username = action.payload.username;
     },
@@ -55,6 +57,7 @@ const authSlice = createSlice({
       state.username = null;
       state.playerNames = [];
       state.users = [];
+      state.loggedOut = true;
     },
     setAuthState(state, action) {
       state.authState = action.payload;
