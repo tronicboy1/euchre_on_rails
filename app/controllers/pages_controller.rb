@@ -38,11 +38,12 @@ class PagesController < ApplicationController
     json_request.permit(:p1, :p2, :p3, :p4)
     p1_id = json_request["p1"]
     created_room_id = setup_room(json_request)
-    puts created_room_id
     if created_room_id
       room_info = get_room_info(created_room_id, p1_id)
       player_names = room_info[:player_names]
       player_no = room_info[:player_no]
+      puts "player no: "
+      puts player_no
       render json: { error: false, roomId: created_room_id, playerNames: player_names, playerNo: player_no }
     else
       #send new user list along with error notification
@@ -56,8 +57,6 @@ class PagesController < ApplicationController
     json_request.permit(:username, :password)
     username = json_request["username"].downcase
     password = json_request["password"]
-    puts username
-    puts password
     user = User.find_by(username: username)
     if user
       auth = user.authenticate(password)

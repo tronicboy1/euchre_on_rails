@@ -29,7 +29,7 @@ const App = (props) => {
     }
     const isAuth = window.localStorage.getItem("isAuth");
     if (isAuth) {
-      const localId = window.localStorage.getItem("userId");
+      const localId = Number(window.localStorage.getItem("userId"));
       const localUsername = window.localStorage.getItem("username");
       dispatch(authActions.setAuth({ userId: localId, username: localUsername }));
     }
