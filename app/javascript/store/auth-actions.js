@@ -41,7 +41,6 @@ export const sendCreateRoomRequest = (playerList, token) => {
       .then((data) => {
         if (data.roomId) {
           dispatch(authActions.setRoom(data));
-          console.log(data);
           dispatch(gameStateActions.setPlayerNo(data.playerNo));
         } else {
           dispatch(authActions.setCreateRoomErrors(true));

@@ -14,6 +14,8 @@ import {
 import GameUpdates from "./GameUpdates";
 import Options from "./Options";
 
+let isInitial = true;
+
 const CreateRoom = () => {
   const dispatch = useDispatch();
   //redux selectors
@@ -36,8 +38,11 @@ const CreateRoom = () => {
   //effects
   //fetch gameupdates when loaded and check for updates/refresh info
   useEffect(() => {
+    if (isInitial) {
+      isInitial = false;
+      dispatch(checkInvites(token, userId));
+    }
     dispatch(getGameUpdates("game-updates/json", token));
-    dispatch(checkInvites(token, userId));
   }, []);
   //functions
   const submitHandler = (e) => {
