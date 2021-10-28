@@ -223,6 +223,7 @@ class Round
       #hide turnup card and show buttons for picking trump
       ActionCable.server.broadcast(@channel,{ "interfaceState" => "CALL_SUIT" })
       sleep(0.1)
+      @turnup_suit = @turnup.suit
       @turnup = nil
     end
 
@@ -261,7 +262,7 @@ class Round
   end
 
   def call_trump_input(input)
-    if input["command"] == @turnup.suit
+    if input["command"] == @turnup_suit
       ActionCable.server.broadcast(@channel, {"type" => "GAME_TELOP",
         "gameupdate" => "You cannot call kitty suit as trump!"})
     elsif input["command"] == false
