@@ -61,6 +61,7 @@ const authSlice = createSlice({
     },
     setAuthState(state, action) {
       state.authState = action.payload;
+      state.authErrors = null;
     },
     setCreateRoomErrors(state, action) {
       state.createRoomErrors = action.payload;

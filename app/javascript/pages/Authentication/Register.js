@@ -27,10 +27,6 @@ const Register = (props) => {
     return false;
   };
 
-  const changeMode = () => {
-    props.setMode("LOGIN");
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     const passwordIsValid =

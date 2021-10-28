@@ -16,11 +16,6 @@ const Login = (props) => {
 
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
-  
-
-  const changeMode = () => {
-    props.setMode("REGISTER");
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
