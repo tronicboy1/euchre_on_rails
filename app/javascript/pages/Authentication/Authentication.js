@@ -32,9 +32,12 @@ const Authentication = (props) => {
   return (
     <>
       <div className={styles.banner}>
-        <h1 className={styles.header}>Welcome to Euchre on Rails!</h1>
+        <h1>
+          <span className={styles.welcome}>Welcome,</span>
+          <span className={styles.rails}> to Euchre on Rails.</span>
+        </h1>
       </div>
-      <Card className="form">
+      <Card className="form" className2="form-animation-delay">
         <Card className="form-inner">
           <div className={styles["button-bar"]}>
             <Button
