@@ -67,7 +67,6 @@
     background-color: rgb(192, 192, 192) !important;
     border-color: rgb(192, 192, 192) !important;
     color: black !important;
-    cursor: default !important;
 }
 
 @keyframes fade {

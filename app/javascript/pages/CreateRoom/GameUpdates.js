@@ -8,11 +8,11 @@ import Tile from "../../components/UI/Tile";
 const GameUpdates = (props) => {
   return (
     <Card className="form">
-      <Card className="form-inner">
+      <Card style={{ height: "40vh" }} className="form-inner" className2="flexbox">
         <h3>Game Updates</h3>
-        <ul className={styles.updates}>
-          {props.gameUpdates ? (
-            props.gameUpdates.map((update, i) => (
+        {props.gameUpdates && (
+          <ul className={styles.updates}>
+            {props.gameUpdates.map((update, i) => (
               <Tile
                 key={update.id}
                 text={update.text}
@@ -21,11 +21,9 @@ const GameUpdates = (props) => {
                 first={i === 0}
                 last={i === props.gameUpdates.length - 1}
               />
-            ))
-          ) : (
-            <li>No Game Updates Available.</li>
-          )}
-        </ul>
+            ))}
+          </ul>
+        )}
       </Card>
     </Card>
   );

@@ -21,7 +21,7 @@ const Header = () => {
         <img src={spade} alt="" /> Euchre on Rails
       </span>
       <nav className={styles.nav}>
-        <ul>{isAuth && <li onClick={handleLogout}>Logout</li>}</ul>
+        <ul>{isAuth && <li className={styles.selected} onClick={handleLogout}>Logout</li>}</ul>
       </nav>
     </header>
   );

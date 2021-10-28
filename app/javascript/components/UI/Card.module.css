@@ -33,6 +33,11 @@
     margin: 0;
 }
 
+.flexbox {
+    display: flex;
+    flex-direction: column;
+}
+
 .card.highlight {
     -webkit-animation: pulse 2s ease-in-out infinite alternate;
     animation: pulse 2s ease-in-out infinite alternate;
