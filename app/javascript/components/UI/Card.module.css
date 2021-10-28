@@ -4,7 +4,7 @@
     border-radius: 10px;
     margin-top: 0.35rem;
     margin-bottom: 0.35rem;
-    width: 90%;
+    width: 95%;
     margin-left: auto;
     margin-right: auto;
     transition: all 0.5s;
@@ -27,10 +27,10 @@
 
 .form-inner {
     padding: 1rem;
-    margin: 0;
     background: rgb(219, 219, 219);
     border-radius: 5px;
     width: 100%;
+    margin: 0;
 }
 
 .card.highlight {
@@ -81,7 +81,7 @@
     width: auto;
     padding: 0.25rem;
     opacity: 1;
-    animation: fade .5s linear;
+    animation: fade 0.5s linear;
 }
 
 .boardcard img {
@@ -202,10 +202,10 @@
 
 @keyframes fade {
     0% {
-        opacity: 0
+        opacity: 0;
     }
     100% {
-        opacity: 1
+        opacity: 1;
     }
 }
 
@@ -245,11 +245,6 @@
 }
 
 @media screen and (max-width: 400px) {
-    .card {
-        margin-top: 0.15rem;
-        margin-bottom: 0.15rem;
-        width: 95%;
-    }
     .gamecard {
         padding: 0.15rem;
         margin: 0.1rem;
