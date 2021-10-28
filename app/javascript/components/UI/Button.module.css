@@ -7,6 +7,7 @@
     padding: 0 0 0 0;
     transition: all 0.3s;
     height: 50px;
+    font-size: calc(1rem + 0.7vw);
 }
 
 .button:hover,
@@ -36,7 +37,7 @@ button:active:disabled {
     border-radius: 0px;
     border-top-right-radius: 5px;
     border-top-left-radius: 5px;
-    height: 30px;
+    height: 40px;
     width: 100%;
 }
 
