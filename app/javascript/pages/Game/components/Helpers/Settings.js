@@ -21,8 +21,8 @@ const Settings = (props) => {
         props.setShowSettings(false);
       }}
     >
-      {roomId && <Button onClick={handleLeaveRoom}>Leave Room</Button>}
-      <Button onClick={handleLogout} style={{ marginTop: roomId ? "1rem" : "0" }}>
+      <Button onClick={handleLeaveRoom}>Leave Room</Button>
+      <Button onClick={handleLogout} style={{ marginTop: "1rem" }}>
         Logout
       </Button>
     </Modal>

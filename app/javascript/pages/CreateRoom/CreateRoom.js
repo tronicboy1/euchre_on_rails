@@ -8,7 +8,7 @@ import Select from "../../components/UI/Select";
 import Button from "../../components/UI/Button";
 import { getGameUpdates, sendCreateRoomRequest } from "../../store/auth-actions";
 import GameUpdates from "./GameUpdates";
-import Settings from "../Game/components/Helpers/Settings";
+import Options from "./Options";
 
 const CreateRoom = () => {
   const dispatch = useDispatch();
@@ -57,7 +57,7 @@ const CreateRoom = () => {
 
   return (
     <>
-    {showSettings && <Settings setShowSettings={setShowSettings} />}
+    {showSettings && <Options setShowSettings={setShowSettings} />}
       <Card className="form">
         <Card className="form-inner">
           <h1>Welcome back, {username}</h1>
