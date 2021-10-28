@@ -141,6 +141,7 @@
     right: 0;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
+    animation: fade 0.5s 1s;
 }
 
 .chat-box {
