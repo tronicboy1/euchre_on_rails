@@ -45,6 +45,7 @@ const authSlice = createSlice({
     },
     logout(state) {
       state.isAuth = false;
+      state.authState = "LOGIN";
       state.authErrors = null;
       state.userId = null;
       state.roomId = null;

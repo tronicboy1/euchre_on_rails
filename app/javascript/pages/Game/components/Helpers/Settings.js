@@ -8,7 +8,6 @@ const Settings = (props) => {
   const dispatch = useDispatch();
   const token = useSelector(state => state.auth.csrfToken);
   const roomId = useSelector(state => state.auth.roomId);
-  console.log(token, roomId);
   const handleLogout = () => {
     dispatch(logoutUser(token, roomId));
   };

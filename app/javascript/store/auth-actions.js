@@ -21,7 +21,6 @@ export const sendAuthRequest = (address, username, password, token) => {
             dispatch(gameStateActions.setPlayerNo(data.playerNo));
             dispatch(authActions.setRoom(data));
           }
-          console.log(data);
         } else {
           dispatch(authActions.setAuthErrors(true));
         }
@@ -40,7 +39,6 @@ export const sendCreateRoomRequest = (playerList, token) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         dispatch(authActions.setRoom(data));
         dispatch(gameStateActions.setPlayerNo(data.playerNo));
       })
@@ -53,7 +51,6 @@ export const getGameUpdates = (address) => {
     fetch(address)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         dispatch(authActions.setGameUpdates(data.gameUpdates));
       })
       .catch((e) => console.log(e));

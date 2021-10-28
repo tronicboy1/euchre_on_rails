@@ -1,19 +1,10 @@
 Rails.application.routes.draw do
   root to: "pages#index"
-  get "game", to: "game#show"
-  get "game/new", to: "game#new"
-  post "game", to: "game#create"
-  get "game/leave", to: "game#destroy"
-  resources :gameupdates
-  resources :users, only: [:new, :create, :index]
-  get "login", to: "sessions#new"
-  post "login", to: "sessions#create"
-  get "logout", to: "sessions#destroy"
-  post "game/leave/json", to: "pages#destroyJson"
-  post "login/json", to: "sessions#createJson"
-  post "register/json", to: "users#createJson"
-  post "game/new/json", to: "game#createJson"
-  get "game-updates/json", to: "pages#fetchUpdates"
+  post "game/leave/json", to: "pages#destroy_room_json"
+  post "login/json", to: "pages#login"
+  post "register/json", to: "pages#register"
+  post "game/new/json", to: "pages#create_room"
+  get "game-updates/json", to: "pages#fetch_updates"
 
   mount ActionCable.server, at: "/cable"
 end
