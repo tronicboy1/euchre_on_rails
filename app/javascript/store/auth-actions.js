@@ -39,8 +39,13 @@ export const sendCreateRoomRequest = (playerList, token) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        dispatch(authActions.setRoom(data));
-        dispatch(gameStateActions.setPlayerNo(data.playerNo));
+        if (data.roomId) {
+          dispatch(authActions.setRoom(data));
+          dispatch(gameStateActions.setPlayerNo(data.playerNo));
+        } else {
+          dispatch(authActions.setCreateRoomErrors(true));
+          dispatch(authActions.setUsers(data.users));
+        }
       })
       .catch((e) => console.log(e));
   };
@@ -84,5 +89,26 @@ export const logoutUser = (token, roomId) => {
     destroyRoom(token, roomId);
     dispatch(authActions.logout());
     dispatch(gameStateActions.resetGameState());
+  };
+};
+
+export const checkInvites = (token, userId) => {
+  return (dispatch) => {
+    fetch("game/invites/json", {
+      method: "POST",
+      credentials: "same-origin",
+      headers: { "X-CSRF-Token": token },
+      body: JSON.stringify({ userId }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.roomId) {
+          dispatch(authActions.setRoom(data));
+          dispatch(gameStateActions.setPlayerNo(data.playerNo));
+        } else {
+          dispatch(authActions.setUsers(data.users));
+        }
+      })
+      .catch((e) => console.log(e));
   };
 };

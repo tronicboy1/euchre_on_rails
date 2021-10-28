@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   post "register/json", to: "pages#register"
   post "game/new/json", to: "pages#create_room"
   get "game-updates/json", to: "pages#fetch_updates"
+  post "game/invites/json", to: "pages#fetch_invites"
 
   mount ActionCable.server, at: "/cable"
 end

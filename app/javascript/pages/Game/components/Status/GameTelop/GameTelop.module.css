@@ -10,7 +10,7 @@
 .gameupdate {
     padding: 0.75rem;
     text-align: center;
-    font-size: x-large;
+    font-size: calc(1.2rem + 1.5vw)
 }
 
 @media screen and (max-width: 400px) {

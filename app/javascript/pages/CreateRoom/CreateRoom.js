@@ -7,6 +7,7 @@ import Card from "../../components/UI/Card";
 import Select from "../../components/UI/Select";
 import Button from "../../components/UI/Button";
 import {
+  checkInvites,
   getGameUpdates,
   sendCreateRoomRequest,
 } from "../../store/auth-actions";
@@ -21,6 +22,7 @@ const CreateRoom = () => {
   const users = useSelector((state) => state.auth.users);
   const gameUpdates = useSelector((state) => state.auth.gameUpdates);
   const token = useSelector((state) => state.auth.csrfToken);
+  const createRoomErrors = useSelector((state) => state.auth.createRoomErrors);
 
   //state
   const [formError, setFormError] = useState(false);
@@ -32,9 +34,10 @@ const CreateRoom = () => {
   const p4Ref = useRef("");
 
   //effects
-  //fetch gameupdates when loaded
+  //fetch gameupdates when loaded and check for updates/refresh info
   useEffect(() => {
     dispatch(getGameUpdates("game-updates/json", token));
+    dispatch(checkInvites(token, userId));
   }, []);
   //functions
   const submitHandler = (e) => {
@@ -58,20 +61,28 @@ const CreateRoom = () => {
     setShowSettings((prev) => !prev);
   };
 
+  const fetchInvites = () => {
+    dispatch(checkInvites(token, userId));
+  };
+
   return (
     <>
       {showSettings && <Options setShowSettings={setShowSettings} />}
       <div className={styles.banner}>
         <h1>Welcome back, {username}</h1>
       </div>
+      <Card className="form">
+        <Button onClick={fetchInvites} style={{ width: "100%" }}>
+          Check for Invites
+        </Button>
+      </Card>
       <GameUpdates gameUpdates={gameUpdates} />
       <Card className="form">
         <Card className="form-inner">
           <h3>Start a new game</h3>
           {formError && <p>Looks like you selected the same user twice!</p>}
+          {createRoomErrors && <p>You invited a user who is already in a room.</p>}
           <form className={styles.form} onSubmit={submitHandler}>
-            <p style={{ marginBottom: "0.5rem" }}>Player 1</p>
-            <p style={{ paddingLeft: "0.25rem" }}>{username}</p>
             <Select
               name="p2"
               label="Player 2"

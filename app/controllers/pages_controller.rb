@@ -9,6 +9,22 @@ class PagesController < ApplicationController
     render json: { gameUpdates: updates }
   end
 
+  def fetch_invites
+    json_request = ActionController::Parameters.new(JSON.parse(request.body.read))
+    json_request.permit(:userId)
+    user_id = json_request[:userId]
+    user = User.find(user_id)
+    if user.room_id
+      room_info = get_room_info(user.room_id, user.id)
+      player_names = room_info[:player_names]
+      player_no = room_info[:player_no]
+      render json: { roomId: user.room_id, username: user.username, playerNames: player_names, playerNo: player_no }
+    else
+      user_list = add_player_list()
+      render json: { users: user_list }
+    end
+  end
+
   def destroy_room_json
     json_request = ActionController::Parameters.new(JSON.parse(request.body.read))
     json_request.permit(:roomId)
@@ -22,13 +38,16 @@ class PagesController < ApplicationController
     json_request.permit(:p1, :p2, :p3, :p4)
     p1_id = json_request["p1"]
     created_room_id = setup_room(json_request)
+    puts created_room_id
     if created_room_id
       room_info = get_room_info(created_room_id, p1_id)
       player_names = room_info[:player_names]
       player_no = room_info[:player_no]
       render json: { error: false, roomId: created_room_id, playerNames: player_names, playerNo: player_no }
     else
-      render json: { error: true }
+      #send new user list along with error notification
+      user_list = add_player_list()
+      render json: { error: true, users: user_list }
     end
   end
 

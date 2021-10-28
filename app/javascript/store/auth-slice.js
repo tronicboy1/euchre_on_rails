@@ -4,6 +4,7 @@ const initialState = {
   isAuth: false,
   authState: 'LOGIN',
   authErrors: null,
+  createRoomErrors: null,
   csrfToken: null,
   userId: null,
   roomId: null,
@@ -28,6 +29,7 @@ const authSlice = createSlice({
     setRoom(state, action) {
       state.roomId = action.payload.roomId;
       state.playerNames = action.payload.playerNames;
+      state.createRoomErrors = false;
     },
     setUsers(state, action) {
       //remove user from list to avoid selection of self in create room
@@ -47,6 +49,7 @@ const authSlice = createSlice({
       state.isAuth = false;
       state.authState = "LOGIN";
       state.authErrors = null;
+      state.createRoomErrors = null;
       state.userId = null;
       state.roomId = null;
       state.username = null;
@@ -55,6 +58,9 @@ const authSlice = createSlice({
     },
     setAuthState(state, action) {
       state.authState = action.payload;
+    },
+    setCreateRoomErrors(state, action) {
+      state.createRoomErrors = action.payload;
     },
   },
 });

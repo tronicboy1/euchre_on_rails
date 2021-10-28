@@ -40,11 +40,17 @@ module ApplicationHelper
     new_room.player1_id = player1_id
     #only add human players to playerid array to avoid error
     playerid_arr = [player1_id]
+    
     if player2_id == "computer"
       new_room.player2_id = 0
     else
-      new_room.player2_id = player2_id
-      playerid_arr.push(player2_id)
+      #check to see if all players are not currently in a room 
+      if User.find(player2_id).room_id.nil?
+        new_room.player2_id = player2_id
+        playerid_arr.push(player2_id)
+      else
+        return false
+      end
     end
 
     #check for redundancies
@@ -53,16 +59,24 @@ module ApplicationHelper
     elsif player3_id == "computer"
       new_room.player3_id = 0
     else
-      new_room.player3_id = player3_id
-      playerid_arr.push(player3_id)
+      if User.find(player3_id).room_id.nil?
+        new_room.player3_id = player3_id
+        playerid_arr.push(player3_id)
+      else
+        return false
+      end
     end
     if [player2_id, player3_id].include?(player4_id) && player4_id != "computer"
       return false
     elsif player4_id == "computer"
       new_room.player4_id = 0
     else
-      new_room.player4_id = player4_id
-      playerid_arr.push(player4_id)
+      if User.find(player4_id).room_id.nil?
+        new_room.player4_id = player4_id
+        playerid_arr.push(player4_id)
+      else
+        return false
+      end
     end
     saved = new_room.save
     if saved
