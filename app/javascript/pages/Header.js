@@ -17,10 +17,10 @@ const Header = () => {
 
   return (
     <header className={styles.header}>
-      <span className={styles.icon}>
+      <span className={`${styles.icon} ${!isAuth && styles.delay}`}>
         <img src={spade} alt="" /> Euchre on Rails
       </span>
-      <nav className={styles.nav}>
+      <nav className={`${styles.nav} ${!isAuth && styles.delay}`}>
         <ul>{isAuth && <li className={styles.selected} onClick={handleLogout}>Logout</li>}</ul>
       </nav>
     </header>

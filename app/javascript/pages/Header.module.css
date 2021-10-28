@@ -24,7 +24,6 @@
     height: 100%;
     opacity: 0;
     animation: fade 2s forwards;
-    animation-delay: 2s;
 }
 
 .icon img {
@@ -33,13 +32,16 @@
     margin-right: 0.5rem;
 }
 
+.delay {
+    animation-delay: 2s;
+}
+
 .nav {
     display: flex;
     flex-direction: row-reverse;
     justify-content: flex-end;
     opacity: 0;
     animation: fade 2s forwards;
-    animation-delay: 2s;
 }
 
 .nav ul {
