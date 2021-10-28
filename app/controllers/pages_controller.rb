@@ -61,7 +61,8 @@ class PagesController < ApplicationController
     if user
       auth = user.authenticate(password)
       user_list = add_player_list()
-      if !auth.nil?
+      puts auth
+      if auth
         if user.room_id
           room_info = get_room_info(user.room_id, user.id)
           player_names = room_info[:player_names]
@@ -70,6 +71,8 @@ class PagesController < ApplicationController
         else
           render json: { auth: true, roomId: user.room_id, userId: user.id, username: user.username, users: user_list }
         end
+      else
+        render json: { auth: false }
       end
     else
       render json: { auth: false }
