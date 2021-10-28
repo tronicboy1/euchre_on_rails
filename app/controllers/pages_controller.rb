@@ -57,17 +57,21 @@ class PagesController < ApplicationController
     json_request.permit(:username, :password)
     username = json_request["username"].downcase
     password = json_request["password"]
+    #check if username is in db
     user = User.find_by(username: username)
     if user
+      #check if password is correct
       auth = user.authenticate(password)
-      user_list = add_player_list()
-      puts auth
       if auth
+        #user list will be sent to players in room too
+        user_list = add_player_list()
+        #check if in a room
         if user.room_id
           room_info = get_room_info(user.room_id, user.id)
           player_names = room_info[:player_names]
           player_no = room_info[:player_no]
           render json: { auth: true, roomId: user.room_id, userId: user.id, username: user.username, users: user_list, playerNames: player_names, playerNo: player_no }
+        #send player list if not in a room
         else
           render json: { auth: true, roomId: user.room_id, userId: user.id, username: user.username, users: user_list }
         end
