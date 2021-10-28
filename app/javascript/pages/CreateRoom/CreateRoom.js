@@ -84,7 +84,7 @@ const CreateRoom = () => {
       <GameUpdates gameUpdates={gameUpdates} />
       <Card className="form">
         <Card className="form-inner">
-          <h3>Start a new game</h3>
+          <h3 style={{ marginBottom: "1.5rem" }}>Start a new game</h3>
           {formError && <p>Looks like you selected the same user twice!</p>}
           {createRoomErrors && <p>You invited a user who is already in a room.</p>}
           <form className={styles.form} onSubmit={submitHandler}>

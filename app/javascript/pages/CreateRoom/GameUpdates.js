@@ -8,8 +8,8 @@ import Tile from "../../components/UI/Tile";
 const GameUpdates = (props) => {
   return (
     <Card className="form">
-      <Card style={{ height: "40vh" }} className="form-inner" className2="flexbox">
-        <h3>Game Updates</h3>
+      <Card style={{ height: "45vh" }} className="form-inner" className2="flexbox">
+        <h3 style={{ marginBottom: "1.5rem" }}>Game Updates</h3>
         {props.gameUpdates && (
           <ul className={styles.updates}>
             {props.gameUpdates.map((update, i) => (
