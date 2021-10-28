@@ -6,4 +6,14 @@
     overflow-y: scroll;
     border: 1px solid grey;
     border-radius: 8px;
+    animation: fade 1s linear;
+}
+
+@keyframes fade {
+    0% {
+        opacity: 0
+    }
+    100% {
+        opacity: 1
+    }
 }

@@ -14,12 +14,16 @@ const Authentication = (props) => {
   const authState = useSelector((state) => state.auth.authState);
 
   const loginButtonStyle = {
-    background: authState === "LOGIN" && "rgb(77, 77, 77)",
+    background: authState === "LOGIN" && "rgb(192, 192, 192)",
     borderColor: authState === "LOGIN" && "rgb(77, 77, 77)",
+    color:  authState === "LOGIN" && "black",
+    cursor: authState === "LOGIN" && "default"
   };
   const registerButtonStyle = {
-    background: authState === "REGISTER" && "rgb(77, 77, 77)",
+    background: authState === "REGISTER" && "rgb(192, 192, 192)",
     borderColor: authState === "REGISTER" && "rgb(77, 77, 77)",
+    color: authState === "REGISTER" && "black",
+    cursor: authState === "REGISTER" && "default"
   };
 
   const onLoginClick = () => {
