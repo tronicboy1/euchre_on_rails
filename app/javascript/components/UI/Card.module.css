@@ -125,8 +125,6 @@
     left: 0;
     right: 0;
     height: 47vh;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
 }
 
 .hand {
@@ -135,8 +133,6 @@
     left: 0;
     right: 0;
     height: 19vh;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
 }
 
 .buttons {
@@ -144,9 +140,6 @@
     top: 89vh;
     left: 0;
     right: 0;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    animation: fade 0.5s linear;
 }
 
 .chat-box {
