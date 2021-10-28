@@ -6,6 +6,7 @@ import { authActions } from "../store/auth-slice";
 import Game from "../pages/Game/Game";
 import Authentication from "../pages/Authentication/Authentication";
 import CreateRoom from "../pages/CreateRoom/CreateRoom";
+import Header from "../pages/Header";
 
 const App = (props) => {
   const dispatch = useDispatch();
@@ -24,10 +25,12 @@ const App = (props) => {
   if (isAuth && roomId) {
     return <Game />;
   }
-  if (isAuth) {
-    return <CreateRoom />;
-  }
-  return <Authentication />;
+  return (
+    <>
+      <Header />
+      {isAuth ? <CreateRoom /> : <Authentication />}
+    </>
+  );
 };
 
 const WrappedApp = (props) => {

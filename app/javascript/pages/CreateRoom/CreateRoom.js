@@ -6,7 +6,10 @@ import styles from "./CreateRoom.module.css";
 import Card from "../../components/UI/Card";
 import Select from "../../components/UI/Select";
 import Button from "../../components/UI/Button";
-import { getGameUpdates, sendCreateRoomRequest } from "../../store/auth-actions";
+import {
+  getGameUpdates,
+  sendCreateRoomRequest,
+} from "../../store/auth-actions";
 import GameUpdates from "./GameUpdates";
 import Options from "./Options";
 
@@ -52,24 +55,22 @@ const CreateRoom = () => {
   };
 
   const toggleSettings = () => {
-    setShowSettings(prev => !prev);
+    setShowSettings((prev) => !prev);
   };
 
   return (
     <>
-    {showSettings && <Options setShowSettings={setShowSettings} />}
-      <Card className="form">
-        <Card className="form-inner">
-          <h1>Welcome back, {username}</h1>
-        </Card>
-      </Card>
+      {showSettings && <Options setShowSettings={setShowSettings} />}
+      <div className={styles.banner}>
+        <h1>Welcome back, {username}</h1>
+      </div>
       <GameUpdates gameUpdates={gameUpdates} />
       <Card className="form">
         <Card className="form-inner">
           <h3>Start a new game</h3>
           {formError && <p>Looks like you selected the same user twice!</p>}
           <form className={styles.form} onSubmit={submitHandler}>
-            <p style={{ marginBottom: "0.5rem"}}>Player 1</p>
+            <p style={{ marginBottom: "0.5rem" }}>Player 1</p>
             <p style={{ paddingLeft: "0.25rem" }}>{username}</p>
             <Select
               name="p2"
@@ -94,7 +95,9 @@ const CreateRoom = () => {
         </Card>
       </Card>
       <Card className="form">
-          <Button style={{ width: "100%" }} onClick={toggleSettings}>Options</Button>
+        <Button style={{ width: "100%" }} onClick={toggleSettings}>
+          Options
+        </Button>
       </Card>
     </>
   );

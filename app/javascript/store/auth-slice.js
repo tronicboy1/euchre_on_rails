@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   isAuth: false,
+  authState: 'LOGIN',
   authErrors: null,
   csrfToken: null,
   userId: null,
@@ -50,6 +51,9 @@ const authSlice = createSlice({
       state.username = null;
       state.playerNames = [];
       state.users = [];
+    },
+    setAuthState(state, action) {
+      state.authState = action.payload;
     },
   },
 });
