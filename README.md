@@ -1,13 +1,12 @@
 About this Project
 __________________________
 
-An online Euchre (Michigan style!) game using Ruby on Rails. 
+An online Euchre (Michigan style!) Single-Page Application using Ruby on Rails and React.js
 
 Built with:
 1. Rails
 2. React.js (Rails-react)
 3. Redux React
-4. Bootstrap (for non react elements)
 5. PostgreSQL
 
 Getting Started
