@@ -78,14 +78,14 @@ export const leaveRoom = (token, roomId) => {
   return (dispatch) => {
     destroyRoom(token, roomId);
     dispatch(authActions.leaveRoom());
+    dispatch(gameStateActions.resetGameState());
   };
 };
 
 export const logoutUser = (token, roomId) => {
   return (dispatch) => {
-    if (roomId) {
-      destroyRoom(token, roomId);
-    }
+    destroyRoom(token, roomId);
     dispatch(authActions.logout());
+    dispatch(gameStateActions.resetGameState());
   };
 };

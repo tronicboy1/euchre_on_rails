@@ -116,6 +116,9 @@ const gameStateSlice = createSlice({
     setPlayerNo(state, action) {
       state.playerNo = action.payload;
     },
+    resetGameState(state) {
+      Object.assign(state, initialGameState);
+    },
   },
 });
 
