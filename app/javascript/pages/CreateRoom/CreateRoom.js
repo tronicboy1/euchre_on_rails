@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Redirect } from "react-router-dom";
 
 import styles from "./CreateRoom.module.css";
 
@@ -16,7 +17,11 @@ import Options from "./Options";
 
 let isInitial = true;
 
-const CreateRoom = () => {
+const CreateRoom = ({ isAuth }) => {
+  //redirect if not authenticated
+  if (!isAuth) {
+    return <Redirect to="/authentication"/>
+  }
   const dispatch = useDispatch();
   //redux selectors
   const username = useSelector((state) => state.auth.username);
@@ -83,7 +88,6 @@ const CreateRoom = () => {
       </Card>
       <GameUpdates gameUpdates={gameUpdates} />
       <Card className="form">
-        <Card className="form-inner">
           <h3 style={{ marginBottom: "1.5rem" }}>Start a new game</h3>
           {formError && <p>Looks like you selected the same user twice!</p>}
           {createRoomErrors && <p>You invited a user who is already in a room.</p>}
@@ -106,9 +110,8 @@ const CreateRoom = () => {
               ref={p4Ref}
               options={users}
             ></Select>
-            <Button type="submit">Create Room</Button>
+            <Button style={{ marginTop: '1rem' }} type="submit">Create Room</Button>
           </form>
-        </Card>
       </Card>
       <Card className="form">
         <Button style={{ width: "100%" }} onClick={toggleSettings}>

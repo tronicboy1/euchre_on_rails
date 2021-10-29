@@ -18,6 +18,7 @@
     opacity: 0;
     animation: slideIn 1s forwards;
     z-index: 10;
+    color: white;
 }
 
 .form-animation-delay {

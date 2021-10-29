@@ -1,29 +1,39 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { authActions } from "../../store/auth-slice";
+import { Redirect, Switch, Route, Link, useLocation } from "react-router-dom";
 
 import styles from "./Authentication.module.css";
 
 import Login from "./Login";
 import Register from "./Register";
 import Card from "../../components/UI/Card";
-import Button from "../../components/UI/Button";
 
 const Authentication = (props) => {
+  //redirect if logged in
+  if (props.isAuth) {
+    return <Redirect to="/game" />;
+  }
   const dispatch = useDispatch();
-  const authState = useSelector((state) => state.auth.authState);
+  const location = useLocation();
+  const authState = location.pathname.split('/')[2];
 
   const loginButtonStyle = {
-    background: authState === "LOGIN" && "rgb(192, 192, 192)",
-    borderColor: authState === "LOGIN" && "rgb(77, 77, 77)",
-    color:  authState === "LOGIN" && "black",
-    cursor: authState === "LOGIN" && "default"
+    background: authState === "login" && "rgb(192, 192, 192)",
+    borderColor: authState === "login" && "rgb(77, 77, 77)",
+    color: authState === "login" && "black",
+    cursor: authState === "login" && "default",
+    borderTopLeftRadius: "8px",
+    borderBottomLeftRadius: "8px"
+    
   };
   const registerButtonStyle = {
-    background: authState === "REGISTER" && "rgb(192, 192, 192)",
-    borderColor: authState === "REGISTER" && "rgb(77, 77, 77)",
-    color: authState === "REGISTER" && "black",
-    cursor: authState === "REGISTER" && "default"
+    background: authState === "register" && "rgb(192, 192, 192)",
+    borderColor: authState === "register" && "rgb(77, 77, 77)",
+    color: authState === "register" && "black",
+    cursor: authState === "register" && "default",
+    borderTopRightRadius: "8px",
+    borderBottomRightRadius: "8px"
   };
 
   const onLoginClick = () => {
@@ -42,25 +52,21 @@ const Authentication = (props) => {
         </h1>
       </div>
       <Card className="form" className2="form-animation-delay">
-        <Card className="form-inner">
           <div className={styles["button-bar"]}>
-            <Button
-              style={loginButtonStyle}
-              onClick={onLoginClick}
-              className="bar-left"
-            >
-              Login
-            </Button>
-            <Button
-              style={registerButtonStyle}
-              onClick={onRegisterClick}
-              className="bar-right"
-            >
-              Register
-            </Button>
+            <Link style={loginButtonStyle} onClick={onLoginClick} to="/authentication/login">Login</Link>
+            <Link style={registerButtonStyle} onClick={onRegisterClick} to="/authentication/register">Register</Link>
           </div>
-          {authState === "LOGIN" ? <Login /> : <Register />}
-        </Card>
+          <Switch>
+            <Route path="/authentication/login">
+              <Login />
+            </Route>
+            <Route path="/authentication/register">
+              <Register />
+            </Route>
+            <Route path="/">
+              <Redirect to="/authentication/login" />
+            </Route>
+          </Switch>
       </Card>
     </>
   );

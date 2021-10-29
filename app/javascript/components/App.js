@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { Provider, useDispatch, useSelector } from "react-redux";
+import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import store from "../store/store";
 import { authActions } from "../store/auth-slice";
 
@@ -7,7 +8,6 @@ import Game from "../pages/Game/Game";
 import Authentication from "../pages/Authentication/Authentication";
 import CreateRoom from "../pages/CreateRoom/CreateRoom";
 import Header from "../pages/Header";
-import { checkInvites } from "../store/auth-actions";
 
 const App = (props) => {
   const dispatch = useDispatch();
@@ -31,7 +31,9 @@ const App = (props) => {
     if (isAuth) {
       const localId = Number(window.localStorage.getItem("userId"));
       const localUsername = window.localStorage.getItem("username");
-      dispatch(authActions.setAuth({ userId: localId, username: localUsername }));
+      dispatch(
+        authActions.setAuth({ userId: localId, username: localUsername })
+      );
     }
   }, []);
 
@@ -50,10 +52,21 @@ const App = (props) => {
   if (isAuth && roomId) {
     return <Game />;
   }
+
   return (
     <>
       <Header />
-      {isAuth ? <CreateRoom /> : <Authentication />}
+      <Switch>
+        <Route path="/game">
+          <CreateRoom isAuth={isAuth} />
+        </Route>
+        <Route path="/authentication" >
+          <Authentication isAuth={isAuth} />
+        </Route>
+        <Route to="/">
+          <Redirect to={isAuth ? "/game" : "/authentication/login"} />
+        </Route>
+      </Switch>
     </>
   );
 };
@@ -61,7 +74,9 @@ const App = (props) => {
 const WrappedApp = (props) => {
   return (
     <Provider store={store}>
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </Provider>
   );
 };

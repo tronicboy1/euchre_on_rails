@@ -38,7 +38,8 @@
 }
 
 .form label {
-    color: black;
+    color: white;
+    margin-bottom: 0.5rem;
 }
 
 .form p {
@@ -74,6 +75,18 @@
     flex-direction: row;
     width: 100%;
     margin-bottom: 2rem;
+}
+
+.button-bar a {
+    color: white;
+    background-color: none;
+    padding-top: 0.2rem;
+    width: 100%;
+    height: 35px;
+    background: rgb(41, 41, 41);
+    border: 1px solid rgb(41, 41, 41);
+    text-align: center;
+    text-decoration: none;
 }
 
 .button-bar button {

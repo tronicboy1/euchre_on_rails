@@ -7,7 +7,7 @@ import Input from "../../components/UI/Input";
 import Button from "../../components/UI/Button";
 import { sendAuthRequest } from "../../store/auth-actions";
 
-const Login = (props) => {
+const Login = () => {
   const dispatch = useDispatch();
   const csrfToken = useSelector((state) => state.auth.csrfToken);
   const authErrors = useSelector(state => state.auth.authErrors);
