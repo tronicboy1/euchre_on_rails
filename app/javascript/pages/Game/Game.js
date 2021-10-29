@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ActionCableProvider from "./components/Helpers/ActionCableProvider";
 import useModal from "../../components/hooks/use-modal";
 
@@ -10,9 +10,15 @@ import Settings from "./components/Helpers/Settings";
 
 const Game = () => {
   const settingsModal = useModal();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <ActionCableProvider>
-      {settingsModal.show && <Settings fading={settingsModal.fading} hide={settingsModal.hide} />}
+      {settingsModal.show && (
+        <Settings fading={settingsModal.fading} hide={settingsModal.hide} />
+      )}
       <div className={styles.display}>
         <Interface />
         <ChatBox settingsModal={settingsModal} />
