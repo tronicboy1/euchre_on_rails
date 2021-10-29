@@ -21,8 +21,9 @@ const Register = (props) => {
   });
 
   const validator = (value) => {
-    if (value) {
-      return value.trim().length > 0;
+    if (value.trim().length > 0) {
+      const regex = /\W|_/g;
+      return !regex.test(value);
     }
     return false;
   };

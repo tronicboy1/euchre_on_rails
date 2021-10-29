@@ -4,24 +4,6 @@ module ApplicationHelper
     update.save
   end
 
-  def log_in(user)
-    session[:user_id] = user.id
-    session[:username] = user.username
-  end
-
-  def current_user
-    return @current_user ||= User.find_by(id: session[:user_id])
-  end
-
-  def refresh_userinfo_from_db
-    return @current_user = User.find_by(id: session[:user_id])
-  end
-
-  def logged_in?
-    current_user
-    return !@current_user.nil?
-  end
-
   def add_roomid_to_player(id, room_id)
     user = User.find(id)
     user.room_id = room_id

@@ -88,12 +88,18 @@ class PagesController < ApplicationController
     json_request.permit(:username, :password, :passwordCheck)
     username = json_request["username"].downcase
     password = json_request["password"]
-    user = User.new()
-    user.username = username
-    user.password = password
-    if user.save
-      user_list = add_player_list()
-      render json: { auth: true, userId: user.id, username: user.username, users: user_list }
+    #check username validity (no special characters)
+    valid_username = username.scan(/\W/).empty?
+    if valid_username
+      user = User.new()
+      user.username = username
+      user.password = password
+      if user.save
+        user_list = add_player_list()
+        render json: { auth: true, userId: user.id, username: user.username, users: user_list }
+      else
+        render json: { auth: false }
+      end
     else
       render json: { auth: false }
     end
