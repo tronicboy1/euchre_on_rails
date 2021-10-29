@@ -12,9 +12,8 @@ const Options = (props) => {
   };
   return (
     <Modal
-      onClick={() => {
-        props.setShowSettings(false);
-      }}
+      onClick={props.hide}
+      fading={props.fading}
     >
       <Button onClick={handleLogout}>Logout</Button>
     </Modal>

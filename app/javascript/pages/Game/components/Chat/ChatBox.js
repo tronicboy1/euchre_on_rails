@@ -9,7 +9,7 @@ import InputBar from "./InputBar";
 import ChatText from "./ChatText";
 import ActionCableContext from "../Helpers/ActionCableContext";
 
-const ChatBox = (props) => {
+const ChatBox = ({ settingsModal }) => {
   const chat = useSelector((state) => state.chat);
   const context = useContext(ActionCableContext);
   const gameState = useSelector((state) => state.gameState);
@@ -34,12 +34,10 @@ const ChatBox = (props) => {
   }, [chat.messages]);
 
   const onToggleChat = () => {
-    setToggleChat((prevState) => {
-      return !prevState;
-    });
+    
   };
   const toggleSettings = () => {
-    props.setShowSettings((prev) => !prev);
+    settingsModal.setShow(true);
   };
 
   const noButtons = gameState.status !== "pickup_or_pass" && gameState.status !== "call_trump" && gameState.status !== "loner_check" && !gameState.showStartButton;

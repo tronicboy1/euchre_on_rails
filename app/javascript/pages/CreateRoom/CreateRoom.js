@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from "react-router-dom";
+import useModal from "../../components/hooks/use-modal";
 
 import styles from "./CreateRoom.module.css";
 
@@ -26,7 +27,7 @@ const CreateRoom = ({ isAuth }) => {
   const token = useSelector((state) => state.auth.csrfToken);
 
   //state
-  const [showSettings, setShowSettings] = useState(false);
+  const settingsModal = useModal();
 
   //fetch gameupdates when loaded and check for updates/refresh info
   useEffect(() => {
@@ -38,12 +39,12 @@ const CreateRoom = ({ isAuth }) => {
   }, []);
   //functions
   const toggleSettings = () => {
-    setShowSettings((prev) => !prev);
+    settingsModal.setShow(true);
   };
 
   return (
     <>
-      {showSettings && <Options setShowSettings={setShowSettings} />}
+      {settingsModal.show && <Options fading={settingsModal.fading} hide={settingsModal.hide} />}
       <div className={styles.banner}>
         <h1>Welcome back, {username}</h1>
       </div>

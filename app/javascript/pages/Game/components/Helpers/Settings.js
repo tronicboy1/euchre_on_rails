@@ -16,9 +16,8 @@ const Settings = (props) => {
   };
   return (
     <Modal
-      onClick={() => {
-        props.setShowSettings(false);
-      }}
+      onClick={props.hide}
+      fading={props.fading}
     >
       <Button onClick={handleLeaveRoom}>Leave Room</Button>
       <Button onClick={handleLogout} style={{ marginTop: "1rem" }}>

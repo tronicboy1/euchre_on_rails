@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import ActionCableProvider from "./components/Helpers/ActionCableProvider";
+import useModal from "../../components/hooks/use-modal";
 
 import styles from "./Game.module.css";
 
@@ -8,13 +9,13 @@ import ChatBox from "./components/Chat/ChatBox";
 import Settings from "./components/Helpers/Settings";
 
 const Game = () => {
-  const [showSettings, setShowSettings] = useState(false);
+  const settingsModal = useModal();
   return (
     <ActionCableProvider>
-      {showSettings && <Settings setShowSettings={setShowSettings} />}
+      {settingsModal.show && <Settings fading={settingsModal.fading} hide={settingsModal.hide} />}
       <div className={styles.display}>
         <Interface />
-        <ChatBox setShowSettings={setShowSettings} />
+        <ChatBox settingsModal={settingsModal} />
       </div>
     </ActionCableProvider>
   );

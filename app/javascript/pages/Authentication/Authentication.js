@@ -1,5 +1,5 @@
 import React from "react";
-import { Redirect, Switch, Route } from "react-router-dom";
+import { Redirect, Switch, Route, useLocation } from "react-router-dom";
 
 import styles from "./Authentication.module.css";
 
@@ -9,6 +9,8 @@ import Card from "../../components/UI/Card";
 import LinkBar from "./LinkBar";
 
 const Authentication = (props) => {
+  const location = useLocation();
+  const mode = location.pathname.split("/")[2];
   //redirect if logged in
   if (props.isAuth) {
     return <Redirect to="/game" />;
@@ -21,7 +23,11 @@ const Authentication = (props) => {
           <span className={styles.rails}> to Euchre on Rails.</span>
         </h1>
       </div>
-      <Card className="form" className2="form-animation-delay">
+      <Card
+        style={{ height: mode === "login" ? "310px" : "390px", overflow: "hidden" }}
+        className="form"
+        className2="form-animation-delay"
+      >
         <LinkBar />
         <Switch>
           <Route path="/authentication/login">
