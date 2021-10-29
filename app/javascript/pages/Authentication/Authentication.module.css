@@ -93,6 +93,12 @@
     height: 35px;
 }
 
+.active {
+    background-color: rgb(192, 192, 192) !important;
+    color: black !important;
+    cursor: default;
+}
+
 @keyframes fade {
     0% {
         opacity: 0

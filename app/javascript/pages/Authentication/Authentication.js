@@ -1,7 +1,12 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { authActions } from "../../store/auth-slice";
-import { Redirect, Switch, Route, Link, useLocation } from "react-router-dom";
+import {
+  Redirect,
+  Switch,
+  Route,
+  NavLink,
+} from "react-router-dom";
 
 import styles from "./Authentication.module.css";
 
@@ -15,25 +20,14 @@ const Authentication = (props) => {
     return <Redirect to="/game" />;
   }
   const dispatch = useDispatch();
-  const location = useLocation();
-  const authState = location.pathname.split('/')[2];
 
   const loginButtonStyle = {
-    background: authState === "login" && "rgb(192, 192, 192)",
-    borderColor: authState === "login" && "rgb(77, 77, 77)",
-    color: authState === "login" && "black",
-    cursor: authState === "login" && "default",
     borderTopLeftRadius: "8px",
-    borderBottomLeftRadius: "8px"
-    
+    borderBottomLeftRadius: "8px",
   };
   const registerButtonStyle = {
-    background: authState === "register" && "rgb(192, 192, 192)",
-    borderColor: authState === "register" && "rgb(77, 77, 77)",
-    color: authState === "register" && "black",
-    cursor: authState === "register" && "default",
     borderTopRightRadius: "8px",
-    borderBottomRightRadius: "8px"
+    borderBottomRightRadius: "8px",
   };
 
   const onLoginClick = () => {
@@ -52,21 +46,35 @@ const Authentication = (props) => {
         </h1>
       </div>
       <Card className="form" className2="form-animation-delay">
-          <div className={styles["button-bar"]}>
-            <Link style={loginButtonStyle} onClick={onLoginClick} to="/authentication/login">Login</Link>
-            <Link style={registerButtonStyle} onClick={onRegisterClick} to="/authentication/register">Register</Link>
-          </div>
-          <Switch>
-            <Route path="/authentication/login">
-              <Login />
-            </Route>
-            <Route path="/authentication/register">
-              <Register />
-            </Route>
-            <Route path="/">
-              <Redirect to="/authentication/login" />
-            </Route>
-          </Switch>
+        <div className={styles["button-bar"]}>
+          <NavLink
+            style={loginButtonStyle}
+            activeClassName={styles.active}
+            onClick={onLoginClick}
+            to="/authentication/login"
+          >
+            Login
+          </NavLink>
+          <NavLink
+            style={registerButtonStyle}
+            activeClassName={styles.active}
+            onClick={onRegisterClick}
+            to="/authentication/register"
+          >
+            Register
+          </NavLink>
+        </div>
+        <Switch>
+          <Route path="/authentication/login">
+            <Login />
+          </Route>
+          <Route path="/authentication/register">
+            <Register />
+          </Route>
+          <Route path="/">
+            <Redirect to="/authentication/login" />
+          </Route>
+        </Switch>
       </Card>
     </>
   );
