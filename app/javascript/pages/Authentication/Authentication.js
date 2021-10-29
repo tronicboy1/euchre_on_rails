@@ -1,42 +1,18 @@
 import React from "react";
-import { useDispatch } from "react-redux";
-import { authActions } from "../../store/auth-slice";
-import {
-  Redirect,
-  Switch,
-  Route,
-  NavLink,
-} from "react-router-dom";
+import { Redirect, Switch, Route } from "react-router-dom";
 
 import styles from "./Authentication.module.css";
 
 import Login from "./Login";
 import Register from "./Register";
 import Card from "../../components/UI/Card";
+import LinkBar from "./LinkBar";
 
 const Authentication = (props) => {
   //redirect if logged in
   if (props.isAuth) {
     return <Redirect to="/game" />;
   }
-  const dispatch = useDispatch();
-
-  const loginButtonStyle = {
-    borderTopLeftRadius: "8px",
-    borderBottomLeftRadius: "8px",
-  };
-  const registerButtonStyle = {
-    borderTopRightRadius: "8px",
-    borderBottomRightRadius: "8px",
-  };
-
-  const onLoginClick = () => {
-    dispatch(authActions.resetAuthErrors());
-  };
-  const onRegisterClick = () => {
-    dispatch(authActions.resetAuthErrors());
-  };
-
   return (
     <>
       <div className={styles.banner}>
@@ -46,24 +22,7 @@ const Authentication = (props) => {
         </h1>
       </div>
       <Card className="form" className2="form-animation-delay">
-        <div className={styles["button-bar"]}>
-          <NavLink
-            style={loginButtonStyle}
-            activeClassName={styles.active}
-            onClick={onLoginClick}
-            to="/authentication/login"
-          >
-            Login
-          </NavLink>
-          <NavLink
-            style={registerButtonStyle}
-            activeClassName={styles.active}
-            onClick={onRegisterClick}
-            to="/authentication/register"
-          >
-            Register
-          </NavLink>
-        </div>
+        <LinkBar />
         <Switch>
           <Route path="/authentication/login">
             <Login />

@@ -70,35 +70,6 @@
     margin: auto;
 }
 
-.button-bar {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    margin-bottom: 2rem;
-}
-
-.button-bar a {
-    color: white;
-    background-color: none;
-    padding-top: 0.2rem;
-    width: 100%;
-    height: 35px;
-    background: rgb(41, 41, 41);
-    border: 1px solid rgb(41, 41, 41);
-    text-align: center;
-    text-decoration: none;
-}
-
-.button-bar button {
-    height: 35px;
-}
-
-.active {
-    background-color: rgb(192, 192, 192) !important;
-    color: black !important;
-    cursor: default;
-}
-
 @keyframes fade {
     0% {
         opacity: 0
