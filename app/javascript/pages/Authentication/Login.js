@@ -22,7 +22,7 @@ const Login = (props) => {
     const username = usernameRef.current.value;
     const password = passwordRef.current.value;
     if (username && password) {
-      dispatch(sendAuthRequest('/login/json', username, password, csrfToken));
+      dispatch(sendAuthRequest('/login', username, password, csrfToken));
     } else {
       if (!username) {
         setUsernameError(true);

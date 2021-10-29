@@ -38,7 +38,7 @@ const Register = (props) => {
     if (isValid) {
       dispatch(
         sendAuthRequest(
-          "/register/json",
+          "/register",
           username.current.value,
           password.current.value,
           csrfToken

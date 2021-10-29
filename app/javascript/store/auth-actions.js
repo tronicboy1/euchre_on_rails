@@ -1,9 +1,12 @@
 import { authActions } from "./auth-slice";
 import { gameStateActions } from "./store";
 
+const baseUrl = `${window.location.protocol}//${window.location.host}/api`;
+
 export const sendAuthRequest = (address, username, password, token) => {
   return (dispatch) => {
-    fetch(address, {
+    console.log(`${baseUrl}${address}`);
+    fetch(`${baseUrl}${address}`, {
       method: "POST",
       credentials: "same-origin",
       headers: { "X-CSRF-Token": token },
@@ -31,7 +34,7 @@ export const sendAuthRequest = (address, username, password, token) => {
 
 export const sendCreateRoomRequest = (playerList, token) => {
   return (dispatch) => {
-    fetch("game/new/json", {
+    fetch(`${baseUrl}/game/new`, {
       method: "POST",
       credentials: "same-origin",
       headers: { "X-CSRF-Token": token },
@@ -53,7 +56,7 @@ export const sendCreateRoomRequest = (playerList, token) => {
 
 export const getGameUpdates = (address) => {
   return (dispatch) => {
-    fetch(address)
+    fetch(`${baseUrl}/game-updates`)
       .then((response) => response.json())
       .then((data) => {
         dispatch(authActions.setGameUpdates(data.gameUpdates));
@@ -63,7 +66,7 @@ export const getGameUpdates = (address) => {
 };
 
 const destroyRoom = (token, roomId) => {
-  fetch("game/leave/json", {
+  fetch(`${baseUrl}/game/leave`, {
     method: "POST",
     credentials: "same-origin",
     headers: { "X-CSRF-Token": token },
@@ -94,7 +97,7 @@ export const logoutUser = (token, roomId) => {
 
 export const checkInvites = (token, userId) => {
   return (dispatch) => {
-    fetch("game/invites/json", {
+    fetch(`${baseUrl}/game/invites`, {
       method: "POST",
       credentials: "same-origin",
       headers: { "X-CSRF-Token": token },
