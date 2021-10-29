@@ -6,6 +6,7 @@
     right: 0;
     height: auto;
     width: 100%;
+    margin: 0;
     background: rgba(0, 0, 0, 0.5);
     display: inline-flex;
     animation: fadeIn 0.2s linear, shrink 0.2s ease-out;
