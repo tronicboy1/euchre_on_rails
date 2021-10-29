@@ -15,6 +15,9 @@ const chatSlice = createSlice({
       const content = action.payload.message;
       state.messages.unshift({ id, username, content });
     },
+    resetChat(state) {
+      state.messages = [{ id: 0, content: "Welcome to Euchre on Rails!" }];
+    },
   },
 });
 

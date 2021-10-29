@@ -1,5 +1,5 @@
 import { authActions } from "./auth-slice";
-import { gameStateActions } from "./store";
+import { chatActions, gameStateActions } from "./store";
 
 const baseUrl = `${window.location.protocol}//${window.location.host}/api`;
 
@@ -83,6 +83,7 @@ export const leaveRoom = (token, roomId) => {
     destroyRoom(token, roomId);
     dispatch(authActions.leaveRoom());
     dispatch(gameStateActions.resetGameState());
+    dispatch(chatActions.resetChat());
   };
 };
 
@@ -91,6 +92,7 @@ export const logoutUser = (token, roomId) => {
     destroyRoom(token, roomId);
     dispatch(authActions.logout());
     dispatch(gameStateActions.resetGameState());
+    dispatch(chatActions.resetChat());
   };
 };
 
