@@ -8,7 +8,7 @@
     width: 100%;
     background: rgba(0, 0, 0, 0.5);
     display: inline-flex;
-    animation: fade 0.3s linear;
+    animation: fade 0.2s linear, shrink 0.2s ease-out;
     z-index: 9999;
 }
 
@@ -32,5 +32,14 @@
     }
     100% {
         opacity: 1
+    }
+}
+
+@keyframes shrink {
+    0% {
+        transform: scale(2);
+    }
+    100% {
+        transform: scale(1);
     }
 }

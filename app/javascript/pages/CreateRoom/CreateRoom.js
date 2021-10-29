@@ -14,6 +14,7 @@ import {
 } from "../../store/auth-actions";
 import GameUpdates from "./GameUpdates";
 import Options from "./Options";
+import CheckInvites from "./CheckInvites";
 
 let isInitial = true;
 
@@ -71,21 +72,13 @@ const CreateRoom = ({ isAuth }) => {
     setShowSettings((prev) => !prev);
   };
 
-  const fetchInvites = () => {
-    dispatch(checkInvites(token, userId));
-  };
-
   return (
     <>
       {showSettings && <Options setShowSettings={setShowSettings} />}
       <div className={styles.banner}>
         <h1>Welcome back, {username}</h1>
       </div>
-      <Card className="form">
-        <Button onClick={fetchInvites} style={{ width: "100%" }}>
-          Check for Invites
-        </Button>
-      </Card>
+      <CheckInvites token={token} userId={userId} />
       <GameUpdates gameUpdates={gameUpdates} />
       <Card className="form">
           <h3 style={{ marginBottom: "1.5rem" }}>Start a new game</h3>

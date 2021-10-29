@@ -1,10 +1,31 @@
 .display {
     display: flex;
     flex-direction: column;
+    animation: fade 0.5s linear, shrink 0.5s ease-out;
 }
 
 @media screen and (min-width:1024px) {
     .display {
         flex-direction: row;
+    }
+}
+
+@keyframes fade {
+    0% {
+        opacity: 0
+    }
+    100% {
+        opacity: 1
+    }
+}
+
+@keyframes shrink {
+    0% {
+        overflow: hidden;
+        transform: scale(3);
+    }
+    100% {
+        transform: scale(1);
+        overflow: hidden;
     }
 }

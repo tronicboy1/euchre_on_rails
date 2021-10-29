@@ -96,6 +96,7 @@ export const logoutUser = (token, roomId) => {
 
 export const checkInvites = (token, userId) => {
   return (dispatch) => {
+    dispatch(authActions.setLoading(true));
     fetch(`${baseUrl}/game/invites`, {
       method: "POST",
       credentials: "same-origin",
@@ -109,8 +110,12 @@ export const checkInvites = (token, userId) => {
           dispatch(gameStateActions.setPlayerNo(data.playerNo));
         } else {
           dispatch(authActions.setUsers(data.users));
+          dispatch(authActions.setLoading(false));
         }
       })
-      .catch((e) => console.log(e));
+      .catch((e) => {
+        console.log(e);
+        dispatch(authActions.setLoading(false));
+      });
   };
 };

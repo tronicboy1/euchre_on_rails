@@ -5,6 +5,7 @@ const initialState = {
   loggedOut: false,
   authErrors: null,
   createRoomErrors: null,
+  loading: false,
   csrfToken: null,
   userId: null,
   roomId: null,
@@ -62,6 +63,9 @@ const authSlice = createSlice({
     },
     setCreateRoomErrors(state, action) {
       state.createRoomErrors = action.payload;
+    },
+    setLoading(state, action) {
+      state.loading = action.payload;
     },
   },
 });
