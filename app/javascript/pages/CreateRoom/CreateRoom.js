@@ -23,7 +23,6 @@ const CreateRoom = ({ isAuth }) => {
   //redux selectors
   const username = useSelector((state) => state.auth.username);
   const userId = useSelector((state) => state.auth.userId);
-  
   const token = useSelector((state) => state.auth.csrfToken);
 
   //state
