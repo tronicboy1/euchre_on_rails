@@ -37,10 +37,10 @@ const Authentication = (props) => {
   };
 
   const onLoginClick = () => {
-    dispatch(authActions.setAuthState("LOGIN"));
+    dispatch(authActions.resetAuthErrors());
   };
   const onRegisterClick = () => {
-    dispatch(authActions.setAuthState("REGISTER"));
+    dispatch(authActions.resetAuthErrors());
   };
 
   return (

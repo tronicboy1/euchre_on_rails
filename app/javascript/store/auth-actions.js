@@ -5,7 +5,6 @@ const baseUrl = `${window.location.protocol}//${window.location.host}/api`;
 
 export const sendAuthRequest = (address, username, password, token) => {
   return (dispatch) => {
-    console.log(`${baseUrl}${address}`);
     fetch(`${baseUrl}${address}`, {
       method: "POST",
       credentials: "same-origin",
