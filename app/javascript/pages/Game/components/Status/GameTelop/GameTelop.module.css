@@ -22,3 +22,9 @@
         font-size: medium;
     }
 }
+
+@media screen and (min-width: 1024px) {
+    .gameupdate {
+        font-size: calc(0.9rem + 1.5vw);
+    }
+}
