@@ -8,6 +8,7 @@ import Game from "../pages/Game/Game";
 import Authentication from "../pages/Authentication/Authentication";
 import CreateRoom from "../pages/CreateRoom/CreateRoom";
 import Header from "../pages/Header";
+import { checkInvites, getGameUpdates } from "../store/auth-actions";
 
 const App = (props) => {
   const dispatch = useDispatch();
@@ -27,6 +28,7 @@ const App = (props) => {
         dispatch(authActions.setCsrfToken(token));
       }
     }
+    dispatch(getGameUpdates("game-updates/json", token));
     const isAuth = window.localStorage.getItem("isAuth");
     if (isAuth) {
       const localId = Number(window.localStorage.getItem("userId"));
@@ -34,6 +36,7 @@ const App = (props) => {
       dispatch(
         authActions.setAuth({ userId: localId, username: localUsername })
       );
+      dispatch(checkInvites(token, localId));
     }
   }, []);
 
@@ -49,18 +52,18 @@ const App = (props) => {
     }
   }, [userId, username, isAuth]);
 
-  if (isAuth && roomId) {
-    return <Game />;
-  }
+  // if (isAuth && roomId) {
+  //   return <Game />;
+  // }
 
   return (
     <>
-      <Header />
+      {!roomId && <Header />}
       <Switch>
         <Route path="/game">
-          <CreateRoom isAuth={isAuth} />
+          {isAuth && roomId ? <Game /> : <CreateRoom isAuth={isAuth}/>}
         </Route>
-        <Route path="/authentication" >
+        <Route path="/authentication">
           <Authentication isAuth={isAuth} />
         </Route>
         <Route to="/">

@@ -110,10 +110,9 @@ export const checkInvites = (token, userId) => {
         if (data.roomId) {
           dispatch(authActions.setRoom(data));
           dispatch(gameStateActions.setPlayerNo(data.playerNo));
-        } else {
-          dispatch(authActions.setUsers(data.users));
-          dispatch(authActions.setLoading(false));
-        }
+        } 
+        dispatch(authActions.setUsers(data.users));
+        dispatch(authActions.setLoading(false));
       })
       .catch((e) => {
         console.log(e);

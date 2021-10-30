@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React from "react";
+import { useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import useModal from "../../components/hooks/use-modal";
 
@@ -7,20 +7,16 @@ import styles from "./CreateRoom.module.css";
 
 import Card from "../../components/UI/Card";
 import Button from "../../components/UI/Button";
-import { checkInvites, getGameUpdates } from "../../store/auth-actions";
 import GameUpdates from "./GameUpdates";
 import Options from "./Options";
 import CheckInvites from "./CheckInvites";
 import NewRoomForm from "./NewRoomForm";
-
-let isInitial = true;
 
 const CreateRoom = ({ isAuth }) => {
   //redirect if not authenticated
   if (!isAuth) {
     return <Redirect to="/authentication" />;
   }
-  const dispatch = useDispatch();
   //redux selectors
   const username = useSelector((state) => state.auth.username);
   const userId = useSelector((state) => state.auth.userId);
@@ -29,14 +25,6 @@ const CreateRoom = ({ isAuth }) => {
   //state
   const settingsModal = useModal();
 
-  //fetch gameupdates when loaded and check for updates/refresh info
-  useEffect(() => {
-    if (isInitial) {
-      isInitial = false;
-      dispatch(checkInvites(token, userId));
-    }
-    dispatch(getGameUpdates("game-updates/json", token));
-  }, []);
   //functions
   const toggleSettings = () => {
     settingsModal.setShow(true);

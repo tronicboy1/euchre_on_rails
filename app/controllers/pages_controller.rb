@@ -14,13 +14,13 @@ class PagesController < ApplicationController
     json_request.permit(:userId)
     user_id = json_request[:userId]
     user = User.find(user_id)
+    user_list = add_player_list()
     if user.room_id
       room_info = get_room_info(user.room_id, user.id)
       player_names = room_info[:player_names]
       player_no = room_info[:player_no]
-      render json: { roomId: user.room_id, username: user.username, playerNames: player_names, playerNo: player_no }
+      render json: { roomId: user.room_id, username: user.username, playerNames: player_names, playerNo: player_no, users: user_list }
     else
-      user_list = add_player_list()
       render json: { users: user_list }
     end
   end
@@ -71,7 +71,7 @@ class PagesController < ApplicationController
           player_names = room_info[:player_names]
           player_no = room_info[:player_no]
           render json: { auth: true, roomId: user.room_id, userId: user.id, username: user.username, users: user_list, playerNames: player_names, playerNo: player_no }
-        #send player list if not in a room
+          #send player list if not in a room
         else
           render json: { auth: true, roomId: user.room_id, userId: user.id, username: user.username, users: user_list }
         end

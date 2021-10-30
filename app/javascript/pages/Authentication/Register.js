@@ -5,7 +5,6 @@ import styles from "./Authentication.module.css";
 import Input from "../../components/UI/Input";
 import Button from "../../components/UI/Button";
 import { useSelector, useDispatch } from "react-redux";
-import { authActions } from "../../store/auth-slice";
 import { sendAuthRequest } from "../../store/auth-actions";
 
 const Register = (props) => {
