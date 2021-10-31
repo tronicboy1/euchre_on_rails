@@ -112,8 +112,9 @@ class Round
         end
       else
         @status = "pickup_or_pass"
+        @current_game_telop = "#{@current_player.username.capitalize}, pass or pickup?"
         ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP",
-          "gameupdate" => "#{@current_player.username.capitalize}, pass or pickup?", "status" => @status })
+          "gameupdate" => @current_game_telop, "status" => @status })
         sleep(0.1)
       end
     else
@@ -151,8 +152,9 @@ class Round
     ActionCable.server.broadcast(@channel,{ "img" => @turnup.b64_img,
       "pickupcard" => true, "interfaceState" => false, "status" => @status })
     sleep(0.1)
+    @current_game_telop = "#{@dealer.username.capitalize}, choose card to throw away"
     ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP",
-      "gameupdate" => "#{@dealer.username.capitalize}, choose card to throw away" })
+      "gameupdate" => @current_game_telop })
     sleep(0.1)
 
     #automatically throw_away_card for computers
@@ -179,8 +181,9 @@ class Round
     #check for loner
     if @current_player.id != 0
       @status = "loner_check"
+      @current_game_telop = "#{@current_player.username.capitalize}, go alone?"
       ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP",
-        "gameupdate" => "#{@current_player.username.capitalize}, go alone?", "interfaceState" => "LONER_YESNO", "status" => @status })
+        "gameupdate" => @current_game_telop, "interfaceState" => "LONER_YESNO", "status" => @status })
     #if computer start round
     else
       setup_turn()
@@ -220,9 +223,6 @@ class Round
 
   def call_trump
     if @pass_count == 4
-      #hide turnup card and show buttons for picking trump
-      ActionCable.server.broadcast(@channel,{ "interfaceState" => "CALL_SUIT" })
-      sleep(0.1)
       #must set turnup to nil because it is referenced in set trump
       @turnup_suit = @turnup.suit
       @turnup = nil
@@ -240,8 +240,9 @@ class Round
           trump_list_gen()
           order_symbol_set()
           trump_str = {0 => "Spades", 1 => "Clubs", 2 => "Diamonds", 3 => "Hearts"}[@trump]
+          @current_game_telop = "#{@current_player.username.capitalize} called #{trump_str} trump!"
           ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP",
-            "gameupdate" => "#{@current_player.username.capitalize} called #{trump_str} trump!", "interfaceState" => false })
+            "gameupdate" => @current_game_telop, "interfaceState" => false })
           sleep(2)
           setup_turn()
           next_player()
@@ -252,8 +253,9 @@ class Round
         end
       else
         @pass_count += 1
+        @current_game_telop = "#{@current_player.username.capitalize}, call trump or pass?"
         ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP",
-          "gameupdate" => "#{@current_player.username.capitalize}, call trump or pass?",
+          "gameupdate" => @current_game_telop,
           "interfaceState" => "CALL_SUIT" })
       end
     else
@@ -265,14 +267,16 @@ class Round
   def call_trump_input(input)
     #check if player is trying to set trump to the suit of turned down kitty
     if input["command"] == @turnup_suit
+      @current_game_telop = "You cannot call kitty suit as trump!"
       ActionCable.server.broadcast(@channel, {"type" => "GAME_TELOP",
-        "gameupdate" => "You cannot call kitty suit as trump!"})
+        "gameupdate" => @current_game_telop})
     elsif input["command"] == false
       next_player()
       call_trump()
     else
       @status = "loner_check"
-      ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP", "gameupdate" => "#{@current_player.username.capitalize}, go alone?", "interfaceState" => "LONER_YESNO", "status" => @status })
+      @current_game_telop = "#{@current_player.username.capitalize}, go alone?"
+      ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP", "gameupdate" => @current_game_telop, "interfaceState" => "LONER_YESNO", "status" => @status })
       set_trump(input)
       order_symbol_set()
     end
@@ -282,8 +286,9 @@ class Round
     #for non computer players only
     if input["command"]
       @loner = {1 => 3, 2 => 4, 3 => 1, 4 => 2}[@current_player.player_no]
+      @current_game_telop = "#{@current_player.username.capitalize} is going alone!"
       ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP",
-        "gameupdate" => "#{@current_player.username.capitalize} is going alone!" })
+        "gameupdate" => @current_game_telop })
       sleep(1.5)
     end
     setup_turn()
@@ -316,8 +321,9 @@ class Round
           next_player()
           turn()
         else
+          @current_game_telop = "#{@current_player.username.capitalize}, choose a card to play."
           ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP",
-            "gameupdate" => "#{@current_player.username.capitalize}, choose a card to play." })
+            "gameupdate" => @current_game_telop })
           sleep(0.1)
         end
       else
@@ -360,7 +366,8 @@ class Round
           after_check(input,card)
         else
           @status = "turn"
-          ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP", "gameupdate" => "#{@current_player.username.capitalize}, you can't lie to me.", "status" => @status })
+          @current_game_telop = "#{@current_player.username.capitalize}, you can't lie to me."
+          ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP", "gameupdate" => @current_game_telop, "status" => @status })
           sleep(0.1)
         end
       else
@@ -381,8 +388,9 @@ class Round
     end
     #add card played to cards_played list in order played
     @cards_played.push([card,current_player])
+    @current_game_telop = "#{@current_player.username.capitalize} played the #{card.to_s}"
     ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP",
-      "gameupdate" => "#{@current_player.username.capitalize} played the #{card.to_s}" })
+      "gameupdate" => @current_game_telop })
     sleep(0.1)
     #send player's card to board
     ActionCable.server.broadcast(@channel,{ "img" => card.b64_img,
@@ -443,8 +451,9 @@ class Round
     end
 
     #send winner to telop
+    @current_game_telop = "#{winner.username} won the trick!"
     ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP",
-      "gameupdate" => "#{winner.username} won the trick!" })
+      "gameupdate" => @current_game_telop })
     sleep(0.1)
     #add trick to player
     winner.tricks += 1
@@ -504,8 +513,9 @@ class Round
       else
         @player1.score += 2
         @player3.score += 2
+        @current_game_telop = "#{@player2.username.capitalize} and #{@player4.username} were Euchred!"
         ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP",
-          "gameupdate" => "#{@player2.username.capitalize} and #{@player4.username} were Euchred!" })
+          "gameupdate" => @current_game_telop })
         sleep(0.1)
         new_update("#{@player2.username} and #{@player4.username} were Euchred!")
       end
@@ -535,8 +545,9 @@ class Round
       else
         @player2.score += 2
         @player4.score += 2
+        @current_game_telop = "#{@player1.username} and #{@player3.username} were Euchred!"
         ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP",
-          "gameupdate" => "#{@player1.username} and #{@player3.username} were Euchred!" })
+          "gameupdate" => @current_game_telop })
         sleep(0.1)
         new_update("#{@player1.username} and #{@player3.username} were Euchred!")
       end
@@ -555,10 +566,12 @@ class Round
     if @player1.score >= 10
       #end game here
       new_update("#{@player1.username} and #{@player3.username} won a game!")
-      ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP", "gameupdate" => "#{@player1.username} and #{@player3.username} won the game!" })
+      @current_game_telop = "#{@player1.username} and #{@player3.username} won the game!"
+      ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP", "gameupdate" => @current_game_telop })
     elsif @player2.score >= 10
       new_update("#{@player2.username} and #{@player4.username} won a game!")
-      ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP", "gameupdate" => "#{@player2.username} and #{@player4.username} won the game!" })
+      @current_game_telop = "#{@player2.username} and #{@player4.username} won the game!"
+      ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP", "gameupdate" => @current_game_telop })
     else
       #start new round here
       start_new_round()
