@@ -1,7 +1,7 @@
 #round will hold data for each round such as next player and when round is finished
 #also will hold functions to update round information based on player input
 class Round
-  attr_accessor :current_player, :turn, :trump, :turnup, :status, :dealer, :player_list, :cards_played
+  attr_accessor :current_player, :turn, :trump, :turnup, :status, :dealer, :player_list, :cards_played, :current_game_telop
 
   def initialize(player1,player2,player3,player4,turn,channel,status)
     @status = status
@@ -17,6 +17,7 @@ class Round
     @dealer = @player_list[@turn]
     @trump = nil
     @round_count = 0
+    @current_game_telop = "START"
     @cards_played = []
     #record the player who ordered trump for keeping score
     @ordered_player = nil
