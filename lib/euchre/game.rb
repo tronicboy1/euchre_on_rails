@@ -44,6 +44,7 @@ class Game
 
   #resend telop info and current player info on websocket reconnect
   def reconnect()
+    puts "reconnect in game"
     if @status != "start"
       ActionCable.server.broadcast(@channel, { "type": "GAME_TELOP",
                                                "gameupdate": "reconnected, #{@round.status} #{@round.current_player.player_no}" })
