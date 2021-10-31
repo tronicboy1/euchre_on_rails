@@ -811,7 +811,7 @@ class Round
         sleep(0.1)
       end
     end
-    resend_player_cards()
+    resend_played_cards()
     if @status == "pickup_or_pass"
       ActionCable.server.broadcast(@channel,{ "img" => @turnup.b64_img, "kitty" => true })
       sleep(0.1)
