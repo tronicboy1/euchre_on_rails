@@ -69,3 +69,4 @@ Acknowledgements
 __________________________
  
 Card Illustration Source: https://chicodeza.com/freeitems/torannpu-illust.html
+Card suits illustration by b farias from the Noun Project https://thenounproject.com/term/card-suits/1729645/
