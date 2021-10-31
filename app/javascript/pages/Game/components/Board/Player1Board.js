@@ -9,9 +9,7 @@ const Player1Board = (props) => {
   if (props.showKitty === "PLACEHOLDER") {
     return (
       <div className={styles.board}>
-        <Card className="boardcard">
-          <div className={styles.placeholder}>♤♧♢♡</div>
-        </Card>
+        <Card className="boardcard"><img style={{ border: "none" }} src={props.cardSuits} /></Card>
       </div>
     );
   }

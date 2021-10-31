@@ -6,6 +6,7 @@ import Player2Board from "./Player2Board";
 import Player3Board from "./Player3Board";
 import Player4Board from "./Player4Board";
 import Card from "../../../../components/UI/Card";
+import cardSuits from "../../../../../assets/images/card_suits.png";
 
 const Board = () => {
   const context = useContext(ActionCableContext);
@@ -26,6 +27,7 @@ const Board = () => {
           p3Card={p3Card}
           p4Card={p4Card}
           playerNames={context.playerNames}
+          cardSuits={cardSuits}
         />
       </Card>
     );
@@ -40,6 +42,7 @@ const Board = () => {
           p3Card={p3Card}
           p4Card={p4Card}
           playerNames={context.playerNames}
+          cardSuits={cardSuits}
         />
       </Card>
     );
@@ -54,6 +57,7 @@ const Board = () => {
           p3Card={p3Card}
           p4Card={p4Card}
           playerNames={context.playerNames}
+          cardSuits={cardSuits}
         />
       </Card>
     );
@@ -68,6 +72,7 @@ const Board = () => {
           p3Card={p3Card}
           p4Card={p4Card}
           playerNames={context.playerNames}
+          cardSuits={cardSuits}
         />
       </Card>
     );

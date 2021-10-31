@@ -10,7 +10,7 @@ const Player2Board = (props) => {
     return (
       <div className={styles.board}>
         <Card className="boardcard">
-          <div className={styles.placeholder}>♤♧♢♡</div>
+          <div className={styles.placeholder}><img style={{ border: "none" }} src={props.cardSuits} /></div>
         </Card>
       </div>
     );
