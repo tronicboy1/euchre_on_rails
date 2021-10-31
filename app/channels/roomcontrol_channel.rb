@@ -2,11 +2,9 @@ require "base64"
 
 class RoomcontrolChannel < ApplicationCable::Channel
   def subscribed
-    puts "subscribed"
     stream_from "chat_#{params[:room_id]}"
     ActionCable.server.broadcast("chat_#{params[:room_id]}", { "message" => "#{params[:username]} entered room!" })
     if $game_dict.key?(params[:room_id])
-      puts "Key check ok"
       $game_dict[params[:room_id]].reconnect()
     end
   end
