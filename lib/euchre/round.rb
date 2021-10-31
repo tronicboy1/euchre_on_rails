@@ -793,6 +793,13 @@ class Round
     end
   end
 
+  def resend_played_cards
+    @cards_played.each do |card,player|
+      ActionCable.server.broadcast(@channel,{ "img" => card.b64_img,
+        "playedCard" => "p#{player.player_no}" })
+    end
+  end
+
   #resends player cards after pickup and throw away
   def resend_player_cards(player)
     #clear hand command for react
@@ -804,10 +811,7 @@ class Round
         sleep(0.1)
       end
     end
-    @cards_played.each do |card,player|
-      ActionCable.server.broadcast(@channel,{ "img" => card.b64_img,
-        "playedCard" => "p#{player.player_no}" })
-    end
+    resend_player_cards()
     if @status == "pickup_or_pass"
       ActionCable.server.broadcast(@channel,{ "img" => @turnup.b64_img, "kitty" => true })
       sleep(0.1)

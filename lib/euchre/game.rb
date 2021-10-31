@@ -51,6 +51,9 @@ class Game
                                                "currentPlayer": "p#{@round.current_player.player_no}",
                                                "reconnect": true })
     end
+    if @round.cards_played
+      @round.resend_played_cards()
+    end
   end
 
   def game_control(user_input)
