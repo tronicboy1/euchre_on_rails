@@ -84,19 +84,11 @@
     flex-direction: column;
     justify-content: center;
     background: rgb(219, 219, 219);
-    width: auto;
+    width: fit-content;
+    height: fit-content;
     padding: 0.25rem;
     opacity: 1;
     animation: fade 0.5s linear;
-}
-
-.boardcard img {
-    border-radius: 8px;
-    border: rgb(56, 56, 56) 1px solid;
-    margin: auto;
-    width: auto;
-    height: 80px;
-    animation: fade 0.2s linear;
 }
 
 .boardcard.left {
