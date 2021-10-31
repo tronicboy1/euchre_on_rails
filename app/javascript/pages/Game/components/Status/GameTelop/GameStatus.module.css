@@ -15,9 +15,11 @@
     font-size: small;
     vertical-align: middle;
     height: 100%;
+    max-width: 25%;
     border-right: rgba(109, 109, 109, 0.5) 1px solid;
     padding: 0.1rem;
     flex: 1;
+    overflow: hidden;
 }
 
 .status.right {
@@ -28,8 +30,7 @@
     padding-left: 10px;
     padding-right: 10px;
     text-align: center;
-    overflow: hidden;
-    overflow-x: hidden;
+    height: 100%;
     flex: 1;
 }
 
@@ -41,7 +42,5 @@
     text-align: center;
     width: 100%;
     height: 100%;
-    overflow: hidden;
-    overflow-x: hidden;
     flex: 1;
 }
