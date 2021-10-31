@@ -19,6 +19,7 @@
     height: 100%;
     border-right: rgba(109, 109, 109, 0.5) 1px solid;
     padding: 0.1rem;
+    flex: 1 1 0;
 }
 
 .status.right {
@@ -30,6 +31,7 @@
     padding-right: 10px;
     text-align: center;
     overflow: hidden;
+    overflow-x: hidden;
 }
 
 .double {
@@ -41,4 +43,5 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
+    overflow-x: hidden;
 }

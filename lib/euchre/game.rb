@@ -46,9 +46,10 @@ class Game
   def reconnect()
     if @round.status != "start"
       ActionCable.server.broadcast(@channel, { "type": "GAME_TELOP",
-                                               "gameupdate": "reconnected, #{@round.status} #{@round.current_player.player_no}",
-                                               "status": @round.status,
-                                               "currentPlayer": "p#{@round.current_player.player_no}" })
+                                              "gameupdate": "reconnected, #{@round.status} #{@round.current_player.player_no}",
+                                              "status": @round.status,
+                                              "currentPlayer": "p#{@round.current_player.player_no}",
+                                              "reconnect": true })
     end
   end
 

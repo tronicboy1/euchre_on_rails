@@ -16,6 +16,12 @@ const gameStateSlice = createSlice({
     statusChange(state, action) {
       //redefine all show status every time in the event of browser refresh
       const status = action.payload.status;
+      //do not change state if player cards are not loaded on reconnect
+      console.log(state, action.payload);
+      if (state.playerCards.length === 0 && action.payload.reconnect) {
+        console.log("not reloaded");
+        return;
+      }
       if (status === "pickup_or_pass") {
         state.showKitty = true;
         state.showTelop = true;
