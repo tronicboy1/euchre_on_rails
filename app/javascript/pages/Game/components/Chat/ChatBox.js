@@ -34,23 +34,26 @@ const ChatBox = ({ settingsModal }) => {
   }, [chat.messages]);
 
   const onToggleChat = () => {
-    
+    setToggleChat((prev) => !prev);
   };
   const toggleSettings = () => {
     settingsModal.setShow(true);
   };
 
-  const noButtons = gameState.status !== "pickup_or_pass" && gameState.status !== "call_trump" && gameState.status !== "loner_check" && !gameState.showStartButton;
+  const noButtons =
+    gameState.status !== "pickup_or_pass" &&
+    gameState.status !== "call_trump" &&
+    gameState.status !== "loner_check" &&
+    !gameState.showStartButton;
 
   return (
     <Card
       style={{
-        marginTop:
-          noButtons
-            ? "91vh"
-            : !gameState.showStartButton
-            ? "101vh"
-            : "1rem",
+        marginTop: noButtons
+          ? "91vh"
+          : !gameState.showStartButton
+          ? "101vh"
+          : "1rem",
       }}
       className2={toggleText !== "Toggle Chat" && "highlight"}
       className="chat-box"

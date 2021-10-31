@@ -7,13 +7,6 @@
     padding: 0 0 0 0;
     transition: all 0.3s;
     height: 50px;
-    font-size: calc(1rem + 0.7vw);
-}
-
-.button:hover,
-.button:active {
-    background: rgb(61, 61, 61);
-    border-color: rgb(61, 61, 61);
 }
 
 button:disabled,
