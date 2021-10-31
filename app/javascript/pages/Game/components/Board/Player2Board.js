@@ -52,14 +52,15 @@ const Player2Board = (props) => {
           )}
         </Card>
       </div>
-      <div className={styles.lower}></div>
-      <Card className="boardcard">
-        {props.p2Card ? (
-          <Image src={props.p2Card} />
-        ) : (
-          <div className={styles.placeholder} />
-        )}
-      </Card>
+      <div className={styles.lower}>
+        <Card className="boardcard">
+          {props.p2Card ? (
+            <Image src={props.p2Card} />
+          ) : (
+            <div className={styles.placeholder} />
+          )}
+        </Card>
+      </div>
     </div>
   );
 };
