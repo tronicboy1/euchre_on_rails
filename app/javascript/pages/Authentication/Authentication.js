@@ -1,5 +1,5 @@
 import React from "react";
-import { Redirect, Switch, Route, useLocation } from "react-router-dom";
+import { Redirect, Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 
 import styles from "./Authentication.module.css";
 
@@ -11,6 +11,7 @@ import LinkBar from "./LinkBar";
 const Authentication = (props) => {
   const location = useLocation();
   const mode = location.pathname.split("/")[2];
+  const match = useRouteMatch();
   //redirect if logged in
   if (props.isAuth) {
     return <Redirect to="/game" />;
@@ -30,14 +31,14 @@ const Authentication = (props) => {
       >
         <LinkBar />
         <Switch>
-          <Route path="/authentication/login">
+          <Route path={`${match.path}/login`}>
             <Login />
           </Route>
-          <Route path="/authentication/register">
+          <Route path={`${match.path}/register`}>
             <Register />
           </Route>
           <Route path="/">
-            <Redirect to="/authentication/login" />
+            <Redirect to={`${match.path}/login`} />
           </Route>
         </Switch>
       </Card>

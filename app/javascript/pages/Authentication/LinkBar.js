@@ -1,12 +1,15 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { NavLink, useRouteMatch } from "react-router-dom";
 import { authActions } from "../../store/auth-slice";
 
 import styles from "./LinkBar.module.css";
 
 const LinkBar = () => {
   const dispatch = useDispatch();
+  const match  = useRouteMatch();
+
+  console.log(match);
 
   const loginButtonStyle = {
     borderTopLeftRadius: "8px",
@@ -29,7 +32,7 @@ const LinkBar = () => {
         style={loginButtonStyle}
         activeClassName={styles.active}
         onClick={onLoginClick}
-        to="/authentication/login"
+        to={`${match.path}/login`}
       >
         Login
       </NavLink>
@@ -37,7 +40,7 @@ const LinkBar = () => {
         style={registerButtonStyle}
         activeClassName={styles.active}
         onClick={onRegisterClick}
-        to="/authentication/register"
+        to={`${match.path}/register`}
       >
         Register
       </NavLink>
