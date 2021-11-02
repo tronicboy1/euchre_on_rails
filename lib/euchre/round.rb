@@ -172,7 +172,7 @@ class Round
 
   def throw_away_card(input)
     @dealer.hand.delete_at input["command"]
-    resend_player_cards(@dealer)
+    resend_dealer_cards(@dealer)
     sleep(0.1)
     #setup for turn start
     throw_away_shared_code()
@@ -229,7 +229,7 @@ class Round
       @turnup = nil
     end
 
-    if @pass_count <= 8
+    if @pass_count < 8
       #action for computer
       #computer will pass for the time being
       if @current_player.id == 0
@@ -797,6 +797,17 @@ class Round
     @cards_played.each do |card,player|
       ActionCable.server.broadcast(@channel,{ "img" => card.b64_img,
         "playedCard" => "p#{player.player_no}" })
+    end
+  end
+
+  def resend_dealer_cards(player)
+    ActionCable.server.broadcast(@channel,{ "clearHand" => true, "playerNo" => "p#{player.player_no}", "status" => @status })
+    sleep(0.1)
+    player.hand.each_with_index do |card, i|
+      if !card.nil?
+        ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "playerNo" => "p#{player.player_no}", "cardNo" => i })
+        sleep(0.1)
+      end
     end
   end
 
