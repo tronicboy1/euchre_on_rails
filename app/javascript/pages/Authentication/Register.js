@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import styles from "./Authentication.module.css";
 
@@ -18,6 +18,12 @@ const Register = (props) => {
     passwordIsValid: true,
     usernameIsValid: true,
   });
+
+  useEffect(() => {
+    return () => {
+      setFormValid(null);
+    };
+  }, [])
 
   const validator = (value) => {
     if (value.trim().length > 0) {

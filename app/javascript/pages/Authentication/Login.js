@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import styles from "./Authentication.module.css";
@@ -16,6 +16,13 @@ const Login = () => {
 
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      setUsernameError(false);
+      setPasswordError(false);
+    }
+  }, [])
 
   const handleSubmit = (e) => {
     e.preventDefault();

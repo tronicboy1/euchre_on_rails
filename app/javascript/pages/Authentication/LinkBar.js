@@ -9,8 +9,6 @@ const LinkBar = () => {
   const dispatch = useDispatch();
   const match  = useRouteMatch();
 
-  console.log(match);
-
   const loginButtonStyle = {
     borderTopLeftRadius: "8px",
     borderBottomLeftRadius: "8px",
