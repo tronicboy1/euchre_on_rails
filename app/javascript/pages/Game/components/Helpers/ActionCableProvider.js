@@ -7,34 +7,41 @@ import { useDispatch, useSelector } from "react-redux";
 
 const ActionCableProvider = (props) => {
   const dispatch = useDispatch();
-  const roomId = useSelector(state => state.auth.roomId);
-  const userId = useSelector(state => state.auth.userId);
-  const username = useSelector(state => state.auth.username);
-  const playerNames = useSelector(state => state.auth.playerNames);
-  const playerNo = useSelector(state => state.gameState.playerNo);
+  const roomId = useSelector((state) => state.auth.roomId);
+  const userId = useSelector((state) => state.auth.userId);
+  const username = useSelector((state) => state.auth.username);
+  const playerNames = useSelector((state) => state.auth.playerNames);
+  const playerNo = useSelector((state) => state.gameState.playerNo);
   const [roomChannel, setRoomChannel] = useState(null);
 
   //setup activecable connection
   useEffect(() => {
-    const roomChannel = consumer.subscriptions.create(
-      {
-        channel: "RoomcontrolChannel",
-        room_id: roomId,
-        username: username,
-        user_id: userId,
-      },
-      {
-        connected() {},
-        disconnected() {
-          // Called when the subscription has been terminated by the server
+    setRoomChannel(
+      consumer.subscriptions.create(
+        {
+          channel: "RoomcontrolChannel",
+          room_id: roomId,
+          username: username,
+          user_id: userId,
         },
-        received(data) {
-          actionCableReceivedHandler(data, dispatch);
-        },
-      }
+        {
+          connected() {},
+          disconnected() {
+            // Called when the subscription has been terminated by the server
+          },
+          received(data) {
+            actionCableReceivedHandler(data, dispatch);
+          },
+        }
+      )
     );
-    setRoomChannel(roomChannel);
-  }, [roomId,userId,username]);
+    return () => {
+      setRoomChannel((state) => {
+        state.disconnect();
+        return null;
+      });
+    };
+  }, [roomId, userId, username]);
 
   const cableContext = {
     roomId,

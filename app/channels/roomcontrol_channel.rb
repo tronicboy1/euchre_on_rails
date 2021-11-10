@@ -32,7 +32,7 @@ class RoomcontrolChannel < ApplicationCable::Channel
 
   def unsubscribed
     # Any cleanup needed when channel is unsubscribed
-    ActionCable.server.broadcast("chat_#{params[:room_id]}", { "disconnected" => "##{params[:user_id]}-status" })
+    ActionCable.server.broadcast("chat_#{params[:room_id]}", { "message" => "User left room" })
   end
 
   def speak
