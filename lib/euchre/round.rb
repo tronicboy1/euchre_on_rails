@@ -58,7 +58,7 @@ class Round
 
     #set turnup card and send to players
     @turnup = @deck.deal_card
-    ActionCable.server.broadcast(@channel,{ "img" => @turnup.b64_img, "kitty" => true })
+    ActionCable.server.broadcast(@channel,{ "img" => @turnup.url, "kitty" => true })
     sleep(0.1)
     #declare a counter to keep track of how many times players have passed
     @pass_count = 0
@@ -150,7 +150,7 @@ class Round
     @status = "throw_away_card"
     #must pass in card as an array bc using concat
     @dealer.add_cards([@turnup])
-    ActionCable.server.broadcast(@channel,{ "img" => @turnup.b64_img,
+    ActionCable.server.broadcast(@channel,{ "img" => @turnup.url,
       "pickupcard" => true, "interfaceState" => false, "status" => @status })
     sleep(0.1)
     @current_game_telop = "#{@dealer.username.capitalize}, choose card to throw away"
