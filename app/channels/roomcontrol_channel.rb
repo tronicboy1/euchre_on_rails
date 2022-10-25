@@ -23,7 +23,7 @@ class RoomcontrolChannel < ApplicationCable::Channel
       player_no_list.each do |player_no|
         card_id.each_with_index do |id, index|
           card = Card.new(id[0], id[1])
-          ActionCable.server.broadcast("chat_#{params[:room_id]}", { "img" => card.b64_img, "element" => "p#{player_no}-card#{index}", "show" => "#hand" })
+          ActionCable.server.broadcast("chat_#{params[:room_id]}", { "img" => card.url, "element" => "p#{player_no}-card#{index}", "show" => "#hand" })
           sleep(0.1)
         end
       end
