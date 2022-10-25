@@ -20,7 +20,7 @@ const GameCard = (props) => {
     props.onClick(cardNo);
   };
 
-  const imgData = "data:image/png;base64," + props.b64Img;
+  const imgData = props.b64Img;
 
   return (
     //<Card className="gamecard">
