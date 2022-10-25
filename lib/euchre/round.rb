@@ -394,7 +394,7 @@ class Round
       "gameupdate" => @current_game_telop })
     sleep(0.1)
     #send player's card to board
-    ActionCable.server.broadcast(@channel,{ "img" => card.b64_img,
+    ActionCable.server.broadcast(@channel,{ "img" => card.url,
       "playedCard" => "p#{@current_player.player_no}" })
     sleep(1.5)
     #set status back to turn to avoid multiple input while waiting
@@ -460,7 +460,7 @@ class Round
     winner.tricks += 1
     #update tricks on screen
     team1_tricks = @player1.tricks + @player3.tricks
-    team2_tricks = @player2.tricks + @player4.tricks 
+    team2_tricks = @player2.tricks + @player4.tricks
     ActionCable.server.broadcast(@channel,{ "type" => "TRICKS",
       "gameupdate" => "tricks", "team1Tricks" => team1_tricks, "team2Tricks" => team2_tricks })
     sleep(2)
@@ -690,9 +690,9 @@ class Round
           #@current_player.non_trump_cards.push(card)
         end
       end
-      
+
     end
-    
+
     generate_best_card_lists()
 
     return choose_card()
@@ -786,7 +786,7 @@ class Round
     @player_list.each do |player|
       if player.id != 0
         player.hand.each_with_index do |card, i|
-          ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "playerNo" => "p#{player.player_no}", "cardNo" => i })
+          ActionCable.server.broadcast(@channel,{ "img" => card.url, "playerNo" => "p#{player.player_no}", "cardNo" => i })
           sleep(0.1)
         end
       end
@@ -795,7 +795,7 @@ class Round
 
   def resend_played_cards
     @cards_played.each do |card,player|
-      ActionCable.server.broadcast(@channel,{ "img" => card.b64_img,
+      ActionCable.server.broadcast(@channel,{ "img" => card.url,
         "playedCard" => "p#{player.player_no}" })
     end
   end
@@ -805,7 +805,7 @@ class Round
     sleep(0.1)
     player.hand.each_with_index do |card, i|
       if !card.nil?
-        ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "playerNo" => "p#{player.player_no}", "cardNo" => i })
+        ActionCable.server.broadcast(@channel,{ "img" => card.url, "playerNo" => "p#{player.player_no}", "cardNo" => i })
         sleep(0.1)
       end
     end
@@ -818,7 +818,7 @@ class Round
     sleep(0.1)
     player.hand.each_with_index do |card, i|
       if !card.nil?
-        ActionCable.server.broadcast(@channel,{ "img" => card.b64_img, "playerNo" => "p#{player.player_no}", "cardNo" => i })
+        ActionCable.server.broadcast(@channel,{ "img" => card.url, "playerNo" => "p#{player.player_no}", "cardNo" => i })
         sleep(0.1)
       end
     end
@@ -832,7 +832,7 @@ class Round
     ActionCable.server.broadcast(@channel,{ "type" => "SCORE", "gameupdate" => player.score, "team1Score" => @player1.score, "team2Score" => @player2.score })
     sleep(0.1)
     team1_tricks = @player1.tricks + @player3.tricks
-    team2_tricks = @player2.tricks + @player4.tricks 
+    team2_tricks = @player2.tricks + @player4.tricks
     ActionCable.server.broadcast(@channel,{ "type" => "TRICKS", "gameupdate" => "tricks", "team1Tricks" => team1_tricks, "team2Tricks" => team2_tricks })
     ActionCable.server.broadcast(@channel,{ "type" => "GAME_TELOP", "gameupdate" => "Game Restored" })
     order_symbol_set()

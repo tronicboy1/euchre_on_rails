@@ -1,6 +1,6 @@
 #individual cards with img data
 class Card
-    attr_accessor :suit, :value, :b64_img, :id
+    attr_accessor :suit, :value, :b64_img, :id, :url
 
     def initialize(suit,value)
       @suit = suit
@@ -9,6 +9,7 @@ class Card
       path = "./app/assets/images/cards/cards_sm/#{suit},#{value}.png"
       img = File.open(path,"rb")
       @b64_img = Base64.strict_encode64(img.read)
+      @url = "/images/cards/cards_sm/#{suit},#{value}.png"
     end
 
     def inspect
