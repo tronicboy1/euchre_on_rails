@@ -824,7 +824,7 @@ class Round
     end
     resend_played_cards()
     if @status == "pickup_or_pass"
-      ActionCable.server.broadcast(@channel,{ "img" => @turnup.b64_img, "kitty" => true })
+      ActionCable.server.broadcast(@channel,{ "img" => @turnup.url, "kitty" => true })
       sleep(0.1)
     end
     ActionCable.server.broadcast(@channel,{ "type" => "DEALER", "gameupdate" => @dealer.username.capitalize, "status" => @status })
